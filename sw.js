@@ -1,5 +1,10 @@
-const CACHE = 'foyer-diallo-v3';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CACHE = 'foyer-diallo-v4';
+const BASE = '/foyer-diallo-mobile';
+const ASSETS = [
+  BASE + '/',
+  BASE + '/index.html',
+  BASE + '/manifest.json'
+];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
@@ -13,9 +18,8 @@ self.addEventListener('activate', e => {
   self.clients.claim();
 });
 
-// Network first, cache fallback — pour que les catégories soient toujours à jour
 self.addEventListener('fetch', e => {
-  if (e.request.url.includes('script.google.com')) return; // jamais en cache
+  if (e.request.url.includes('script.google.com')) return;
   e.respondWith(
     fetch(e.request).then(r => {
       const clone = r.clone();

@@ -14,15 +14,21 @@
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     :root{
-      --dark:#111827;--dark2:#1e293b;--blue:#2457ff;--green:#138a5b;
-      --red:#dc2626;--amber:#c58a1e;--muted:#64748b;--line:#e2e8f0;
-      --bg:#f4f7fb;--white:#fff;
+      --dark:#111827;--dark2:#1e293b;--blue:#2457ff;
+      --c-ali-bg:#e8f5e9;--c-ali-tx:#1b5e20;--c-ali-bd:#a5d6a7;
+      --c-enf-bg:#e3f2fd;--c-enf-tx:#0d47a1;--c-enf-bd:#90caf9;
+      --c-mai-bg:#fff3e0;--c-mai-tx:#e65100;--c-mai-bd:#ffcc80;
+      --c-tra-bg:#f3e5f5;--c-tra-tx:#4a148c;--c-tra-bd:#ce93d8;
+      --c-san-bg:#fce4ec;--c-san-tx:#880e4f;--c-san-bd:#f48fb1;
+      --c-loi-bg:#e0f7fa;--c-loi-tx:#006064;--c-loi-bd:#80deea;
+      --c-sen-bg:#fff8e1;--c-sen-tx:#f57f17;--c-sen-bd:#ffe082;
+      --c-div-bg:#f1f8e9;--c-div-tx:#33691e;--c-div-bd:#c5e1a5;
     }
-    html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#0f172a;overscroll-behavior:none}
+    html,body{height:100%;background:#f4f7fb;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#0f172a;overscroll-behavior:none}
 
-    /* ── HEADER ── */
-    .header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:env(safe-area-inset-top,0px) 18px 20px;position:sticky;top:0;z-index:10}
-    .header-top{display:flex;justify-content:space-between;align-items:center;padding-top:12px}
+    /* HEADER */
+    .header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:env(safe-area-inset-top,0px) 18px 18px;position:sticky;top:0;z-index:10}
+    .header-top{display:flex;justify-content:space-between;align-items:center;padding-top:12px;margin-bottom:14px}
     .brand{display:flex;align-items:center;gap:10px}
     .brand-mark{width:34px;height:34px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
     .brand-name{font-size:15px;font-weight:600;color:#fff}
@@ -30,93 +36,77 @@
     .hist-btn{font-size:12px;color:#94a3b8;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:5px}
     .hist-btn i{font-size:14px}
 
-    .amount-area{margin-top:18px}
-    .amount-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
-    .amount-display{display:flex;align-items:baseline;gap:6px;min-height:58px}
-    .amount-cur{font-size:24px;color:#64748b}
-    .amount-val{font-size:52px;font-weight:600;color:#fff;line-height:1;letter-spacing:-.02em;min-width:20px}
+    /* MONTANT */
+    .amount-area{cursor:pointer}
+    .amount-row{display:flex;align-items:baseline;gap:6px;min-height:56px}
+    .amount-cur{font-size:22px;color:#64748b}
+    .amount-val{font-size:52px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.02em}
     .amount-val.empty{color:#475569}
-    .amount-cursor{width:3px;height:44px;background:var(--blue);border-radius:2px;animation:blink 1s infinite;margin-bottom:4px}
+    .amount-cursor{width:3px;height:44px;background:var(--blue);border-radius:2px;animation:blink 1s infinite;margin-bottom:2px}
     @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    .amount-hint{font-size:11px;color:#475569;margin-top:8px}
+    .amount-hint{font-size:11px;color:#475569;margin-top:6px;min-height:16px}
 
-    /* ── BODY ── */
-    .body{padding:14px;display:flex;flex-direction:column;gap:14px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+    /* BODY */
+    .body{padding:14px;display:flex;flex-direction:column;gap:16px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 90px)}
 
-    .sec-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding:0 2px}
+    /* GROUPES */
+    .group-block{display:flex;flex-direction:column;gap:8px}
+    .group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:7px;padding:4px 2px}
+    .group-title i{font-size:18px}
+    .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .cat-btn{border-radius:14px;padding:14px 8px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .1s,box-shadow .1s;min-height:78px;justify-content:center;user-select:none;-webkit-user-select:none}
+    .cat-btn i{font-size:26px}
+    .cat-btn:active{transform:scale(.95)}
+    .cat-btn.sel{box-shadow:0 0 0 3px var(--blue);transform:scale(1.03)}
 
-    /* Catégories */
-    .cats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .cat-chip{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:11px 10px;font-size:13px;color:#1e293b;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .12s;user-select:none;-webkit-user-select:none}
-    .cat-chip i{font-size:16px;color:#94a3b8;flex-shrink:0}
-    .cat-chip.sel{background:#eff6ff;border:2px solid var(--blue);color:var(--blue)}
-    .cat-chip.sel i{color:var(--blue)}
-    .cat-chip:active{transform:scale(.97)}
-    .add-cat-btn{background:var(--white);border:1px dashed #cbd5e1;border-radius:12px;padding:11px 10px;font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .12s;user-select:none}
-    .add-cat-btn i{font-size:16px;flex-shrink:0}
-    .add-cat-btn:active{transform:scale(.97)}
+    /* COULEURS GROUPES */
+    .g-ali .group-title{color:var(--c-ali-tx)}.g-ali .cat-btn{background:var(--c-ali-bg);color:var(--c-ali-tx);border-color:var(--c-ali-bd)}
+    .g-enf .group-title{color:var(--c-enf-tx)}.g-enf .cat-btn{background:var(--c-enf-bg);color:var(--c-enf-tx);border-color:var(--c-enf-bd)}
+    .g-mai .group-title{color:var(--c-mai-tx)}.g-mai .cat-btn{background:var(--c-mai-bg);color:var(--c-mai-tx);border-color:var(--c-mai-bd)}
+    .g-tra .group-title{color:var(--c-tra-tx)}.g-tra .cat-btn{background:var(--c-tra-bg);color:var(--c-tra-tx);border-color:var(--c-tra-bd)}
+    .g-san .group-title{color:var(--c-san-tx)}.g-san .cat-btn{background:var(--c-san-bg);color:var(--c-san-tx);border-color:var(--c-san-bd)}
+    .g-loi .group-title{color:var(--c-loi-tx)}.g-loi .cat-btn{background:var(--c-loi-bg);color:var(--c-loi-tx);border-color:var(--c-loi-bd)}
+    .g-sen .group-title{color:var(--c-sen-tx)}.g-sen .cat-btn{background:var(--c-sen-bg);color:var(--c-sen-tx);border-color:var(--c-sen-bd)}
+    .g-div .group-title{color:var(--c-div-tx)}.g-div .cat-btn{background:var(--c-div-bg);color:var(--c-div-tx);border-color:var(--c-div-bd)}
 
-    /* Add cat inline */
-    .add-cat-form{display:none;background:var(--white);border:2px solid var(--blue);border-radius:12px;padding:12px;grid-column:1/-1}
-    .add-cat-form.open{display:block}
-    .add-cat-row{display:flex;gap:8px;align-items:center}
-    .add-cat-input{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13px;outline:none;background:var(--bg)}
-    .add-cat-input:focus{border-color:var(--blue)}
-    .add-cat-confirm{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap}
-    .add-cat-cancel{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:9px 8px}
-
-    /* Propriétaire */
-    .prop-row{display:flex;gap:8px}
-    .prop-btn{flex:1;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:11px 6px;font-size:13px;color:#1e293b;text-align:center;cursor:pointer;transition:all .12s;user-select:none}
-    .prop-btn.sel{border:2px solid var(--blue);color:var(--blue);background:#eff6ff;font-weight:600}
-    .prop-btn:active{transform:scale(.97)}
-
-    /* Note */
-    .note-field{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:#0f172a;width:100%;resize:none;outline:none;min-height:42px;font-family:inherit}
-    .note-field:focus{border-color:var(--blue)}
-    .note-field::placeholder{color:#94a3b8}
-
-    /* Bouton valider */
-    .val-btn{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;border:none;border-radius:14px;padding:17px;font-size:16px;font-weight:600;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:opacity .15s}
-    .val-btn:disabled{opacity:.5;cursor:not-allowed}
+    /* BARRE VALIDATION FIXE */
+    .val-bar{position:fixed;bottom:0;left:0;right:0;padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 10px);background:rgba(244,247,251,.96);backdrop-filter:blur(10px);border-top:1px solid #e2e8f0;z-index:10}
+    .val-btn{width:100%;background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:opacity .15s}
     .val-btn i{font-size:19px}
-    .val-btn.loading{opacity:.7}
+    .val-btn:disabled{opacity:.4;cursor:not-allowed}
+    .val-btn.loading{opacity:.6}
 
-    /* Dernière saisie */
-    .last-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
-    .last-info .last-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
-    .last-info .last-val{font-size:13px;color:#1e293b;font-weight:500}
-    .last-sync{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;font-weight:600}
-    .last-sync i{font-size:14px}
-    .last-none{font-size:13px;color:var(--muted)}
+    /* TOAST */
+    .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 88px);left:16px;right:16px;background:#065f46;color:#d1fae5;border-radius:12px;padding:13px 16px;font-size:14px;font-weight:600;opacity:0;transition:all .25s;z-index:100;display:flex;align-items:center;gap:9px;pointer-events:none}
+    .toast.show{opacity:1}
+    .toast.error{background:#7f1d1d;color:#fecaca}
+    .toast i{font-size:18px}
 
-    /* Toast */
-    .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;z-index:100;white-space:nowrap;display:flex;align-items:center;gap:8px;pointer-events:none}
-    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-    .toast.success i{color:#4ade80}
-    .toast.error i{color:#f87171}
-
-    /* Historique panel */
-    .hist-panel{position:fixed;inset:0;background:var(--bg);z-index:50;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
+    /* HISTORIQUE PANEL */
+    .hist-panel{position:fixed;inset:0;background:#f4f7fb;z-index:50;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
     .hist-panel.open{transform:translateY(0)}
-    .hist-header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+    .hist-header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
     .hist-title{font-size:16px;font-weight:600;color:#fff}
-    .hist-close{background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px}
+    .hist-actions{display:flex;gap:8px}
+    .hist-close{background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
+    .hist-reset{background:rgba(220,38,38,.25);border:1px solid rgba(220,38,38,.4);color:#fca5a5;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
     .hist-body{padding:14px;display:flex;flex-direction:column;gap:8px}
-    .hist-item{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
-    .hist-item-left .hi-cat{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:5px}
-    .hist-item-left .hi-name{font-size:13px;font-weight:500;color:#1e293b}
-    .hist-item-right{text-align:right}
-    .hist-item-right .hi-amt{font-size:16px;font-weight:700;color:#0f172a}
-    .hist-item-right .hi-date{font-size:11px;color:var(--muted);margin-top:2px}
-    .hist-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+    .hist-item{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .hi-cat{font-size:11px;color:#64748b;margin-bottom:3px;display:flex;align-items:center;gap:5px}
+    .hi-date{font-size:13px;font-weight:500;color:#1e293b}
+    .hi-note{font-size:11px;color:#94a3b8;margin-top:2px}
+    .hi-amt{font-size:17px;font-weight:700;color:#0f172a}
+    .hi-date-right{font-size:11px;color:#94a3b8;margin-top:2px;text-align:right}
+    .hist-empty{text-align:center;padding:48px 20px;color:#94a3b8;font-size:14px}
+    .hist-count{font-size:12px;color:#94a3b8;padding:0 0 8px 2px}
 
-    /* Numpad (optionnel, futur) */
-    select,input{font-size:16px} /* évite zoom iOS sur focus */
+    select,input{font-size:16px}
+    input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
   </style>
 </head>
 <body>
 
+<!-- HEADER + MONTANT -->
 <div class="header">
   <div class="header-top">
     <div class="brand">
@@ -130,299 +120,321 @@
       <i class="ti ti-clock"></i> Historique
     </button>
   </div>
-  <div class="amount-area">
-    <div class="amount-label">Montant</div>
-    <div class="amount-display">
+  <div class="amount-area" onclick="focusInput()">
+    <div class="amount-row">
       <span class="amount-cur">€</span>
       <span class="amount-val empty" id="amountDisplay">0</span>
-      <span class="amount-cursor"></span>
+      <span class="amount-cursor" id="amtCursor"></span>
     </div>
-    <div class="amount-hint" id="amountHint">Tapez le montant</div>
+    <div class="amount-hint" id="amountHint">Tapez le montant puis choisissez une catégorie</div>
   </div>
 </div>
 
+<!-- GROUPES + CATÉGORIES -->
 <div class="body">
 
-  <!-- Catégories -->
-  <div class="sec-label">Catégorie</div>
-  <div class="cats-grid" id="catsGrid">
-    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;grid-column:1/-1">
-      <i class="ti ti-loader" style="animation:spin 1s linear infinite;font-size:20px;display:block;margin-bottom:8px"></i>
-      Chargement…
-    </div>
-  </div>
-  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
-
-  <!-- Propriétaire -->
-  <div class="sec-label">Propriétaire</div>
-  <div class="prop-row" id="propRow"></div>
-
-  <!-- Note -->
-  <textarea class="note-field" id="noteField" placeholder="Note (optionnelle)…" rows="1"
-    oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
-
-  <!-- Dernière saisie -->
-  <div class="last-card" id="lastCard">
-    <div class="last-none">Aucune saisie récente</div>
+  <div class="group-block g-ali">
+    <div class="group-title"><i class="ti ti-shopping-cart" aria-hidden="true"></i>Alimentation</div>
+    <div class="cat-grid" id="cats-ali"></div>
   </div>
 
-  <!-- Valider -->
-  <button class="val-btn" id="valBtn" onclick="submitDepense()">
-    <i class="ti ti-check"></i> Enregistrer la dépense
-  </button>
+  <div class="group-block g-enf">
+    <div class="group-title"><i class="ti ti-baby-carriage" aria-hidden="true"></i>Enfants</div>
+    <div class="cat-grid" id="cats-enf"></div>
+  </div>
+
+  <div class="group-block g-mai">
+    <div class="group-title"><i class="ti ti-home" aria-hidden="true"></i>Maison</div>
+    <div class="cat-grid" id="cats-mai"></div>
+  </div>
+
+  <div class="group-block g-tra">
+    <div class="group-title"><i class="ti ti-car" aria-hidden="true"></i>Transport</div>
+    <div class="cat-grid" id="cats-tra"></div>
+  </div>
+
+  <div class="group-block g-san">
+    <div class="group-title"><i class="ti ti-heart" aria-hidden="true"></i>Santé</div>
+    <div class="cat-grid" id="cats-san"></div>
+  </div>
+
+  <div class="group-block g-loi">
+    <div class="group-title"><i class="ti ti-confetti" aria-hidden="true"></i>Loisirs</div>
+    <div class="cat-grid" id="cats-loi"></div>
+  </div>
+
+  <div class="group-block g-sen">
+    <div class="group-title"><i class="ti ti-world" aria-hidden="true"></i>Sénégal</div>
+    <div class="cat-grid" id="cats-sen"></div>
+  </div>
+
+  <div class="group-block g-div">
+    <div class="group-title"><i class="ti ti-dots" aria-hidden="true"></i>Divers</div>
+    <div class="cat-grid" id="cats-div"></div>
+  </div>
 
 </div>
 
-<!-- Historique panel -->
+<!-- BARRE FIXE -->
+<div class="val-bar">
+  <button class="val-btn" id="valBtn" disabled onclick="submitDepense()">
+    <i class="ti ti-check"></i>
+    <span id="valLabel">Choisir une catégorie</span>
+  </button>
+</div>
+
+<!-- HISTORIQUE -->
 <div class="hist-panel" id="histPanel">
   <div class="hist-header">
     <span class="hist-title">Historique</span>
-    <button class="hist-close" onclick="closeHist()"><i class="ti ti-x"></i> Fermer</button>
+    <div class="hist-actions">
+      <button class="hist-reset" onclick="resetHistory()"><i class="ti ti-trash"></i> Vider</button>
+      <button class="hist-close" onclick="closeHist()"><i class="ti ti-x"></i> Fermer</button>
+    </div>
   </div>
-  <div class="hist-body" id="histBody">
-    <div class="hist-empty">Chargement…</div>
-  </div>
+  <div class="hist-body" id="histBody"></div>
 </div>
 
-<!-- Toast -->
-<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toastMsg"></span></div>
+<!-- TOAST -->
+<div class="toast" id="toast"><i class="ti ti-check" id="toastIcon"></i><span id="toastMsg"></span></div>
+
+<!-- INPUT CACHÉ POUR CLAVIER NUMÉRIQUE -->
+<input type="number" id="hiddenInput" inputmode="decimal" style="position:fixed;opacity:0;top:0;left:0;width:1px;height:1px;pointer-events:none;z-index:-1">
 
 <script>
-// ─── CONFIG ── À REMPLIR ─────────────────────────────────────────────────────
+// ─── CONFIG ─────────────────────────────────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyR1OXpZNyz3hBHRE7HuRylfJwW1MiRIUtyUfyJIJwIlx2CV7l0rmRFoe1Vp1KC88bFRw/exec';
-const SECRET     = '0603'; // même valeur que dans Code.gs
+const SECRET     = '0603';
 // ────────────────────────────────────────────────────────────────────────────
 
 const ICON_MAP = {
-  'Alimentation':'ti-shopping-cart','Transport':'ti-car','Énergie':'ti-bolt',
-  'Santé':'ti-heart','Loisirs':'ti-device-gamepad-2','Maison':'ti-building-store',
-  'Vêtements':'ti-shirt','Enfants':'ti-baby-carriage','Épargne':'ti-piggy-bank',
-  'Restaurant':'ti-tools-kitchen-2','Voyage':'ti-plane','Abonnements':'ti-repeat',
-  'Cadeaux':'ti-gift','Animaux':'ti-paw','Sport':'ti-run'
+  'Courses':'ti-basket','Restaurant':'ti-tools-kitchen-2','Boulangerie':'ti-bread',
+  'Marché':'ti-plant-2','Boucherie':'ti-meat','Livraison repas':'ti-motorbike',
+  'Cantine':'ti-soup','Fournitures scolaires':'ti-pencil','Activités/sport enfants':'ti-ball-football',
+  'Vêtements/chaussures enfants':'ti-shirt','Inscription École/Univ':'ti-school','Sorties enfants':'ti-confetti',
+  'Énergie':'ti-bolt','Eau':'ti-droplet','Granulets':'ti-flame','Réparation/Bricolage':'ti-hammer',
+  'Électroménager':'ti-washing-machine','Produits ménagers':'ti-spray','Déco/meubles':'ti-armchair',
+  'Carburant':'ti-gas-station','Péage':'ti-road','Parking':'ti-parking','Train/RER':'ti-train','Taxi/VTC':'ti-taxi',
+  'Pharmacie':'ti-pill','Médecin':'ti-stethoscope','Dentiste':'ti-dental','Optique':'ti-eye',
+  'Cinéma':'ti-movie','Sorties':'ti-music','Sports/Fitness':'ti-run','Vacances':'ti-plane',
+  'Potager':'ti-plant','Cultures/livres/DVD':'ti-book','Jeux':'ti-device-gamepad-2',
+  'Envoi famille':'ti-send','Achats Sénégal':'ti-shopping-bag',
+  'Cadeaux':'ti-gift','Dons':'ti-heart-handshake','Imprévus':'ti-alert-triangle',
+  'Fêtes':'ti-star','Tabaski':'ti-star','Korite':'ti-star','Noël':'ti-christmas-tree',
+  'Abonnements ponctuels':'ti-repeat'
 };
+
+// Groupes fixes avec leurs catégories et l'id du container
+const GROUPS_CONFIG = [
+  {id:'cats-ali', cats:['Courses','Restaurant','Boulangerie','Marché','Boucherie','Livraison repas']},
+  {id:'cats-enf', cats:['Cantine','Fournitures scolaires','Activités/sport enfants','Vêtements/chaussures enfants','Inscription École/Univ','Sorties enfants']},
+  {id:'cats-mai', cats:['Énergie','Eau','Granulets','Réparation/Bricolage','Électroménager','Produits ménagers','Déco/meubles']},
+  {id:'cats-tra', cats:['Carburant','Péage','Parking','Train/RER','Taxi/VTC']},
+  {id:'cats-san', cats:['Pharmacie','Médecin','Dentiste','Optique']},
+  {id:'cats-loi', cats:['Cinéma','Sorties','Sports/Fitness','Vacances','Potager','Cultures/livres/DVD','Jeux']},
+  {id:'cats-sen', cats:['Envoi famille','Achats Sénégal']},
+  {id:'cats-div', cats:['Cadeaux','Dons','Imprévus','Fêtes','Tabaski','Korite','Noël','Abonnements ponctuels']}
+];
 
 let state = {
   amount: '',
   categorie: null,
-  proprietaire: 'Foyer',
-  categories: [],
-  membres: ['Mandiaye','Julie','Foyer'],
-  history: JSON.parse(localStorage.getItem('fd_history') || '[]')
+  history: JSON.parse(localStorage.getItem('fd_history')||'[]')
 };
 
-// ─── API ─────────────────────────────────────────────────────────────────────
-async function apiGet(params) {
-  const url = SCRIPT_URL + '?' + new URLSearchParams({ ...params, secret: SECRET });
-  const r = await fetch(url);
-  return r.json();
-}
-async function apiPost(body) {
-  const r = await fetch(SCRIPT_URL, {
-    method: 'POST',
-    body: JSON.stringify({ ...body, secret: SECRET })
-  });
-  return r.json();
-}
-
 // ─── INIT ────────────────────────────────────────────────────────────────────
-async function init() {
-  renderProps();
-  renderLastCard();
-  await loadCategories();
-  setupKeyboard();
+function init() {
+  renderAllGroups();
+  setupInput();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+  // Charger catégories dynamiques depuis le Sheet en arrière-plan
+  loadCategoriesFromSheet();
 }
 
-async function loadCategories() {
+function renderAllGroups() {
+  GROUPS_CONFIG.forEach(g => {
+    const el = document.getElementById(g.id);
+    if (!el) return;
+    el.innerHTML = g.cats.map(cat => {
+      const icon = ICON_MAP[cat] || 'ti-tag';
+      return `<button class="cat-btn" onclick="selectCat(this,'${cat.replace(/'/g,"\\'")}')">
+        <i class="ti ${icon}" aria-hidden="true"></i>${cat}
+      </button>`;
+    }).join('');
+    // Masquer le groupe parent s'il n'y a pas de catégories
+    if (!g.cats.length) el.closest('.group-block').style.display = 'none';
+  });
+}
+
+async function loadCategoriesFromSheet() {
   try {
-    const data = await apiGet({ action: 'get_categories' });
-    const raw = (data.categories && data.categories['dépense']) || [];
-    state.categories = raw.map(c => typeof c === 'string' ? { nom: c, icone: ICON_MAP[c] || 'ti-tag' } : { nom: c.nom, icone: c.icone || ICON_MAP[c.nom] || 'ti-tag' });
-    // Membres depuis les catégories si présents
-    if (data.membres) state.membres = data.membres;
-    localStorage.setItem('fd_categories', JSON.stringify(state.categories));
-  } catch(e) {
-    // Fallback cache local
-    const cached = localStorage.getItem('fd_categories');
-    if (cached) state.categories = JSON.parse(cached);
-    else state.categories = [
-      {nom:'Alimentation',icone:'ti-shopping-cart'},{nom:'Transport',icone:'ti-car'},
-      {nom:'Énergie',icone:'ti-bolt'},{nom:'Santé',icone:'ti-heart'},
-      {nom:'Loisirs',icone:'ti-device-gamepad-2'},{nom:'Maison',icone:'ti-building-store'}
-    ];
-  }
-  renderCategories();
-  renderProps();
+    const url = SCRIPT_URL + '?' + new URLSearchParams({action:'get_categories',secret:SECRET});
+    const r = await fetch(url, {redirect:'follow'});
+    const text = await r.text();
+    const data = JSON.parse(text);
+    if (data.ok && data.categories) {
+      localStorage.setItem('fd_categories', JSON.stringify(data.categories));
+    }
+  } catch(e) {}
 }
 
-// ─── RENDU ───────────────────────────────────────────────────────────────────
-function renderCategories() {
-  const grid = document.getElementById('catsGrid');
-  grid.innerHTML = state.categories.map(c => `
-    <div class="cat-chip ${state.categorie===c.nom?'sel':''}" onclick="selectCat('${c.nom}')">
-      <i class="ti ${c.icone}"></i>${c.nom}
-    </div>`).join('') + `
-    <div class="add-cat-btn" onclick="toggleAddCat()">
-      <i class="ti ti-plus"></i>Ajouter
-    </div>
-    <div class="add-cat-form" id="addCatForm">
-      <div class="add-cat-row">
-        <input class="add-cat-input" id="newCatInput" placeholder="Nom de la catégorie" maxlength="30">
-        <button class="add-cat-confirm" onclick="confirmAddCat()">OK</button>
-        <button class="add-cat-cancel" onclick="toggleAddCat()">×</button>
-      </div>
-    </div>`;
+// ─── INPUT MONTANT ────────────────────────────────────────────────────────────
+function setupInput() {
+  const input = document.getElementById('hiddenInput');
+  input.addEventListener('input', () => {
+    const v = input.value.replace(/[^0-9.]/g,'');
+    state.amount = v;
+    updateAmountDisplay();
+  });
+  setTimeout(() => input.focus(), 300);
 }
 
-function renderProps() {
-  document.getElementById('propRow').innerHTML = state.membres.map(m => `
-    <div class="prop-btn ${state.proprietaire===m?'sel':''}" onclick="selectProp('${m}')">${m}</div>
-  `).join('');
-}
-
-function renderLastCard() {
-  const card = document.getElementById('lastCard');
-  const last = state.history[0];
-  if (!last) { card.innerHTML = '<div class="last-none">Aucune saisie récente</div>'; return; }
-  card.innerHTML = `
-    <div class="last-info">
-      <div class="last-lbl">Dernière saisie</div>
-      <div class="last-val">${last.categorie} — ${last.montant} € · ${last.proprietaire}</div>
-    </div>
-    <div class="last-sync"><i class="ti ti-check"></i>Envoyée</div>`;
+function focusInput() {
+  document.getElementById('hiddenInput').focus();
 }
 
 function updateAmountDisplay() {
   const el = document.getElementById('amountDisplay');
   el.textContent = state.amount || '0';
   el.classList.toggle('empty', !state.amount);
-  document.getElementById('amountHint').textContent = state.amount ? '' : 'Tapez le montant';
-}
-
-// ─── INTERACTIONS ────────────────────────────────────────────────────────────
-function selectCat(nom) { state.categorie = nom; renderCategories(); }
-function selectProp(m)  { state.proprietaire = m; renderProps(); }
-
-function toggleAddCat() {
-  const f = document.getElementById('addCatForm');
-  f.classList.toggle('open');
-  if (f.classList.contains('open')) setTimeout(() => document.getElementById('newCatInput').focus(), 80);
-}
-
-async function confirmAddCat() {
-  const input = document.getElementById('newCatInput');
-  const nom = input.value.trim();
-  if (!nom) return;
-  const icone = ICON_MAP[nom] || 'ti-tag';
-  // Ajouter localement
-  if (!state.categories.find(c => c.nom === nom)) {
-    state.categories.push({ nom, icone });
-    localStorage.setItem('fd_categories', JSON.stringify(state.categories));
+  const hint = document.getElementById('amountHint');
+  if (state.amount && state.categorie) {
+    hint.textContent = '✓ Prêt à enregistrer';
+    hint.style.color = '#4ade80';
+  } else if (state.amount) {
+    hint.textContent = 'Choisissez une catégorie';
+    hint.style.color = '#475569';
+  } else {
+    hint.textContent = 'Tapez le montant puis choisissez une catégorie';
+    hint.style.color = '#475569';
   }
-  // Envoyer au Sheet
-  try {
-    await apiPost({ action: 'add_categorie', type: 'dépense', nom, icone });
-  } catch(e) { /* silencieux, sera synchro plus tard */ }
-  state.categorie = nom;
-  toggleAddCat();
-  renderCategories();
-  toast('Catégorie ajoutée', 'success');
+  updateValBtn();
 }
 
-// Clavier natif sur mobile via input caché
-function setupKeyboard() {
-  const hidden = document.createElement('input');
-  hidden.type = 'number';
-  hidden.inputMode = 'decimal';
-  hidden.style.cssText = 'position:fixed;opacity:0;top:0;left:0;width:1px;height:1px;pointer-events:none';
-  document.body.appendChild(hidden);
-  document.querySelector('.amount-display').addEventListener('click', () => hidden.focus());
-  document.querySelector('.header').addEventListener('click', () => hidden.focus());
-  hidden.addEventListener('input', () => {
-    const v = hidden.value.replace(/[^0-9.]/g,'');
-    state.amount = v;
-    updateAmountDisplay();
-  });
-  setTimeout(() => hidden.focus(), 400);
+// ─── SÉLECTION CATÉGORIE ──────────────────────────────────────────────────────
+function selectCat(btn, cat) {
+  document.querySelectorAll('.cat-btn.sel').forEach(b => b.classList.remove('sel'));
+  btn.classList.add('sel');
+  state.categorie = cat;
+  updateAmountDisplay();
+  updateValBtn();
+  // Si montant déjà saisi, scroller vers le bas
+  if (state.amount) {
+    setTimeout(() => window.scrollTo({top:0, behavior:'smooth'}), 50);
+  }
 }
 
+function updateValBtn() {
+  const btn = document.getElementById('valBtn');
+  const label = document.getElementById('valLabel');
+  const ready = state.amount && parseFloat(state.amount) > 0 && state.categorie;
+  btn.disabled = !ready;
+  if (ready) {
+    label.textContent = `Enregistrer — ${state.categorie}`;
+  } else if (state.categorie && !state.amount) {
+    label.textContent = `${state.categorie} — entrez un montant`;
+  } else {
+    label.textContent = 'Choisir une catégorie';
+  }
+}
+
+// ─── ENVOI ────────────────────────────────────────────────────────────────────
 async function submitDepense() {
   const montant = parseFloat(state.amount);
-  if (!montant || montant <= 0) { toast('Entrez un montant', 'error'); return; }
-  if (!state.categorie)         { toast('Choisissez une catégorie', 'error'); return; }
+  if (!montant || montant <= 0) { showToast('Entrez un montant', 'error'); return; }
+  if (!state.categorie) { showToast('Choisissez une catégorie', 'error'); return; }
 
   const btn = document.getElementById('valBtn');
   btn.disabled = true;
   btn.classList.add('loading');
 
   const dep = {
-    date: new Date().toISOString().slice(0, 10),
+    date: new Date().toISOString().slice(0,10),
     montant,
     categorie: state.categorie,
-    proprietaire: state.proprietaire,
-    note: document.getElementById('noteField').value.trim()
+    proprietaire: 'Foyer',
+    note: ''
   };
 
   try {
-    const res = await apiPost({ action: 'add_depense', depense: dep });
-    if (res.ok) {
+    const r = await fetch(SCRIPT_URL, {
+      method:'POST', redirect:'follow',
+      body: JSON.stringify({action:'add_depense', secret:SECRET, depense:dep})
+    });
+    const text = await r.text();
+    const data = JSON.parse(text);
+    if (data.ok) {
       state.history.unshift(dep);
-      if (state.history.length > 50) state.history.pop();
+      if (state.history.length > 100) state.history.pop();
       localStorage.setItem('fd_history', JSON.stringify(state.history));
       // Reset
+      const catSel = state.categorie;
+      const montantSel = montant;
       state.amount = '';
       state.categorie = null;
-      document.getElementById('noteField').value = '';
+      document.getElementById('hiddenInput').value = '';
+      document.querySelectorAll('.cat-btn.sel').forEach(b=>b.classList.remove('sel'));
       updateAmountDisplay();
-      renderCategories();
-      renderLastCard();
-      toast('Dépense enregistrée ✓', 'success');
+      updateValBtn();
+      showToast(`${montantSel} € · ${catSel} enregistré !`, 'success');
+      setTimeout(() => document.getElementById('hiddenInput').focus(), 300);
     } else {
-      toast('Erreur : ' + (res.error || 'inconnue'), 'error');
+      showToast('Erreur : ' + (data.error||'inconnue'), 'error');
     }
   } catch(e) {
-    toast('Hors ligne — réessayer', 'error');
+    // Sauvegarder localement si hors ligne
+    state.history.unshift({...dep, pending: true});
+    localStorage.setItem('fd_history', JSON.stringify(state.history));
+    showToast('Hors ligne — sauvegardé localement', 'error');
   }
 
   btn.disabled = false;
   btn.classList.remove('loading');
 }
 
-// ─── HISTORIQUE ──────────────────────────────────────────────────────────────
+// ─── HISTORIQUE ───────────────────────────────────────────────────────────────
 function openHist() {
   document.getElementById('histPanel').classList.add('open');
   renderHist();
 }
-function closeHist() { document.getElementById('histPanel').classList.remove('open'); }
+function closeHist() {
+  document.getElementById('histPanel').classList.remove('open');
+}
+function resetHistory() {
+  if (!confirm('Vider tout l\'historique local ?')) return;
+  state.history = [];
+  localStorage.removeItem('fd_history');
+  renderHist();
+}
 function renderHist() {
   const body = document.getElementById('histBody');
-  if (!state.history.length) { body.innerHTML = '<div class="hist-empty">Aucune dépense enregistrée.</div>'; return; }
-  body.innerHTML = state.history.map(d => `
-    <div class="hist-item">
-      <div class="hist-item-left">
-        <div class="hi-cat"><i class="ti ${ICON_MAP[d.categorie]||'ti-tag'}"></i>${d.categorie} · ${d.proprietaire}</div>
-        <div class="hi-name">${d.note || d.date}</div>
-      </div>
-      <div class="hist-item-right">
-        <div class="hi-amt">${d.montant} €</div>
-        <div class="hi-date">${d.date}</div>
-      </div>
-    </div>`).join('');
+  if (!state.history.length) {
+    body.innerHTML = '<div class="hist-empty">Aucune dépense enregistrée.</div>';
+    return;
+  }
+  body.innerHTML = `<div class="hist-count">${state.history.length} dépense${state.history.length>1?'s':''}</div>` +
+    state.history.map(d => `
+      <div class="hist-item">
+        <div>
+          <div class="hi-cat"><i class="ti ${ICON_MAP[d.categorie]||'ti-tag'}" style="font-size:13px"></i>${d.categorie}${d.pending?' · <span style="color:#f59e0b">⏳ En attente</span>':''}</div>
+          <div class="hi-date">${d.date}</div>
+          ${d.note?`<div class="hi-note">${d.note}</div>`:''}
+        </div>
+        <div style="text-align:right">
+          <div class="hi-amt">${d.montant} €</div>
+        </div>
+      </div>`).join('');
 }
 
-// ─── TOAST ───────────────────────────────────────────────────────────────────
-function toast(msg, type = 'success') {
+// ─── TOAST ────────────────────────────────────────────────────────────────────
+function showToast(msg, type='success') {
   const el = document.getElementById('toast');
-  const icon = el.querySelector('i');
+  const icon = document.getElementById('toastIcon');
   document.getElementById('toastMsg').textContent = msg;
   el.className = 'toast ' + type;
-  icon.className = 'ti ' + (type === 'success' ? 'ti-check' : 'ti-alert-triangle');
+  icon.className = 'ti ' + (type==='success'?'ti-check':'ti-alert-triangle');
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2800);
-}
-
-// ─── SERVICE WORKER ──────────────────────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
 init();

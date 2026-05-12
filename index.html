@@ -254,7 +254,7 @@ const GROUPS = [
   {key:'enf',icon:'👶',label:'Enfants',color:'#0d47a1',bg:'#e3f2fd',bd:'#90caf9',
    cats:[{n:'Cantine',i:'🍲'},{n:'Fournitures scolaires',i:'✏️'},{n:'Activités/sport enfants',i:'⚽'},{n:'Vêtements/chaussures enfants',i:'👕'},{n:'Inscription École/Univ',i:'🎓'},{n:'Sorties enfants',i:'🎠'}]},
   {key:'mai',icon:'🏠',label:'Maison',color:'#e65100',bg:'#fff3e0',bd:'#ffcc80',
-   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Granulets',i:'🪵'},{n:'Réparation/Bricolage',i:'🔨'},{n:'Électroménager',i:'🫧'},{n:'Produits ménagers',i:'🧹'},{n:'Déco/meubles',i:'🪑'}]},
+   cats:[{n:'Réparation/Bricolage',i:'🔨'},{n:'Électroménager',i:'🫧'},{n:'Produits ménagers',i:'🧹'},{n:'Déco/meubles',i:'🪑'}]},
   {key:'tra',icon:'🚗',label:'Transport',color:'#4a148c',bg:'#f3e5f5',bd:'#ce93d8',
    cats:[{n:'Carburant',i:'⛽'},{n:'Parking',i:'🅿️'},{n:'Train/RER',i:'🚆'},{n:'Taxi/VTC',i:'🚕'},{n:'Péage',i:'🛣️'}]},
   {key:'san',icon:'❤️',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
@@ -263,6 +263,10 @@ const GROUPS = [
    cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sports/Fitness',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Potager',i:'🌱'},{n:'Cultures/livres/DVD',i:'📚'},{n:'Jeux',i:'🎮'}]},
   {key:'sen',icon:'🌍',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
    cats:[{n:'Envoi famille',i:'💸'},{n:'Achats Sénégal',i:'🛍️'}]},
+  {key:'con',icon:'⚡',label:'Conso.',color:'#0369a1',bg:'#e0f2fe',bd:'#7dd3fc',
+   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Granulets',i:'🪵'}]},
+  {key:'abo',icon:'📺',label:'Abonnements',color:'#6d28d9',bg:'#ede9fe',bd:'#c4b5fd',
+   cats:[{n:'Netflix',i:'🎬'},{n:'Apple TV',i:'🍎'},{n:'Amazon Prime',i:'📦'},{n:'YouTube Premium',i:'▶️'},{n:'Google One',i:'☁️'},{n:'Dropbox',i:'📂'},{n:'Autres',i:'📱'}]},
   {key:'div',icon:'•••',label:'Divers',color:'#33691e',bg:'#f1f8e9',bd:'#c5e1a5',
    cats:[{n:'Cadeaux',i:'🎁'},{n:'Imprévus',i:'⚠️'},{n:'Abonnements ponctuels',i:'📱'}]},
   {key:'don',icon:'🤲',label:'Dons',color:'#7c3aed',bg:'#f5f3ff',bd:'#ddd6fe',
@@ -309,7 +313,7 @@ function renderGroups() {
 
 function renderCats() {
   const g = GROUPS.find(x => x.key === activeGroup);
-  const cats = g.cats.slice(0, 6);
+  const cats = g.cats.slice();
   // Remplir jusqu'à 6 pour garder la grille 2×3 régulière
   while (cats.length < 6) cats.push(null);
   document.getElementById('catsArea').innerHTML = `<div class="cat-grid">${

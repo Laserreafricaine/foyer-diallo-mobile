@@ -75,7 +75,7 @@
     }
 
     /* ── CATÉGORIES — grille 2×3 fixe, remplit tout l'espace disponible ── */
-    .cats-area{flex:1;padding:5px 6px;overflow:hidden;min-height:0}
+    .cats-area{flex:1;padding:5px 6px;overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
     .cat-grid{
       display:grid;grid-template-columns:1fr 1fr;
       grid-template-rows:repeat(3,1fr);
@@ -250,21 +250,25 @@ const SECRET = '0603';
 
 const GROUPS = [
   {key:'ali',icon:'🛒',label:'Ali.',color:'#1b5e20',bg:'#e8f5e9',bd:'#a5d6a7',
-   cats:[{n:'Courses',i:'🧺'},{n:'Restaurant',i:'🍽️'},{n:'Boulangerie',i:'🥖'},{n:'Marché',i:'🥬'},{n:'Boucherie',i:'🥩'},{n:'Livraison',i:'🛵'}]},
+   cats:[{n:'Courses',i:'🧺'},{n:'Restaurant',i:'🍽️'},{n:'Boulangerie',i:'🥖'},{n:'Marché',i:'🥬'},{n:'Boucherie',i:'🥩'},{n:'Livraison repas',i:'🛵'}]},
   {key:'enf',icon:'👶',label:'Enfants',color:'#0d47a1',bg:'#e3f2fd',bd:'#90caf9',
-   cats:[{n:'Cantine',i:'🍲'},{n:'Fournitures',i:'✏️'},{n:'Activités',i:'⚽'},{n:'Vêtements',i:'👕'}]},
+   cats:[{n:'Cantine',i:'🍲'},{n:'Fournitures scolaires',i:'✏️'},{n:'Activités/sport enfants',i:'⚽'},{n:'Vêtements/chaussures enfants',i:'👕'},{n:'Inscription École/Univ',i:'🎓'},{n:'Sorties enfants',i:'🎠'}]},
   {key:'mai',icon:'🏠',label:'Maison',color:'#e65100',bg:'#fff3e0',bd:'#ffcc80',
-   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Bricolage',i:'🔨'},{n:'Électroménager',i:'🫧'},{n:'Produits',i:'🧹'},{n:'Déco',i:'🪑'}]},
+   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Granulets',i:'🪵'},{n:'Réparation/Bricolage',i:'🔨'},{n:'Électroménager',i:'🫧'},{n:'Produits ménagers',i:'🧹'},{n:'Déco/meubles',i:'🪑'}]},
   {key:'tra',icon:'🚗',label:'Transport',color:'#4a148c',bg:'#f3e5f5',bd:'#ce93d8',
    cats:[{n:'Carburant',i:'⛽'},{n:'Parking',i:'🅿️'},{n:'Train/RER',i:'🚆'},{n:'Taxi/VTC',i:'🚕'},{n:'Péage',i:'🛣️'}]},
   {key:'san',icon:'❤️',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
    cats:[{n:'Pharmacie',i:'💊'},{n:'Médecin',i:'🩺'},{n:'Dentiste',i:'🦷'},{n:'Optique',i:'👓'}]},
   {key:'loi',icon:'🎉',label:'Loisirs',color:'#006064',bg:'#e0f7fa',bd:'#80deea',
-   cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sport',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Jeux',i:'🎮'}]},
+   cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sports/Fitness',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Potager',i:'🌱'},{n:'Cultures/livres/DVD',i:'📚'},{n:'Jeux',i:'🎮'}]},
   {key:'sen',icon:'🌍',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
-   cats:[{n:'Envoi famille',i:'💸'},{n:'Achats',i:'🛍️'}]},
+   cats:[{n:'Envoi famille',i:'💸'},{n:'Achats Sénégal',i:'🛍️'}]},
   {key:'div',icon:'•••',label:'Divers',color:'#33691e',bg:'#f1f8e9',bd:'#c5e1a5',
-   cats:[{n:'Cadeaux',i:'🎁'},{n:'Dons',i:'🤲'},{n:'Imprévus',i:'⚠️'},{n:'Fêtes',i:'🌟'}]}
+   cats:[{n:'Cadeaux',i:'🎁'},{n:'Imprévus',i:'⚠️'},{n:'Abonnements ponctuels',i:'📱'}]},
+  {key:'don',icon:'🤲',label:'Dons',color:'#7c3aed',bg:'#f5f3ff',bd:'#ddd6fe',
+   cats:[{n:'Dons',i:'🤲'}]},
+  {key:'fet',icon:'🌟',label:'Fêtes',color:'#b45309',bg:'#fffbeb',bd:'#fde68a',
+   cats:[{n:'Tabaski',i:'🌟'},{n:'Korite',i:'🌙'},{n:'Noël',i:'🎄'}]}
 ];
 
 // State

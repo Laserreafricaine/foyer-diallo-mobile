@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="FD Dépenses">
+  <meta name="theme-color" content="#111827">
+  <title>Foyer Diallo — Dépenses</title>
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.2.0/tabler-icons.min.css">
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+    :root{
+      --dark:#111827;--dark2:#1e293b;--blue:#2457ff;--green:#138a5b;
+      --red:#dc2626;--amber:#c58a1e;--muted:#64748b;--line:#e2e8f0;
+      --bg:#f4f7fb;--white:#fff;
+    }
+    html,body{height:100%;background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#0f172a;overscroll-behavior:none}
+
+    /* ── HEADER ── */
+    .header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:env(safe-area-inset-top,0px) 18px 20px;position:sticky;top:0;z-index:10}
+    .header-top{display:flex;justify-content:space-between;align-items:center;padding-top:12px}
+    .brand{display:flex;align-items:center;gap:10px}
+    .brand-mark{width:34px;height:34px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+    .brand-name{font-size:15px;font-weight:600;color:#fff}
+    .brand-sub{font-size:11px;color:#94a3b8;margin-top:1px}
+    .hist-btn{font-size:12px;color:#94a3b8;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:5px}
+    .hist-btn i{font-size:14px}
+
+    .amount-area{margin-top:18px}
+    .amount-label{font-size:11px;color:#64748b;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+    .amount-display{display:flex;align-items:baseline;gap:6px;min-height:58px}
+    .amount-cur{font-size:24px;color:#64748b}
+    .amount-val{font-size:52px;font-weight:600;color:#fff;line-height:1;letter-spacing:-.02em;min-width:20px}
+    .amount-val.empty{color:#475569}
+    .amount-cursor{width:3px;height:44px;background:var(--blue);border-radius:2px;animation:blink 1s infinite;margin-bottom:4px}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+    .amount-hint{font-size:11px;color:#475569;margin-top:8px}
+
+    /* ── BODY ── */
+    .body{padding:14px;display:flex;flex-direction:column;gap:14px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 14px)}
+
+    .sec-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-weight:600;padding:0 2px}
+
+    /* Catégories */
+    .cats-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .cat-chip{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:11px 10px;font-size:13px;color:#1e293b;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .12s;user-select:none;-webkit-user-select:none}
+    .cat-chip i{font-size:16px;color:#94a3b8;flex-shrink:0}
+    .cat-chip.sel{background:#eff6ff;border:2px solid var(--blue);color:var(--blue)}
+    .cat-chip.sel i{color:var(--blue)}
+    .cat-chip:active{transform:scale(.97)}
+    .add-cat-btn{background:var(--white);border:1px dashed #cbd5e1;border-radius:12px;padding:11px 10px;font-size:13px;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .12s;user-select:none}
+    .add-cat-btn i{font-size:16px;flex-shrink:0}
+    .add-cat-btn:active{transform:scale(.97)}
+
+    /* Add cat inline */
+    .add-cat-form{display:none;background:var(--white);border:2px solid var(--blue);border-radius:12px;padding:12px;grid-column:1/-1}
+    .add-cat-form.open{display:block}
+    .add-cat-row{display:flex;gap:8px;align-items:center}
+    .add-cat-input{flex:1;border:1px solid var(--line);border-radius:8px;padding:9px 11px;font-size:13px;outline:none;background:var(--bg)}
+    .add-cat-input:focus{border-color:var(--blue)}
+    .add-cat-confirm{background:var(--blue);color:#fff;border:none;border-radius:8px;padding:9px 14px;font-size:13px;cursor:pointer;font-weight:600;white-space:nowrap}
+    .add-cat-cancel{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:9px 8px}
+
+    /* Propriétaire */
+    .prop-row{display:flex;gap:8px}
+    .prop-btn{flex:1;background:var(--white);border:1px solid var(--line);border-radius:10px;padding:11px 6px;font-size:13px;color:#1e293b;text-align:center;cursor:pointer;transition:all .12s;user-select:none}
+    .prop-btn.sel{border:2px solid var(--blue);color:var(--blue);background:#eff6ff;font-weight:600}
+    .prop-btn:active{transform:scale(.97)}
+
+    /* Note */
+    .note-field{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-size:13px;color:#0f172a;width:100%;resize:none;outline:none;min-height:42px;font-family:inherit}
+    .note-field:focus{border-color:var(--blue)}
+    .note-field::placeholder{color:#94a3b8}
+
+    /* Bouton valider */
+    .val-btn{background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;border:none;border-radius:14px;padding:17px;font-size:16px;font-weight:600;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:opacity .15s}
+    .val-btn:disabled{opacity:.5;cursor:not-allowed}
+    .val-btn i{font-size:19px}
+    .val-btn.loading{opacity:.7}
+
+    /* Dernière saisie */
+    .last-card{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .last-info .last-lbl{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px}
+    .last-info .last-val{font-size:13px;color:#1e293b;font-weight:500}
+    .last-sync{font-size:11px;color:var(--green);display:flex;align-items:center;gap:4px;font-weight:600}
+    .last-sync i{font-size:14px}
+    .last-none{font-size:13px;color:var(--muted)}
+
+    /* Toast */
+    .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 24px);left:50%;transform:translateX(-50%) translateY(20px);background:var(--dark);color:#fff;border-radius:12px;padding:12px 20px;font-size:14px;font-weight:500;opacity:0;transition:all .25s;z-index:100;white-space:nowrap;display:flex;align-items:center;gap:8px;pointer-events:none}
+    .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .toast.success i{color:#4ade80}
+    .toast.error i{color:#f87171}
+
+    /* Historique panel */
+    .hist-panel{position:fixed;inset:0;background:var(--bg);z-index:50;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
+    .hist-panel.open{transform:translateY(0)}
+    .hist-header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0}
+    .hist-title{font-size:16px;font-weight:600;color:#fff}
+    .hist-close{background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px}
+    .hist-body{padding:14px;display:flex;flex-direction:column;gap:8px}
+    .hist-item{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
+    .hist-item-left .hi-cat{font-size:11px;color:var(--muted);margin-bottom:3px;display:flex;align-items:center;gap:5px}
+    .hist-item-left .hi-name{font-size:13px;font-weight:500;color:#1e293b}
+    .hist-item-right{text-align:right}
+    .hist-item-right .hi-amt{font-size:16px;font-weight:700;color:#0f172a}
+    .hist-item-right .hi-date{font-size:11px;color:var(--muted);margin-top:2px}
+    .hist-empty{text-align:center;padding:40px 20px;color:var(--muted);font-size:14px}
+
+    /* Numpad (optionnel, futur) */
+    select,input{font-size:16px} /* évite zoom iOS sur focus */
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-mark">FD</div>
+      <div>
+        <div class="brand-name">Foyer Diallo</div>
+        <div class="brand-sub">Nouvelle dépense</div>
+      </div>
+    </div>
+    <button class="hist-btn" onclick="openHist()">
+      <i class="ti ti-clock"></i> Historique
+    </button>
+  </div>
+  <div class="amount-area">
+    <div class="amount-label">Montant</div>
+    <div class="amount-display">
+      <span class="amount-cur">€</span>
+      <span class="amount-val empty" id="amountDisplay">0</span>
+      <span class="amount-cursor"></span>
+    </div>
+    <div class="amount-hint" id="amountHint">Tapez le montant</div>
+  </div>
+</div>
+
+<div class="body">
+
+  <!-- Catégories -->
+  <div class="sec-label">Catégorie</div>
+  <div class="cats-grid" id="catsGrid">
+    <div style="text-align:center;padding:20px;color:var(--muted);font-size:13px;grid-column:1/-1">
+      <i class="ti ti-loader" style="animation:spin 1s linear infinite;font-size:20px;display:block;margin-bottom:8px"></i>
+      Chargement…
+    </div>
+  </div>
+  <style>@keyframes spin{to{transform:rotate(360deg)}}</style>
+
+  <!-- Propriétaire -->
+  <div class="sec-label">Propriétaire</div>
+  <div class="prop-row" id="propRow"></div>
+
+  <!-- Note -->
+  <textarea class="note-field" id="noteField" placeholder="Note (optionnelle)…" rows="1"
+    oninput="this.style.height='auto';this.style.height=this.scrollHeight+'px'"></textarea>
+
+  <!-- Dernière saisie -->
+  <div class="last-card" id="lastCard">
+    <div class="last-none">Aucune saisie récente</div>
+  </div>
+
+  <!-- Valider -->
+  <button class="val-btn" id="valBtn" onclick="submitDepense()">
+    <i class="ti ti-check"></i> Enregistrer la dépense
+  </button>
+
+</div>
+
+<!-- Historique panel -->
+<div class="hist-panel" id="histPanel">
+  <div class="hist-header">
+    <span class="hist-title">Historique</span>
+    <button class="hist-close" onclick="closeHist()"><i class="ti ti-x"></i> Fermer</button>
+  </div>
+  <div class="hist-body" id="histBody">
+    <div class="hist-empty">Chargement…</div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"><i class="ti ti-check"></i><span id="toastMsg"></span></div>
+
+<script>
+// ─── CONFIG ── À REMPLIR ─────────────────────────────────────────────────────
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbynX5S8Uj9aXrcSHGM2TPHLGS_dpgB5_fppQ1XYlIBuRNm2sqQxdoH-NM-ZmXGd4IwgNw/exec';
+const SECRET     = '0603'; // même valeur que dans Code.gs
+// ────────────────────────────────────────────────────────────────────────────
+
+const ICON_MAP = {
+  'Alimentation':'ti-shopping-cart','Transport':'ti-car','Énergie':'ti-bolt',
+  'Santé':'ti-heart','Loisirs':'ti-device-gamepad-2','Maison':'ti-building-store',
+  'Vêtements':'ti-shirt','Enfants':'ti-baby-carriage','Épargne':'ti-piggy-bank',
+  'Restaurant':'ti-tools-kitchen-2','Voyage':'ti-plane','Abonnements':'ti-repeat',
+  'Cadeaux':'ti-gift','Animaux':'ti-paw','Sport':'ti-run'
+};
+
+let state = {
+  amount: '',
+  categorie: null,
+  proprietaire: 'Foyer',
+  categories: [],
+  membres: ['Mandiaye','Julie','Foyer'],
+  history: JSON.parse(localStorage.getItem('fd_history') || '[]')
+};
+
+// ─── API ─────────────────────────────────────────────────────────────────────
+async function apiGet(params) {
+  const url = SCRIPT_URL + '?' + new URLSearchParams({ ...params, secret: SECRET });
+  const r = await fetch(url);
+  return r.json();
+}
+async function apiPost(body) {
+  const r = await fetch(SCRIPT_URL, {
+    method: 'POST',
+    body: JSON.stringify({ ...body, secret: SECRET })
+  });
+  return r.json();
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+async function init() {
+  renderProps();
+  renderLastCard();
+  await loadCategories();
+  setupKeyboard();
+}
+
+async function loadCategories() {
+  try {
+    const data = await apiGet({ action: 'get_categories' });
+    const raw = (data.categories && data.categories['dépense']) || [];
+    state.categories = raw.map(c => typeof c === 'string' ? { nom: c, icone: ICON_MAP[c] || 'ti-tag' } : { nom: c.nom, icone: c.icone || ICON_MAP[c.nom] || 'ti-tag' });
+    // Membres depuis les catégories si présents
+    if (data.membres) state.membres = data.membres;
+    localStorage.setItem('fd_categories', JSON.stringify(state.categories));
+  } catch(e) {
+    // Fallback cache local
+    const cached = localStorage.getItem('fd_categories');
+    if (cached) state.categories = JSON.parse(cached);
+    else state.categories = [
+      {nom:'Alimentation',icone:'ti-shopping-cart'},{nom:'Transport',icone:'ti-car'},
+      {nom:'Énergie',icone:'ti-bolt'},{nom:'Santé',icone:'ti-heart'},
+      {nom:'Loisirs',icone:'ti-device-gamepad-2'},{nom:'Maison',icone:'ti-building-store'}
+    ];
+  }
+  renderCategories();
+  renderProps();
+}
+
+// ─── RENDU ───────────────────────────────────────────────────────────────────
+function renderCategories() {
+  const grid = document.getElementById('catsGrid');
+  grid.innerHTML = state.categories.map(c => `
+    <div class="cat-chip ${state.categorie===c.nom?'sel':''}" onclick="selectCat('${c.nom}')">
+      <i class="ti ${c.icone}"></i>${c.nom}
+    </div>`).join('') + `
+    <div class="add-cat-btn" onclick="toggleAddCat()">
+      <i class="ti ti-plus"></i>Ajouter
+    </div>
+    <div class="add-cat-form" id="addCatForm">
+      <div class="add-cat-row">
+        <input class="add-cat-input" id="newCatInput" placeholder="Nom de la catégorie" maxlength="30">
+        <button class="add-cat-confirm" onclick="confirmAddCat()">OK</button>
+        <button class="add-cat-cancel" onclick="toggleAddCat()">×</button>
+      </div>
+    </div>`;
+}
+
+function renderProps() {
+  document.getElementById('propRow').innerHTML = state.membres.map(m => `
+    <div class="prop-btn ${state.proprietaire===m?'sel':''}" onclick="selectProp('${m}')">${m}</div>
+  `).join('');
+}
+
+function renderLastCard() {
+  const card = document.getElementById('lastCard');
+  const last = state.history[0];
+  if (!last) { card.innerHTML = '<div class="last-none">Aucune saisie récente</div>'; return; }
+  card.innerHTML = `
+    <div class="last-info">
+      <div class="last-lbl">Dernière saisie</div>
+      <div class="last-val">${last.categorie} — ${last.montant} € · ${last.proprietaire}</div>
+    </div>
+    <div class="last-sync"><i class="ti ti-check"></i>Envoyée</div>`;
+}
+
+function updateAmountDisplay() {
+  const el = document.getElementById('amountDisplay');
+  el.textContent = state.amount || '0';
+  el.classList.toggle('empty', !state.amount);
+  document.getElementById('amountHint').textContent = state.amount ? '' : 'Tapez le montant';
+}
+
+// ─── INTERACTIONS ────────────────────────────────────────────────────────────
+function selectCat(nom) { state.categorie = nom; renderCategories(); }
+function selectProp(m)  { state.proprietaire = m; renderProps(); }
+
+function toggleAddCat() {
+  const f = document.getElementById('addCatForm');
+  f.classList.toggle('open');
+  if (f.classList.contains('open')) setTimeout(() => document.getElementById('newCatInput').focus(), 80);
+}
+
+async function confirmAddCat() {
+  const input = document.getElementById('newCatInput');
+  const nom = input.value.trim();
+  if (!nom) return;
+  const icone = ICON_MAP[nom] || 'ti-tag';
+  // Ajouter localement
+  if (!state.categories.find(c => c.nom === nom)) {
+    state.categories.push({ nom, icone });
+    localStorage.setItem('fd_categories', JSON.stringify(state.categories));
+  }
+  // Envoyer au Sheet
+  try {
+    await apiPost({ action: 'add_categorie', type: 'dépense', nom, icone });
+  } catch(e) { /* silencieux, sera synchro plus tard */ }
+  state.categorie = nom;
+  toggleAddCat();
+  renderCategories();
+  toast('Catégorie ajoutée', 'success');
+}
+
+// Clavier natif sur mobile via input caché
+function setupKeyboard() {
+  const hidden = document.createElement('input');
+  hidden.type = 'number';
+  hidden.inputMode = 'decimal';
+  hidden.style.cssText = 'position:fixed;opacity:0;top:0;left:0;width:1px;height:1px;pointer-events:none';
+  document.body.appendChild(hidden);
+  document.querySelector('.amount-display').addEventListener('click', () => hidden.focus());
+  document.querySelector('.header').addEventListener('click', () => hidden.focus());
+  hidden.addEventListener('input', () => {
+    const v = hidden.value.replace(/[^0-9.]/g,'');
+    state.amount = v;
+    updateAmountDisplay();
+  });
+  setTimeout(() => hidden.focus(), 400);
+}
+
+async function submitDepense() {
+  const montant = parseFloat(state.amount);
+  if (!montant || montant <= 0) { toast('Entrez un montant', 'error'); return; }
+  if (!state.categorie)         { toast('Choisissez une catégorie', 'error'); return; }
+
+  const btn = document.getElementById('valBtn');
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  const dep = {
+    date: new Date().toISOString().slice(0, 10),
+    montant,
+    categorie: state.categorie,
+    proprietaire: state.proprietaire,
+    note: document.getElementById('noteField').value.trim()
+  };
+
+  try {
+    const res = await apiPost({ action: 'add_depense', depense: dep });
+    if (res.ok) {
+      state.history.unshift(dep);
+      if (state.history.length > 50) state.history.pop();
+      localStorage.setItem('fd_history', JSON.stringify(state.history));
+      // Reset
+      state.amount = '';
+      state.categorie = null;
+      document.getElementById('noteField').value = '';
+      updateAmountDisplay();
+      renderCategories();
+      renderLastCard();
+      toast('Dépense enregistrée ✓', 'success');
+    } else {
+      toast('Erreur : ' + (res.error || 'inconnue'), 'error');
+    }
+  } catch(e) {
+    toast('Hors ligne — réessayer', 'error');
+  }
+
+  btn.disabled = false;
+  btn.classList.remove('loading');
+}
+
+// ─── HISTORIQUE ──────────────────────────────────────────────────────────────
+function openHist() {
+  document.getElementById('histPanel').classList.add('open');
+  renderHist();
+}
+function closeHist() { document.getElementById('histPanel').classList.remove('open'); }
+function renderHist() {
+  const body = document.getElementById('histBody');
+  if (!state.history.length) { body.innerHTML = '<div class="hist-empty">Aucune dépense enregistrée.</div>'; return; }
+  body.innerHTML = state.history.map(d => `
+    <div class="hist-item">
+      <div class="hist-item-left">
+        <div class="hi-cat"><i class="ti ${ICON_MAP[d.categorie]||'ti-tag'}"></i>${d.categorie} · ${d.proprietaire}</div>
+        <div class="hi-name">${d.note || d.date}</div>
+      </div>
+      <div class="hist-item-right">
+        <div class="hi-amt">${d.montant} €</div>
+        <div class="hi-date">${d.date}</div>
+      </div>
+    </div>`).join('');
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+function toast(msg, type = 'success') {
+  const el = document.getElementById('toast');
+  const icon = el.querySelector('i');
+  document.getElementById('toastMsg').textContent = msg;
+  el.className = 'toast ' + type;
+  icon.className = 'ti ' + (type === 'success' ? 'ti-check' : 'ti-alert-triangle');
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2800);
+}
+
+// ─── SERVICE WORKER ──────────────────────────────────────────────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+
+init();
+</script>
+</body>
+</html>

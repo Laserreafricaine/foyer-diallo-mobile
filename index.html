@@ -151,6 +151,21 @@
     .hi-right{display:flex;align-items:center;gap:8px}
     .hi-amt{font-size:15px;font-weight:700}
     .hi-del{background:#fee2e2;color:#dc2626;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+    .hi-edit{background:#e0f2fe;color:#0369a1;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:14px}
+    .hist-total{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 14px;font-size:13px;color:#166534;margin-bottom:8px}
+    .hist-day-header{display:flex;justify-content:space-between;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;padding:8px 2px 4px;margin-top:4px}
+    .hist-item.is-archived{opacity:.6;background:#f8fafc}
+    .archived-badge{background:#e2e8f0;color:#64748b;border-radius:999px;padding:1px 7px;font-size:10px;margin-left:4px}
+    .edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+    .edit-card{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:320px}
+    .edit-title{font-size:16px;font-weight:600;margin-bottom:16px;color:#0f172a}
+    .edit-field{margin-bottom:12px}
+    .edit-field label{font-size:12px;color:#64748b;display:block;margin-bottom:4px;font-weight:600}
+    .edit-field input,.edit-field select{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:15px;outline:none}
+    .edit-field input:focus,.edit-field select:focus{border-color:#2457ff}
+    .edit-btns{display:flex;gap:8px;margin-top:16px}
+    .edit-save{flex:1;background:linear-gradient(135deg,#111827,#1e293b);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
+    .edit-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:10px;padding:12px;font-size:14px;cursor:pointer;width:80px}
     .hi-del i{font-size:14px}
     .hist-empty{text-align:center;padding:32px;color:#94a3b8;font-size:13px}
 
@@ -340,7 +355,11 @@ function renderTotaux() {
 function switchGroup(k) {
   activeGroup = k;
   selectedCat = null;
-  renderGroups(); renderCats(); renderTotaux(); updateUI();
+  renderGroups(); renderCats(); renderTotaux(); updateUI(); updatePendingBadge();
+// Synchroniser la file d'attente quand la connexion revient
+window.addEventListener('online', () => { processPending(); showToast('Connexion rétablie — synchronisation…', 'success'); });
+// Tenter sync au démarrage
+setTimeout(processPending, 2000);
 }
 
 function selectCat(n) {
@@ -412,7 +431,11 @@ async function submit() {
   const savedCat = selectedCat;
   const savedAmt = v;
   amount = ''; selectedCat = null;
-  renderGroups(); renderCats(); renderTotaux(); updateUI();
+  renderGroups(); renderCats(); renderTotaux(); updateUI(); updatePendingBadge();
+// Synchroniser la file d'attente quand la connexion revient
+window.addEventListener('online', () => { processPending(); showToast('Connexion rétablie — synchronisation…', 'success'); });
+// Tenter sync au démarrage
+setTimeout(processPending, 2000);
 
   // Envoi au Sheet en arrière-plan
   try {
@@ -493,7 +516,11 @@ setVH();
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
 
-renderGroups(); renderCats(); renderTotaux(); updateUI();
+renderGroups(); renderCats(); renderTotaux(); updateUI(); updatePendingBadge();
+// Synchroniser la file d'attente quand la connexion revient
+window.addEventListener('online', () => { processPending(); showToast('Connexion rétablie — synchronisation…', 'success'); });
+// Tenter sync au démarrage
+setTimeout(processPending, 2000);
 </script>
 </body>
 </html>

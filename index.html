@@ -10,7 +10,6 @@
   <title>Foyer Diallo</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.2.0/tabler-icons.min.css">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     html,body{height:100%;overflow:hidden;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif}
@@ -181,8 +180,8 @@
         <div class="bname">Foyer Diallo</div>
       </div>
       <div class="hd-btns">
-        <button class="hbtn danger" onclick="resetTotaux()"><i class="ti ti-refresh"></i> Reset</button>
-        <button class="hbtn" onclick="openHist()"><i class="ti ti-clock"></i> Historique</button>
+        <button class="hbtn danger" onclick="resetTotaux()">↺ Reset</button>
+        <button class="hbtn" onclick="openHist()">⏱ Historique</button>
       </div>
     </div>
     <div class="hd-row2">
@@ -220,10 +219,10 @@
       <button class="np np-num" onclick="np('9')">9</button>
       <button class="np np-dot" onclick="np('.')">·</button>
       <button class="np np-num" onclick="np('0')">0</button>
-      <button class="np np-del" onclick="npDel()"><i class="ti ti-backspace"></i></button>
+      <button class="np np-del" onclick="npDel()">⌫</button>
     </div>
     <button class="np-ok" id="okBtn" disabled onclick="submit()">
-      <i class="ti ti-check"></i>
+      ✓
       <span id="okLabel">Enregistrer</span>
     </button>
   </div>
@@ -241,7 +240,7 @@
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast"><i class="ti ti-check" id="toastIcon"></i><span id="toastMsg"></span></div>
+<div class="toast" id="toast"><span id="toastIcon">✓</span><span id="toastMsg"></span></div>
 
 <script>
 // ─── CONFIG ─────────────────────────────────────────────────────
@@ -250,22 +249,22 @@ const SECRET = '0603';
 // ────────────────────────────────────────────────────────────────
 
 const GROUPS = [
-  {key:'ali',icon:'ti-shopping-cart',label:'Ali.',color:'#1b5e20',bg:'#e8f5e9',bd:'#a5d6a7',
-   cats:[{n:'Courses',i:'ti-basket'},{n:'Restaurant',i:'ti-tools-kitchen-2'},{n:'Boulangerie',i:'ti-bread'},{n:'Marché',i:'ti-plant-2'},{n:'Boucherie',i:'ti-meat'},{n:'Livraison',i:'ti-motorbike'}]},
-  {key:'enf',icon:'ti-baby-carriage',label:'Enfants',color:'#0d47a1',bg:'#e3f2fd',bd:'#90caf9',
-   cats:[{n:'Cantine',i:'ti-soup'},{n:'Fournitures',i:'ti-pencil'},{n:'Activités',i:'ti-ball-football'},{n:'Vêtements',i:'ti-shirt'}]},
-  {key:'mai',icon:'ti-home',label:'Maison',color:'#e65100',bg:'#fff3e0',bd:'#ffcc80',
-   cats:[{n:'Énergie',i:'ti-bolt'},{n:'Eau',i:'ti-droplet'},{n:'Bricolage',i:'ti-hammer'},{n:'Électroménager',i:'ti-washing-machine'},{n:'Produits',i:'ti-spray'},{n:'Déco',i:'ti-armchair'}]},
-  {key:'tra',icon:'ti-car',label:'Transport',color:'#4a148c',bg:'#f3e5f5',bd:'#ce93d8',
-   cats:[{n:'Carburant',i:'ti-gas-station'},{n:'Parking',i:'ti-parking'},{n:'Train/RER',i:'ti-train'},{n:'Taxi/VTC',i:'ti-taxi'},{n:'Péage',i:'ti-road'}]},
-  {key:'san',icon:'ti-heart',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
-   cats:[{n:'Pharmacie',i:'ti-pill'},{n:'Médecin',i:'ti-stethoscope'},{n:'Dentiste',i:'ti-dental'},{n:'Optique',i:'ti-eye'}]},
-  {key:'loi',icon:'ti-confetti',label:'Loisirs',color:'#006064',bg:'#e0f7fa',bd:'#80deea',
-   cats:[{n:'Cinéma',i:'ti-movie'},{n:'Sorties',i:'ti-music'},{n:'Sport',i:'ti-run'},{n:'Vacances',i:'ti-plane'},{n:'Jeux',i:'ti-device-gamepad-2'}]},
-  {key:'sen',icon:'ti-world',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
-   cats:[{n:'Envoi famille',i:'ti-send'},{n:'Achats',i:'ti-shopping-bag'}]},
-  {key:'div',icon:'ti-dots',label:'Divers',color:'#33691e',bg:'#f1f8e9',bd:'#c5e1a5',
-   cats:[{n:'Cadeaux',i:'ti-gift'},{n:'Dons',i:'ti-heart-handshake'},{n:'Imprévus',i:'ti-alert-triangle'},{n:'Fêtes',i:'ti-star'}]}
+  {key:'ali',icon:'🛒',label:'Ali.',color:'#1b5e20',bg:'#e8f5e9',bd:'#a5d6a7',
+   cats:[{n:'Courses',i:'🧺'},{n:'Restaurant',i:'🍽️'},{n:'Boulangerie',i:'🥖'},{n:'Marché',i:'🥬'},{n:'Boucherie',i:'🥩'},{n:'Livraison',i:'🛵'}]},
+  {key:'enf',icon:'👶',label:'Enfants',color:'#0d47a1',bg:'#e3f2fd',bd:'#90caf9',
+   cats:[{n:'Cantine',i:'🍲'},{n:'Fournitures',i:'✏️'},{n:'Activités',i:'⚽'},{n:'Vêtements',i:'👕'}]},
+  {key:'mai',icon:'🏠',label:'Maison',color:'#e65100',bg:'#fff3e0',bd:'#ffcc80',
+   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Bricolage',i:'🔨'},{n:'Électroménager',i:'🫧'},{n:'Produits',i:'🧹'},{n:'Déco',i:'🪑'}]},
+  {key:'tra',icon:'🚗',label:'Transport',color:'#4a148c',bg:'#f3e5f5',bd:'#ce93d8',
+   cats:[{n:'Carburant',i:'⛽'},{n:'Parking',i:'🅿️'},{n:'Train/RER',i:'🚆'},{n:'Taxi/VTC',i:'🚕'},{n:'Péage',i:'🛣️'}]},
+  {key:'san',icon:'❤️',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
+   cats:[{n:'Pharmacie',i:'💊'},{n:'Médecin',i:'🩺'},{n:'Dentiste',i:'🦷'},{n:'Optique',i:'👓'}]},
+  {key:'loi',icon:'🎉',label:'Loisirs',color:'#006064',bg:'#e0f7fa',bd:'#80deea',
+   cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sport',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Jeux',i:'🎮'}]},
+  {key:'sen',icon:'🌍',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
+   cats:[{n:'Envoi famille',i:'💸'},{n:'Achats',i:'🛍️'}]},
+  {key:'div',icon:'•••',label:'Divers',color:'#33691e',bg:'#f1f8e9',bd:'#c5e1a5',
+   cats:[{n:'Cadeaux',i:'🎁'},{n:'Dons',i:'🤲'},{n:'Imprévus',i:'⚠️'},{n:'Fêtes',i:'🌟'}]}
 ];
 
 // State
@@ -298,7 +297,7 @@ function renderGroups() {
     return `<button class="grp-btn ${g.key===activeGroup?'active':''}"
       style="background:${g.key===activeGroup?g.bg:'#f8fafc'};color:${g.color};${g.key===activeGroup?'border-color:'+g.color:''}"
       onclick="switchGroup('${g.key}')">
-      <i class="ti ${g.icon}"></i>${g.label}
+      <span style="font-size:18px;line-height:1">${g.icon}</span>${g.label}
       ${t>0?`<span class="grp-badge">${Math.round(t)}€</span>`:''}
     </button>`;
   }).join('');
@@ -313,7 +312,7 @@ function renderCats() {
     cats.map(c => c ? `<button class="cat-btn ${selectedCat===c.n?'sel':''}"
       style="background:${g.bg};color:${g.color};border-color:${selectedCat===c.n?'#2457ff':g.bd}"
       onclick="selectCat('${c.n}')">
-      <i class="ti ${c.i}"></i>${c.n}
+      <span style="font-size:24px;line-height:1">${c.i}</span>${c.n}
       ${todayData[activeGroup]?.cats[c.n]>0?`<span class="cat-today">${Math.round(todayData[activeGroup].cats[c.n])}€</span>`:''}
     </button>` : `<div style="border-radius:12px;background:#f8fafc"></div>`
     ).join('')
@@ -446,12 +445,12 @@ function renderHist() {
     const g = GROUPS.find(x => x.key === e.group);
     return `<div class="hist-item">
       <div>
-        <div class="hi-cat"><i class="ti ${g.icon}" style="color:${g.color}"></i>${g.label.replace('Ali.','Alimentation')} · ${e.time}</div>
+        <div class="hi-cat"><span style="font-size:13px">${g.icon}</span>${g.label.replace('Ali.','Alimentation')} · ${e.time}</div>
         <div class="hi-name">${e.cat}</div>
       </div>
       <div class="hi-right">
         <div class="hi-amt" style="color:${g.color}">${e.amt}€</div>
-        <button class="hi-del" onclick="deleteEntry(${e.id})"><i class="ti ti-x"></i></button>
+        <button class="hi-del" onclick="deleteEntry(${e.id})">✕</button>
       </div>
     </div>`;
   }).join('');

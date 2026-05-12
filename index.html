@@ -2,442 +2,491 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="FD Dépenses">
   <meta name="theme-color" content="#111827">
-  <title>Foyer Diallo — Dépenses</title>
+  <title>Foyer Diallo</title>
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icon-192.png">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.2.0/tabler-icons.min.css">
   <style>
-    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-    :root{
-      --dark:#111827;--dark2:#1e293b;--blue:#2457ff;
-      --c-ali-bg:#e8f5e9;--c-ali-tx:#1b5e20;--c-ali-bd:#a5d6a7;
-      --c-enf-bg:#e3f2fd;--c-enf-tx:#0d47a1;--c-enf-bd:#90caf9;
-      --c-mai-bg:#fff3e0;--c-mai-tx:#e65100;--c-mai-bd:#ffcc80;
-      --c-tra-bg:#f3e5f5;--c-tra-tx:#4a148c;--c-tra-bd:#ce93d8;
-      --c-san-bg:#fce4ec;--c-san-tx:#880e4f;--c-san-bd:#f48fb1;
-      --c-loi-bg:#e0f7fa;--c-loi-tx:#006064;--c-loi-bd:#80deea;
-      --c-sen-bg:#fff8e1;--c-sen-tx:#f57f17;--c-sen-bd:#ffe082;
-      --c-div-bg:#f1f8e9;--c-div-tx:#33691e;--c-div-bd:#c5e1a5;
+    *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+    html,body{height:100%;overflow:hidden;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif}
+
+    /* ── LAYOUT FIXE — 100vh, 0 scroll ── */
+    .app{
+      display:flex;flex-direction:column;
+      height:100vh;
+      height:calc(var(--vh,1vh)*100);
+      max-width:430px;margin:0 auto;
+      background:#f4f7fb;overflow:hidden;
     }
-    html,body{height:100%;background:#f4f7fb;font-family:-apple-system,BlinkMacSystemFont,'Inter',sans-serif;color:#0f172a;overscroll-behavior:none}
 
-    /* HEADER */
-    .header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:env(safe-area-inset-top,0px) 18px 18px;position:sticky;top:0;z-index:10}
-    .header-top{display:flex;justify-content:space-between;align-items:center;padding-top:12px;margin-bottom:14px}
-    .brand{display:flex;align-items:center;gap:10px}
-    .brand-mark{width:34px;height:34px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
-    .brand-name{font-size:15px;font-weight:600;color:#fff}
-    .brand-sub{font-size:11px;color:#94a3b8;margin-top:1px}
-    .hist-btn{font-size:12px;color:#94a3b8;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:7px 12px;cursor:pointer;display:flex;align-items:center;gap:5px}
-    .hist-btn i{font-size:14px}
+    /* ── HEADER ── */
+    .hd{
+      background:linear-gradient(135deg,#111827,#1e293b);
+      padding:env(safe-area-inset-top,12px) 14px 10px;
+      flex-shrink:0;
+    }
+    .hd-row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+    .brand{display:flex;align-items:center;gap:8px}
+    .bmark{width:28px;height:28px;border-radius:8px;background:#2457ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+    .bname{font-size:13px;font-weight:600;color:#fff}
+    .hd-btns{display:flex;gap:6px}
+    .hbtn{font-size:11px;color:#94a3b8;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:4px}
+    .hbtn i{font-size:13px}
+    .hbtn.danger{color:#fca5a5;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.25)}
 
-    /* MONTANT */
-    .amount-area{cursor:pointer}
-    .amount-row{display:flex;align-items:baseline;gap:6px;min-height:56px}
-    .amount-cur{font-size:22px;color:#64748b}
-    .amount-val{font-size:52px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.02em}
-    .amount-val.empty{color:#475569}
-    .amount-cursor{width:3px;height:44px;background:var(--blue);border-radius:2px;animation:blink 1s infinite;margin-bottom:2px}
-    @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-    .amount-hint{font-size:11px;color:#475569;margin-top:6px;min-height:16px}
+    .hd-row2{display:flex;align-items:flex-end;justify-content:space-between}
+    .amt-block{display:flex;align-items:baseline;gap:3px}
+    .amt-cur{font-size:18px;color:#64748b}
+    .amt-val{font-size:42px;font-weight:700;color:#fff;line-height:1;letter-spacing:-.02em;min-width:10px}
+    .amt-empty{color:#334155}
+    .amt-hint{font-size:10px;margin-top:3px;min-height:13px;color:#475569}
+    .totaux{display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding-bottom:2px}
+    .total-grp{font-size:11px;font-weight:700;padding:3px 9px;border-radius:999px;background:rgba(255,255,255,.12);color:#e2e8f0;white-space:nowrap}
+    .total-jour{font-size:10px;color:#64748b;white-space:nowrap}
+    .total-jour strong{color:#94a3b8}
 
-    /* BODY */
-    .body{padding:14px;display:flex;flex-direction:column;gap:16px;padding-bottom:calc(env(safe-area-inset-bottom,0px) + 90px)}
+    /* ── GRILLE GROUPES 4×2 ── */
+    .groups-grid{
+      display:grid;grid-template-columns:repeat(4,1fr);
+      gap:4px;background:#fff;
+      border-bottom:1px solid #e2e8f0;
+      flex-shrink:0;padding:5px 6px;
+    }
+    .grp-btn{
+      border-radius:8px;padding:5px 3px;
+      font-size:9px;font-weight:700;
+      cursor:pointer;border:2px solid transparent;
+      display:flex;flex-direction:column;align-items:center;gap:2px;
+      transition:transform .1s;position:relative;
+      min-height:0;justify-content:center;
+    }
+    .grp-btn i{font-size:15px}
+    .grp-btn:active{transform:scale(.92)}
+    .grp-btn.active{border-width:2px}
+    .grp-badge{
+      position:absolute;top:2px;right:2px;
+      background:#ef4444;color:#fff;
+      border-radius:999px;padding:1px 4px;
+      font-size:8px;font-weight:700;line-height:1.4;
+    }
 
-    /* GROUPES */
-    .group-block{display:flex;flex-direction:column;gap:8px}
-    .group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;display:flex;align-items:center;gap:7px;padding:4px 2px}
-    .group-title i{font-size:18px}
-    .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .cat-btn{border-radius:14px;padding:14px 8px;font-size:13px;font-weight:600;cursor:pointer;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:6px;transition:transform .1s,box-shadow .1s;min-height:78px;justify-content:center;user-select:none;-webkit-user-select:none}
-    .cat-btn i{font-size:26px}
-    .cat-btn:active{transform:scale(.95)}
-    .cat-btn.sel{box-shadow:0 0 0 3px var(--blue);transform:scale(1.03)}
+    /* ── CATÉGORIES — grille 2×3 fixe, remplit tout l'espace disponible ── */
+    .cats-area{flex:1;padding:5px 6px;overflow:hidden;min-height:0}
+    .cat-grid{
+      display:grid;grid-template-columns:1fr 1fr;
+      grid-template-rows:repeat(3,1fr);
+      gap:5px;height:100%;
+    }
+    .cat-btn{
+      border-radius:12px;padding:5px;
+      font-size:11px;font-weight:600;
+      cursor:pointer;border:2px solid transparent;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      gap:4px;transition:transform .1s,box-shadow .1s;
+      position:relative;overflow:hidden;
+    }
+    .cat-btn i{font-size:22px}
+    .cat-btn.sel{box-shadow:0 0 0 3px #2457ff;transform:scale(1.03)}
+    .cat-btn:active{transform:scale(.92)}
+    .cat-today{
+      position:absolute;bottom:4px;right:6px;
+      font-size:9px;font-weight:700;opacity:.7;
+    }
 
-    /* COULEURS GROUPES */
-    .g-ali .group-title{color:var(--c-ali-tx)}.g-ali .cat-btn{background:var(--c-ali-bg);color:var(--c-ali-tx);border-color:var(--c-ali-bd)}
-    .g-enf .group-title{color:var(--c-enf-tx)}.g-enf .cat-btn{background:var(--c-enf-bg);color:var(--c-enf-tx);border-color:var(--c-enf-bd)}
-    .g-mai .group-title{color:var(--c-mai-tx)}.g-mai .cat-btn{background:var(--c-mai-bg);color:var(--c-mai-tx);border-color:var(--c-mai-bd)}
-    .g-tra .group-title{color:var(--c-tra-tx)}.g-tra .cat-btn{background:var(--c-tra-bg);color:var(--c-tra-tx);border-color:var(--c-tra-bd)}
-    .g-san .group-title{color:var(--c-san-tx)}.g-san .cat-btn{background:var(--c-san-bg);color:var(--c-san-tx);border-color:var(--c-san-bd)}
-    .g-loi .group-title{color:var(--c-loi-tx)}.g-loi .cat-btn{background:var(--c-loi-bg);color:var(--c-loi-tx);border-color:var(--c-loi-bd)}
-    .g-sen .group-title{color:var(--c-sen-tx)}.g-sen .cat-btn{background:var(--c-sen-bg);color:var(--c-sen-tx);border-color:var(--c-sen-bd)}
-    .g-div .group-title{color:var(--c-div-tx)}.g-div .cat-btn{background:var(--c-div-bg);color:var(--c-div-tx);border-color:var(--c-div-bd)}
+    /* ── PAVÉ NUMÉRIQUE ── */
+    .numpad{background:#fff;border-top:1px solid #e2e8f0;padding:5px 6px calc(env(safe-area-inset-bottom,0px) + 6px);flex-shrink:0}
+    .np-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px}
+    .np{
+      height:42px;border-radius:10px;border:none;
+      font-size:20px;font-weight:500;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:transform .07s;
+    }
+    .np:active{transform:scale(.88)}
+    .np-num{background:#f1f5f9;color:#111827}
+    .np-del{background:#fee2e2;color:#dc2626}
+    .np-del i{font-size:18px}
+    .np-dot{background:#f1f5f9;color:#111827;font-size:22px}
+    .np-ok{
+      background:linear-gradient(135deg,#111827,#1e293b);
+      color:#fff;font-size:13px;font-weight:600;
+      gap:6px;width:100%;border-radius:10px;height:42px;
+      border:none;cursor:pointer;
+      display:flex;align-items:center;justify-content:center;
+      transition:opacity .15s;
+    }
+    .np-ok:disabled{opacity:.35}
+    .np-ok i{font-size:15px}
 
-    /* BARRE VALIDATION FIXE */
-    .val-bar{position:fixed;bottom:0;left:0;right:0;padding:10px 16px calc(env(safe-area-inset-bottom,0px) + 10px);background:rgba(244,247,251,.96);backdrop-filter:blur(10px);border-top:1px solid #e2e8f0;z-index:10}
-    .val-btn{width:100%;background:linear-gradient(135deg,var(--dark),var(--dark2));color:#fff;border:none;border-radius:14px;padding:16px;font-size:16px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:opacity .15s}
-    .val-btn i{font-size:19px}
-    .val-btn:disabled{opacity:.4;cursor:not-allowed}
-    .val-btn.loading{opacity:.6}
+    /* ── HISTORIQUE ── */
+    .hist-overlay{
+      position:fixed;inset:0;
+      background:rgba(0,0,0,.5);
+      z-index:50;
+      display:none;align-items:flex-end;
+      max-width:430px;margin:0 auto;
+    }
+    .hist-overlay.open{display:flex}
+    .hist-sheet{
+      background:#f4f7fb;width:100%;
+      border-radius:20px 20px 0 0;
+      max-height:80vh;display:flex;flex-direction:column;
+      padding-bottom:env(safe-area-inset-bottom,0px);
+    }
+    .hist-hd{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:14px 16px 10px;border-bottom:1px solid #e2e8f0;
+    }
+    .hist-title{font-size:15px;font-weight:600;color:#0f172a}
+    .hist-close{font-size:12px;color:#64748b;background:#f1f5f9;border:none;border-radius:7px;padding:6px 12px;cursor:pointer}
+    .hist-body{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+    .hist-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
+    .hi-cat{font-size:10px;color:#64748b;margin-bottom:2px;display:flex;align-items:center;gap:4px}
+    .hi-cat i{font-size:12px}
+    .hi-name{font-size:13px;font-weight:600;color:#0f172a}
+    .hi-right{display:flex;align-items:center;gap:8px}
+    .hi-amt{font-size:15px;font-weight:700}
+    .hi-del{background:#fee2e2;color:#dc2626;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
+    .hi-del i{font-size:14px}
+    .hist-empty{text-align:center;padding:32px;color:#94a3b8;font-size:13px}
 
-    /* TOAST */
-    .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 88px);left:16px;right:16px;background:#065f46;color:#d1fae5;border-radius:12px;padding:13px 16px;font-size:14px;font-weight:600;opacity:0;transition:all .25s;z-index:100;display:flex;align-items:center;gap:9px;pointer-events:none}
+    /* ── TOAST ── */
+    .toast{
+      position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
+      left:12px;right:12px;max-width:430px;margin:0 auto;
+      background:#065f46;color:#d1fae5;
+      border-radius:12px;padding:12px 16px;
+      font-size:13px;font-weight:600;
+      opacity:0;transition:opacity .25s;z-index:100;
+      display:flex;align-items:center;gap:8px;pointer-events:none;
+    }
     .toast.show{opacity:1}
-    .toast.error{background:#7f1d1d;color:#fecaca}
-    .toast i{font-size:18px}
-
-    /* HISTORIQUE PANEL */
-    .hist-panel{position:fixed;inset:0;background:#f4f7fb;z-index:50;transform:translateY(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);overflow-y:auto;padding-bottom:env(safe-area-inset-bottom,0px)}
-    .hist-panel.open{transform:translateY(0)}
-    .hist-header{background:linear-gradient(135deg,var(--dark),var(--dark2));padding:calc(env(safe-area-inset-top,0px) + 14px) 18px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:5}
-    .hist-title{font-size:16px;font-weight:600;color:#fff}
-    .hist-actions{display:flex;gap:8px}
-    .hist-close{background:rgba(255,255,255,.1);border:none;color:#fff;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
-    .hist-reset{background:rgba(220,38,38,.25);border:1px solid rgba(220,38,38,.4);color:#fca5a5;border-radius:8px;padding:8px 12px;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:5px}
-    .hist-body{padding:14px;display:flex;flex-direction:column;gap:8px}
-    .hist-item{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:12px 14px;display:flex;justify-content:space-between;align-items:center}
-    .hi-cat{font-size:11px;color:#64748b;margin-bottom:3px;display:flex;align-items:center;gap:5px}
-    .hi-date{font-size:13px;font-weight:500;color:#1e293b}
-    .hi-note{font-size:11px;color:#94a3b8;margin-top:2px}
-    .hi-amt{font-size:17px;font-weight:700;color:#0f172a}
-    .hi-date-right{font-size:11px;color:#94a3b8;margin-top:2px;text-align:right}
-    .hist-empty{text-align:center;padding:48px 20px;color:#94a3b8;font-size:14px}
-    .hist-count{font-size:12px;color:#94a3b8;padding:0 0 8px 2px}
-
-    select,input{font-size:16px}
-    input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+    .toast.err{background:#7f1d1d;color:#fecaca}
+    .toast i{font-size:16px}
   </style>
 </head>
 <body>
+<div class="app">
 
-<!-- HEADER + MONTANT -->
-<div class="header">
-  <div class="header-top">
-    <div class="brand">
-      <div class="brand-mark">FD</div>
-      <div>
-        <div class="brand-name">Foyer Diallo</div>
-        <div class="brand-sub">Nouvelle dépense</div>
+  <!-- HEADER -->
+  <div class="hd">
+    <div class="hd-row1">
+      <div class="brand">
+        <div class="bmark">FD</div>
+        <div class="bname">Foyer Diallo</div>
+      </div>
+      <div class="hd-btns">
+        <button class="hbtn danger" onclick="resetTotaux()"><i class="ti ti-refresh"></i> Reset</button>
+        <button class="hbtn" onclick="openHist()"><i class="ti ti-clock"></i> Historique</button>
       </div>
     </div>
-    <button class="hist-btn" onclick="openHist()">
-      <i class="ti ti-clock"></i> Historique
+    <div class="hd-row2">
+      <div>
+        <div class="amt-block">
+          <span class="amt-cur">€</span>
+          <span class="amt-val amt-empty" id="amtVal">0</span>
+        </div>
+        <div class="amt-hint" id="amtHint">Choisissez une catégorie</div>
+      </div>
+      <div class="totaux">
+        <div class="total-grp" id="totalGrp" style="visibility:hidden">—</div>
+        <div class="total-jour" id="totalJour"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GROUPES -->
+  <div class="groups-grid" id="groupsGrid"></div>
+
+  <!-- CATÉGORIES -->
+  <div class="cats-area" id="catsArea"></div>
+
+  <!-- PAVÉ -->
+  <div class="numpad">
+    <div class="np-grid">
+      <button class="np np-num" onclick="np('1')">1</button>
+      <button class="np np-num" onclick="np('2')">2</button>
+      <button class="np np-num" onclick="np('3')">3</button>
+      <button class="np np-num" onclick="np('4')">4</button>
+      <button class="np np-num" onclick="np('5')">5</button>
+      <button class="np np-num" onclick="np('6')">6</button>
+      <button class="np np-num" onclick="np('7')">7</button>
+      <button class="np np-num" onclick="np('8')">8</button>
+      <button class="np np-num" onclick="np('9')">9</button>
+      <button class="np np-dot" onclick="np('.')">·</button>
+      <button class="np np-num" onclick="np('0')">0</button>
+      <button class="np np-del" onclick="npDel()"><i class="ti ti-backspace"></i></button>
+    </div>
+    <button class="np-ok" id="okBtn" disabled onclick="submit()">
+      <i class="ti ti-check"></i>
+      <span id="okLabel">Enregistrer</span>
     </button>
   </div>
-  <div class="amount-area" onclick="focusInput()">
-    <div class="amount-row">
-      <span class="amount-cur">€</span>
-      <span class="amount-val empty" id="amountDisplay">0</span>
-      <span class="amount-cursor" id="amtCursor"></span>
+</div>
+
+<!-- HISTORIQUE SHEET -->
+<div class="hist-overlay" id="histOverlay" onclick="closeHistIfBg(event)">
+  <div class="hist-sheet">
+    <div class="hist-hd">
+      <span class="hist-title">Historique du jour</span>
+      <button class="hist-close" onclick="closeHist()">Fermer</button>
     </div>
-    <div class="amount-hint" id="amountHint">Tapez le montant puis choisissez une catégorie</div>
+    <div class="hist-body" id="histBody"></div>
   </div>
-</div>
-
-<!-- GROUPES + CATÉGORIES -->
-<div class="body">
-
-  <div class="group-block g-ali">
-    <div class="group-title"><i class="ti ti-shopping-cart" aria-hidden="true"></i>Alimentation</div>
-    <div class="cat-grid" id="cats-ali"></div>
-  </div>
-
-  <div class="group-block g-enf">
-    <div class="group-title"><i class="ti ti-baby-carriage" aria-hidden="true"></i>Enfants</div>
-    <div class="cat-grid" id="cats-enf"></div>
-  </div>
-
-  <div class="group-block g-mai">
-    <div class="group-title"><i class="ti ti-home" aria-hidden="true"></i>Maison</div>
-    <div class="cat-grid" id="cats-mai"></div>
-  </div>
-
-  <div class="group-block g-tra">
-    <div class="group-title"><i class="ti ti-car" aria-hidden="true"></i>Transport</div>
-    <div class="cat-grid" id="cats-tra"></div>
-  </div>
-
-  <div class="group-block g-san">
-    <div class="group-title"><i class="ti ti-heart" aria-hidden="true"></i>Santé</div>
-    <div class="cat-grid" id="cats-san"></div>
-  </div>
-
-  <div class="group-block g-loi">
-    <div class="group-title"><i class="ti ti-confetti" aria-hidden="true"></i>Loisirs</div>
-    <div class="cat-grid" id="cats-loi"></div>
-  </div>
-
-  <div class="group-block g-sen">
-    <div class="group-title"><i class="ti ti-world" aria-hidden="true"></i>Sénégal</div>
-    <div class="cat-grid" id="cats-sen"></div>
-  </div>
-
-  <div class="group-block g-div">
-    <div class="group-title"><i class="ti ti-dots" aria-hidden="true"></i>Divers</div>
-    <div class="cat-grid" id="cats-div"></div>
-  </div>
-
-</div>
-
-<!-- BARRE FIXE -->
-<div class="val-bar">
-  <button class="val-btn" id="valBtn" disabled onclick="submitDepense()">
-    <i class="ti ti-check"></i>
-    <span id="valLabel">Choisir une catégorie</span>
-  </button>
-</div>
-
-<!-- HISTORIQUE -->
-<div class="hist-panel" id="histPanel">
-  <div class="hist-header">
-    <span class="hist-title">Historique</span>
-    <div class="hist-actions">
-      <button class="hist-reset" onclick="resetHistory()"><i class="ti ti-trash"></i> Vider</button>
-      <button class="hist-close" onclick="closeHist()"><i class="ti ti-x"></i> Fermer</button>
-    </div>
-  </div>
-  <div class="hist-body" id="histBody"></div>
 </div>
 
 <!-- TOAST -->
 <div class="toast" id="toast"><i class="ti ti-check" id="toastIcon"></i><span id="toastMsg"></span></div>
 
-<!-- INPUT CACHÉ POUR CLAVIER NUMÉRIQUE -->
-<input type="number" id="hiddenInput" inputmode="decimal" style="position:fixed;opacity:0;top:0;left:0;width:1px;height:1px;pointer-events:none;z-index:-1">
-
 <script>
-// ─── CONFIG ─────────────────────────────────────────────────────────────────
+// ─── CONFIG ─────────────────────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyR1OXpZNyz3hBHRE7HuRylfJwW1MiRIUtyUfyJIJwIlx2CV7l0rmRFoe1Vp1KC88bFRw/exec';
-const SECRET     = '0603';
-// ────────────────────────────────────────────────────────────────────────────
+const SECRET = '0603';
+// ────────────────────────────────────────────────────────────────
 
-const ICON_MAP = {
-  'Courses':'ti-basket','Restaurant':'ti-tools-kitchen-2','Boulangerie':'ti-bread',
-  'Marché':'ti-plant-2','Boucherie':'ti-meat','Livraison repas':'ti-motorbike',
-  'Cantine':'ti-soup','Fournitures scolaires':'ti-pencil','Activités/sport enfants':'ti-ball-football',
-  'Vêtements/chaussures enfants':'ti-shirt','Inscription École/Univ':'ti-school','Sorties enfants':'ti-confetti',
-  'Énergie':'ti-bolt','Eau':'ti-droplet','Granulets':'ti-flame','Réparation/Bricolage':'ti-hammer',
-  'Électroménager':'ti-washing-machine','Produits ménagers':'ti-spray','Déco/meubles':'ti-armchair',
-  'Carburant':'ti-gas-station','Péage':'ti-road','Parking':'ti-parking','Train/RER':'ti-train','Taxi/VTC':'ti-taxi',
-  'Pharmacie':'ti-pill','Médecin':'ti-stethoscope','Dentiste':'ti-dental','Optique':'ti-eye',
-  'Cinéma':'ti-movie','Sorties':'ti-music','Sports/Fitness':'ti-run','Vacances':'ti-plane',
-  'Potager':'ti-plant','Cultures/livres/DVD':'ti-book','Jeux':'ti-device-gamepad-2',
-  'Envoi famille':'ti-send','Achats Sénégal':'ti-shopping-bag',
-  'Cadeaux':'ti-gift','Dons':'ti-heart-handshake','Imprévus':'ti-alert-triangle',
-  'Fêtes':'ti-star','Tabaski':'ti-star','Korite':'ti-star','Noël':'ti-christmas-tree',
-  'Abonnements ponctuels':'ti-repeat'
-};
-
-// Groupes fixes avec leurs catégories et l'id du container
-const GROUPS_CONFIG = [
-  {id:'cats-ali', cats:['Courses','Restaurant','Boulangerie','Marché','Boucherie','Livraison repas']},
-  {id:'cats-enf', cats:['Cantine','Fournitures scolaires','Activités/sport enfants','Vêtements/chaussures enfants','Inscription École/Univ','Sorties enfants']},
-  {id:'cats-mai', cats:['Énergie','Eau','Granulets','Réparation/Bricolage','Électroménager','Produits ménagers','Déco/meubles']},
-  {id:'cats-tra', cats:['Carburant','Péage','Parking','Train/RER','Taxi/VTC']},
-  {id:'cats-san', cats:['Pharmacie','Médecin','Dentiste','Optique']},
-  {id:'cats-loi', cats:['Cinéma','Sorties','Sports/Fitness','Vacances','Potager','Cultures/livres/DVD','Jeux']},
-  {id:'cats-sen', cats:['Envoi famille','Achats Sénégal']},
-  {id:'cats-div', cats:['Cadeaux','Dons','Imprévus','Fêtes','Tabaski','Korite','Noël','Abonnements ponctuels']}
+const GROUPS = [
+  {key:'ali',icon:'ti-shopping-cart',label:'Ali.',color:'#1b5e20',bg:'#e8f5e9',bd:'#a5d6a7',
+   cats:[{n:'Courses',i:'ti-basket'},{n:'Restaurant',i:'ti-tools-kitchen-2'},{n:'Boulangerie',i:'ti-bread'},{n:'Marché',i:'ti-plant-2'},{n:'Boucherie',i:'ti-meat'},{n:'Livraison',i:'ti-motorbike'}]},
+  {key:'enf',icon:'ti-baby-carriage',label:'Enfants',color:'#0d47a1',bg:'#e3f2fd',bd:'#90caf9',
+   cats:[{n:'Cantine',i:'ti-soup'},{n:'Fournitures',i:'ti-pencil'},{n:'Activités',i:'ti-ball-football'},{n:'Vêtements',i:'ti-shirt'}]},
+  {key:'mai',icon:'ti-home',label:'Maison',color:'#e65100',bg:'#fff3e0',bd:'#ffcc80',
+   cats:[{n:'Énergie',i:'ti-bolt'},{n:'Eau',i:'ti-droplet'},{n:'Bricolage',i:'ti-hammer'},{n:'Électroménager',i:'ti-washing-machine'},{n:'Produits',i:'ti-spray'},{n:'Déco',i:'ti-armchair'}]},
+  {key:'tra',icon:'ti-car',label:'Transport',color:'#4a148c',bg:'#f3e5f5',bd:'#ce93d8',
+   cats:[{n:'Carburant',i:'ti-gas-station'},{n:'Parking',i:'ti-parking'},{n:'Train/RER',i:'ti-train'},{n:'Taxi/VTC',i:'ti-taxi'},{n:'Péage',i:'ti-road'}]},
+  {key:'san',icon:'ti-heart',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
+   cats:[{n:'Pharmacie',i:'ti-pill'},{n:'Médecin',i:'ti-stethoscope'},{n:'Dentiste',i:'ti-dental'},{n:'Optique',i:'ti-eye'}]},
+  {key:'loi',icon:'ti-confetti',label:'Loisirs',color:'#006064',bg:'#e0f7fa',bd:'#80deea',
+   cats:[{n:'Cinéma',i:'ti-movie'},{n:'Sorties',i:'ti-music'},{n:'Sport',i:'ti-run'},{n:'Vacances',i:'ti-plane'},{n:'Jeux',i:'ti-device-gamepad-2'}]},
+  {key:'sen',icon:'ti-world',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
+   cats:[{n:'Envoi famille',i:'ti-send'},{n:'Achats',i:'ti-shopping-bag'}]},
+  {key:'div',icon:'ti-dots',label:'Divers',color:'#33691e',bg:'#f1f8e9',bd:'#c5e1a5',
+   cats:[{n:'Cadeaux',i:'ti-gift'},{n:'Dons',i:'ti-heart-handshake'},{n:'Imprévus',i:'ti-alert-triangle'},{n:'Fêtes',i:'ti-star'}]}
 ];
 
-let state = {
-  amount: '',
-  categorie: null,
-  history: JSON.parse(localStorage.getItem('fd_history')||'[]')
-};
+// State
+let amount = '', selectedCat = null, activeGroup = 'ali';
+let todayData = {};
+let history = JSON.parse(localStorage.getItem('fd_history_day') || '[]');
+GROUPS.forEach(g => todayData[g.key] = {total:0, cats:{}});
 
-// ─── INIT ────────────────────────────────────────────────────────────────────
-function init() {
-  renderAllGroups();
-  setupInput();
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
-  // Charger catégories dynamiques depuis le Sheet en arrière-plan
-  loadCategoriesFromSheet();
+// Reconstruire todayData depuis history (même jour)
+const today = new Date().toISOString().slice(0,10);
+history = history.filter(e => e.date === today);
+history.forEach(e => {
+  if (!todayData[e.group]) return;
+  todayData[e.group].total = (todayData[e.group].total || 0) + e.amt;
+  todayData[e.group].cats[e.cat] = (todayData[e.group].cats[e.cat] || 0) + e.amt;
+});
+
+function saveHistory() {
+  localStorage.setItem('fd_history_day', JSON.stringify(history));
 }
 
-function renderAllGroups() {
-  GROUPS_CONFIG.forEach(g => {
-    const el = document.getElementById(g.id);
-    if (!el) return;
-    el.innerHTML = g.cats.map(cat => {
-      const icon = ICON_MAP[cat] || 'ti-tag';
-      return `<button class="cat-btn" onclick="selectCat(this,'${cat.replace(/'/g,"\\'")}')">
-        <i class="ti ${icon}" aria-hidden="true"></i>${cat}
-      </button>`;
-    }).join('');
-    // Masquer le groupe parent s'il n'y a pas de catégories
-    if (!g.cats.length) el.closest('.group-block').style.display = 'none';
-  });
+function getTotalJour() {
+  return Math.round(Object.values(todayData).reduce((a,g) => a + (g.total||0), 0) * 100) / 100;
 }
 
-async function loadCategoriesFromSheet() {
-  try {
-    const url = SCRIPT_URL + '?' + new URLSearchParams({action:'get_categories',secret:SECRET});
-    const r = await fetch(url, {redirect:'follow'});
-    const text = await r.text();
-    const data = JSON.parse(text);
-    if (data.ok && data.categories) {
-      localStorage.setItem('fd_categories', JSON.stringify(data.categories));
-    }
-  } catch(e) {}
+// ─── RENDER ─────────────────────────────────────────────────────
+function renderGroups() {
+  document.getElementById('groupsGrid').innerHTML = GROUPS.map(g => {
+    const t = todayData[g.key]?.total || 0;
+    return `<button class="grp-btn ${g.key===activeGroup?'active':''}"
+      style="background:${g.key===activeGroup?g.bg:'#f8fafc'};color:${g.color};${g.key===activeGroup?'border-color:'+g.color:''}"
+      onclick="switchGroup('${g.key}')">
+      <i class="ti ${g.icon}"></i>${g.label}
+      ${t>0?`<span class="grp-badge">${Math.round(t)}€</span>`:''}
+    </button>`;
+  }).join('');
 }
 
-// ─── INPUT MONTANT ────────────────────────────────────────────────────────────
-function setupInput() {
-  const input = document.getElementById('hiddenInput');
-  input.addEventListener('input', () => {
-    const v = input.value.replace(/[^0-9.]/g,'');
-    state.amount = v;
-    updateAmountDisplay();
-  });
-  setTimeout(() => input.focus(), 300);
+function renderCats() {
+  const g = GROUPS.find(x => x.key === activeGroup);
+  const cats = g.cats.slice(0, 6);
+  // Remplir jusqu'à 6 pour garder la grille 2×3 régulière
+  while (cats.length < 6) cats.push(null);
+  document.getElementById('catsArea').innerHTML = `<div class="cat-grid">${
+    cats.map(c => c ? `<button class="cat-btn ${selectedCat===c.n?'sel':''}"
+      style="background:${g.bg};color:${g.color};border-color:${selectedCat===c.n?'#2457ff':g.bd}"
+      onclick="selectCat('${c.n}')">
+      <i class="ti ${c.i}"></i>${c.n}
+      ${todayData[activeGroup]?.cats[c.n]>0?`<span class="cat-today">${Math.round(todayData[activeGroup].cats[c.n])}€</span>`:''}
+    </button>` : `<div style="border-radius:12px;background:#f8fafc"></div>`
+    ).join('')
+  }</div>`;
 }
 
-function focusInput() {
-  document.getElementById('hiddenInput').focus();
+function renderTotaux() {
+  const g = GROUPS.find(x => x.key === activeGroup);
+  const grpT = todayData[activeGroup]?.total || 0;
+  const jourT = getTotalJour();
+  const el = document.getElementById('totalGrp');
+  if (grpT > 0) { el.style.visibility = ''; el.textContent = Math.round(grpT) + '€ ' + g.label.replace('Ali.','Ali.'); }
+  else { el.style.visibility = 'hidden'; el.textContent = '—'; }
+  document.getElementById('totalJour').innerHTML = jourT > 0 ? `Jour : <strong>${Math.round(jourT)}€</strong>` : '';
 }
 
-function updateAmountDisplay() {
-  const el = document.getElementById('amountDisplay');
-  el.textContent = state.amount || '0';
-  el.classList.toggle('empty', !state.amount);
-  const hint = document.getElementById('amountHint');
-  if (state.amount && state.categorie) {
-    hint.textContent = '✓ Prêt à enregistrer';
+function switchGroup(k) {
+  activeGroup = k;
+  selectedCat = null;
+  renderGroups(); renderCats(); renderTotaux(); updateUI();
+}
+
+function selectCat(n) {
+  selectedCat = n; renderCats(); updateUI();
+}
+
+// ─── PAVÉ ────────────────────────────────────────────────────────
+function np(d) {
+  if (d === '.' && amount.includes('.')) return;
+  if (d !== '.' && amount.split('.')[1]?.length >= 2) return;
+  if (amount.length >= 7) return;
+  amount = (amount === '0' && d !== '.') ? d : amount + d;
+  updateUI();
+}
+function npDel() { amount = amount.slice(0,-1); updateUI(); }
+
+function updateUI() {
+  const v = parseFloat(amount) || 0;
+  const el = document.getElementById('amtVal');
+  el.textContent = amount || '0';
+  el.classList.toggle('amt-empty', !v);
+  const hint = document.getElementById('amtHint');
+  const ok = document.getElementById('okBtn');
+  const lbl = document.getElementById('okLabel');
+  if (v > 0 && selectedCat) {
+    hint.textContent = selectedCat + ' — prêt à enregistrer';
     hint.style.color = '#4ade80';
-  } else if (state.amount) {
+    ok.disabled = false;
+    lbl.textContent = `Enregistrer ${v}€ · ${selectedCat}`;
+  } else if (v > 0) {
+    hint.textContent = 'Choisissez une catégorie';
+    hint.style.color = '#94a3b8';
+    ok.disabled = true;
+    lbl.textContent = 'Choisir une catégorie';
+  } else if (selectedCat) {
+    hint.textContent = selectedCat + ' sélectionné — tapez le montant';
+    hint.style.color = '#94a3b8';
+    ok.disabled = true;
+    lbl.textContent = 'Entrer un montant';
+  } else {
     hint.textContent = 'Choisissez une catégorie';
     hint.style.color = '#475569';
-  } else {
-    hint.textContent = 'Tapez le montant puis choisissez une catégorie';
-    hint.style.color = '#475569';
-  }
-  updateValBtn();
-}
-
-// ─── SÉLECTION CATÉGORIE ──────────────────────────────────────────────────────
-function selectCat(btn, cat) {
-  document.querySelectorAll('.cat-btn.sel').forEach(b => b.classList.remove('sel'));
-  btn.classList.add('sel');
-  state.categorie = cat;
-  updateAmountDisplay();
-  updateValBtn();
-  // Si montant déjà saisi, scroller vers le bas
-  if (state.amount) {
-    setTimeout(() => window.scrollTo({top:0, behavior:'smooth'}), 50);
+    ok.disabled = true;
+    lbl.textContent = 'Enregistrer';
   }
 }
 
-function updateValBtn() {
-  const btn = document.getElementById('valBtn');
-  const label = document.getElementById('valLabel');
-  const ready = state.amount && parseFloat(state.amount) > 0 && state.categorie;
-  btn.disabled = !ready;
-  if (ready) {
-    label.textContent = `Enregistrer — ${state.categorie}`;
-  } else if (state.categorie && !state.amount) {
-    label.textContent = `${state.categorie} — entrez un montant`;
-  } else {
-    label.textContent = 'Choisir une catégorie';
-  }
-}
+// ─── SUBMIT ──────────────────────────────────────────────────────
+async function submit() {
+  const v = parseFloat(amount);
+  if (!v || !selectedCat) return;
+  document.getElementById('okBtn').disabled = true;
 
-// ─── ENVOI ────────────────────────────────────────────────────────────────────
-async function submitDepense() {
-  const montant = parseFloat(state.amount);
-  if (!montant || montant <= 0) { showToast('Entrez un montant', 'error'); return; }
-  if (!state.categorie) { showToast('Choisissez une catégorie', 'error'); return; }
-
-  const btn = document.getElementById('valBtn');
-  btn.disabled = true;
-  btn.classList.add('loading');
-
-  const dep = {
-    date: new Date().toISOString().slice(0,10),
-    montant,
-    categorie: state.categorie,
-    proprietaire: 'Foyer',
-    note: ''
+  const entry = {
+    id: Date.now(),
+    date: today,
+    group: activeGroup,
+    cat: selectedCat,
+    amt: v,
+    time: new Date().toLocaleTimeString('fr', {hour:'2-digit', minute:'2-digit'})
   };
 
+  // Update local state immédiatement
+  todayData[activeGroup].total = (todayData[activeGroup].total || 0) + v;
+  todayData[activeGroup].cats[selectedCat] = (todayData[activeGroup].cats[selectedCat] || 0) + v;
+  history.unshift(entry);
+  saveHistory();
+
+  const savedCat = selectedCat;
+  const savedAmt = v;
+  amount = ''; selectedCat = null;
+  renderGroups(); renderCats(); renderTotaux(); updateUI();
+
+  // Envoi au Sheet en arrière-plan
   try {
     const r = await fetch(SCRIPT_URL, {
-      method:'POST', redirect:'follow',
-      body: JSON.stringify({action:'add_depense', secret:SECRET, depense:dep})
+      method: 'POST', redirect: 'follow',
+      body: JSON.stringify({action:'add_depense', secret:SECRET, depense:{
+        date: today, montant: v, categorie: savedCat, proprietaire:'Foyer', note:''
+      }})
     });
-    const text = await r.text();
-    const data = JSON.parse(text);
-    if (data.ok) {
-      state.history.unshift(dep);
-      if (state.history.length > 100) state.history.pop();
-      localStorage.setItem('fd_history', JSON.stringify(state.history));
-      // Reset
-      const catSel = state.categorie;
-      const montantSel = montant;
-      state.amount = '';
-      state.categorie = null;
-      document.getElementById('hiddenInput').value = '';
-      document.querySelectorAll('.cat-btn.sel').forEach(b=>b.classList.remove('sel'));
-      updateAmountDisplay();
-      updateValBtn();
-      showToast(`${montantSel} € · ${catSel} enregistré !`, 'success');
-      setTimeout(() => document.getElementById('hiddenInput').focus(), 300);
-    } else {
-      showToast('Erreur : ' + (data.error||'inconnue'), 'error');
-    }
+    const t = await r.text();
+    const data = JSON.parse(t);
+    if (data.ok) showToast(`${savedAmt}€ · ${savedCat} ✓`, 'success');
+    else showToast('Sauvegardé localement', 'warn');
   } catch(e) {
-    // Sauvegarder localement si hors ligne
-    state.history.unshift({...dep, pending: true});
-    localStorage.setItem('fd_history', JSON.stringify(state.history));
-    showToast('Hors ligne — sauvegardé localement', 'error');
+    showToast('Hors ligne — sauvegardé', 'warn');
   }
-
-  btn.disabled = false;
-  btn.classList.remove('loading');
 }
 
-// ─── HISTORIQUE ───────────────────────────────────────────────────────────────
-function openHist() {
-  document.getElementById('histPanel').classList.add('open');
-  renderHist();
+// ─── RESET ───────────────────────────────────────────────────────
+function resetTotaux() {
+  if (!confirm('Remettre les totaux du jour à zéro ?')) return;
+  GROUPS.forEach(g => todayData[g.key] = {total:0, cats:{}});
+  history = [];
+  saveHistory();
+  renderGroups(); renderCats(); renderTotaux();
+  showToast('Totaux remis à zéro', 'success');
 }
-function closeHist() {
-  document.getElementById('histPanel').classList.remove('open');
-}
-function resetHistory() {
-  if (!confirm('Vider tout l\'historique local ?')) return;
-  state.history = [];
-  localStorage.removeItem('fd_history');
-  renderHist();
-}
+
+// ─── HISTORIQUE ──────────────────────────────────────────────────
+function openHist() { document.getElementById('histOverlay').classList.add('open'); renderHist(); }
+function closeHist() { document.getElementById('histOverlay').classList.remove('open'); }
+function closeHistIfBg(e) { if (e.target === e.currentTarget) closeHist(); }
+
 function renderHist() {
   const body = document.getElementById('histBody');
-  if (!state.history.length) {
-    body.innerHTML = '<div class="hist-empty">Aucune dépense enregistrée.</div>';
-    return;
-  }
-  body.innerHTML = `<div class="hist-count">${state.history.length} dépense${state.history.length>1?'s':''}</div>` +
-    state.history.map(d => `
-      <div class="hist-item">
-        <div>
-          <div class="hi-cat"><i class="ti ${ICON_MAP[d.categorie]||'ti-tag'}" style="font-size:13px"></i>${d.categorie}${d.pending?' · <span style="color:#f59e0b">⏳ En attente</span>':''}</div>
-          <div class="hi-date">${d.date}</div>
-          ${d.note?`<div class="hi-note">${d.note}</div>`:''}
-        </div>
-        <div style="text-align:right">
-          <div class="hi-amt">${d.montant} €</div>
-        </div>
-      </div>`).join('');
+  if (!history.length) { body.innerHTML = '<div class="hist-empty">Aucune dépense aujourd\'hui.</div>'; return; }
+  body.innerHTML = history.map(e => {
+    const g = GROUPS.find(x => x.key === e.group);
+    return `<div class="hist-item">
+      <div>
+        <div class="hi-cat"><i class="ti ${g.icon}" style="color:${g.color}"></i>${g.label.replace('Ali.','Alimentation')} · ${e.time}</div>
+        <div class="hi-name">${e.cat}</div>
+      </div>
+      <div class="hi-right">
+        <div class="hi-amt" style="color:${g.color}">${e.amt}€</div>
+        <button class="hi-del" onclick="deleteEntry(${e.id})"><i class="ti ti-x"></i></button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-// ─── TOAST ────────────────────────────────────────────────────────────────────
+function deleteEntry(id) {
+  const e = history.find(x => x.id === id);
+  if (!e) return;
+  todayData[e.group].total = Math.max(0, (todayData[e.group].total||0) - e.amt);
+  todayData[e.group].cats[e.cat] = Math.max(0, (todayData[e.group].cats[e.cat]||0) - e.amt);
+  history = history.filter(x => x.id !== id);
+  saveHistory();
+  renderGroups(); renderCats(); renderTotaux(); renderHist();
+  showToast('Dépense supprimée', 'warn');
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────
 function showToast(msg, type='success') {
   const el = document.getElementById('toast');
   const icon = document.getElementById('toastIcon');
   document.getElementById('toastMsg').textContent = msg;
-  el.className = 'toast ' + type;
+  el.className = 'toast' + (type==='warn'?' err':'') + ' show';
   icon.className = 'ti ' + (type==='success'?'ti-check':'ti-alert-triangle');
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2800);
+  setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-init();
+// ─── INIT ────────────────────────────────────────────────────────
+// Hauteur réelle sur mobile (fix iOS 100vh)
+function setVH() { document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px'); }
+window.addEventListener('resize', setVH);
+setVH();
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
+
+renderGroups(); renderCats(); renderTotaux(); updateUI();
 </script>
 </body>
 </html>

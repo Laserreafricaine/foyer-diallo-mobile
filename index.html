@@ -9,35 +9,21 @@
   <meta name="theme-color" content="#111827">
   <title>Foyer Diallo</title>
   <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon-192.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
   <style>
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
     html,body{height:100%;overflow:hidden;background:#111827;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Helvetica Neue',sans-serif}
+    .app{display:flex;flex-direction:column;height:100vh;height:calc(var(--vh,1vh)*100);max-width:430px;margin:0 auto;background:#f4f7fb;overflow:hidden}
 
-    /* ── LAYOUT FIXE — 100vh, 0 scroll ── */
-    .app{
-      display:flex;flex-direction:column;
-      height:100vh;
-      height:calc(var(--vh,1vh)*100);
-      max-width:430px;margin:0 auto;
-      background:#f4f7fb;overflow:hidden;
-    }
-
-    /* ── HEADER ── */
-    .hd{
-      background:linear-gradient(135deg,#111827,#1e293b);
-      padding:env(safe-area-inset-top,12px) 14px 10px;
-      flex-shrink:0;
-    }
+    /* HEADER */
+    .hd{background:linear-gradient(135deg,#111827,#1e293b);padding:env(safe-area-inset-top,12px) 14px 10px;flex-shrink:0}
     .hd-row1{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
     .brand{display:flex;align-items:center;gap:8px}
     .bmark{width:28px;height:28px;border-radius:8px;background:#2457ff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
     .bname{font-size:13px;font-weight:600;color:#fff}
     .hd-btns{display:flex;gap:6px}
     .hbtn{font-size:11px;color:#94a3b8;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);border-radius:7px;padding:6px 10px;cursor:pointer;display:flex;align-items:center;gap:4px}
-    .hbtn i{font-size:13px}
     .hbtn.danger{color:#fca5a5;background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.25)}
-
     .hd-row2{display:flex;align-items:flex-end;justify-content:space-between}
     .amt-block{display:flex;align-items:baseline;gap:3px}
     .amt-cur{font-size:18px;color:#64748b}
@@ -49,162 +35,87 @@
     .total-jour{font-size:10px;color:#64748b;white-space:nowrap}
     .total-jour strong{color:#94a3b8}
 
-    /* ── GRILLE GROUPES 4×2 ── */
-    .groups-grid{
-      display:grid;grid-template-columns:repeat(4,1fr);
-      gap:4px;background:#fff;
-      border-bottom:1px solid #e2e8f0;
-      flex-shrink:0;padding:5px 6px;
-    }
-    .grp-btn{
-      border-radius:8px;padding:5px 3px;
-      font-size:9px;font-weight:700;
-      cursor:pointer;border:2px solid transparent;
-      display:flex;flex-direction:column;align-items:center;gap:2px;
-      transition:transform .1s;position:relative;
-      min-height:0;justify-content:center;
-    }
+    /* GROUPES */
+    .groups-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#fff;border-bottom:1px solid #e2e8f0;flex-shrink:0;padding:5px 6px}
+    .grp-btn{border-radius:8px;padding:5px 3px;font-size:9px;font-weight:700;cursor:pointer;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;gap:2px;transition:transform .1s;position:relative;min-height:0;justify-content:center}
     .grp-btn i{font-size:15px}
     .grp-btn:active{transform:scale(.92)}
     .grp-btn.active{border-width:2px}
-    .grp-badge{
-      position:absolute;top:2px;right:2px;
-      background:#ef4444;color:#fff;
-      border-radius:999px;padding:1px 4px;
-      font-size:8px;font-weight:700;line-height:1.4;
-    }
+    .grp-badge{position:absolute;top:2px;right:2px;background:#ef4444;color:#fff;border-radius:999px;padding:1px 4px;font-size:8px;font-weight:700;line-height:1.4}
 
-    /* ── CATÉGORIES — grille 2×3 fixe, remplit tout l'espace disponible ── */
-    .cats-area{flex:1;padding:5px 6px;overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
-    .cat-grid{
-      display:grid;grid-template-columns:1fr 1fr;
-      grid-template-rows:repeat(3,1fr);
-      gap:5px;height:100%;
-    }
-    .cat-btn{
-      border-radius:12px;padding:5px;
-      font-size:11px;font-weight:600;
-      cursor:pointer;border:2px solid transparent;
-      display:flex;flex-direction:column;align-items:center;justify-content:center;
-      gap:4px;transition:transform .1s,box-shadow .1s;
-      position:relative;overflow:hidden;
-    }
+    /* CATÉGORIES */
+    .cats-area{flex:1;padding:5px 6px;overflow-y:auto;-webkit-overflow-scrolling:touch;min-height:0}
+    .cat-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px;height:100%}
+    .cat-btn{border-radius:12px;padding:8px 6px;font-size:11px;font-weight:600;cursor:pointer;border:2px solid transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;transition:transform .1s,box-shadow .1s;position:relative}
     .cat-btn i{font-size:22px}
     .cat-btn.sel{box-shadow:0 0 0 3px #2457ff;transform:scale(1.03)}
     .cat-btn:active{transform:scale(.92)}
-    .cat-today{
-      position:absolute;bottom:4px;right:6px;
-      font-size:9px;font-weight:700;opacity:.7;
-    }
+    .cat-today{position:absolute;bottom:4px;right:6px;font-size:9px;font-weight:700;opacity:.7}
 
-    /* ── PAVÉ NUMÉRIQUE ── */
+    /* PAVÉ */
     .numpad{background:#fff;border-top:1px solid #e2e8f0;padding:5px 6px calc(env(safe-area-inset-bottom,0px) + 6px);flex-shrink:0}
     .np-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;margin-bottom:4px}
-    .np{
-      height:42px;border-radius:10px;border:none;
-      font-size:20px;font-weight:500;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      transition:transform .07s;
-    }
+    .np{height:42px;border-radius:10px;border:none;font-size:20px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .07s}
     .np:active{transform:scale(.88)}
     .np-num{background:#f1f5f9;color:#111827}
-    .np-del{background:#fee2e2;color:#dc2626}
-    .np-del i{font-size:18px}
+    .np-del{background:#fee2e2;color:#dc2626;font-size:18px}
     .np-dot{background:#f1f5f9;color:#111827;font-size:22px}
-    .np-ok{
-      background:linear-gradient(135deg,#111827,#1e293b);
-      color:#fff;font-size:13px;font-weight:600;
-      gap:6px;width:100%;border-radius:10px;height:42px;
-      border:none;cursor:pointer;
-      display:flex;align-items:center;justify-content:center;
-      transition:opacity .15s;
-    }
+    .np-ok{background:linear-gradient(135deg,#111827,#1e293b);color:#fff;font-size:13px;font-weight:600;gap:6px;width:100%;border-radius:10px;height:42px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center}
     .np-ok:disabled{opacity:.35}
-    .np-ok i{font-size:15px}
 
-    /* ── HISTORIQUE ── */
-    .hist-overlay{
-      position:fixed;inset:0;
-      background:rgba(0,0,0,.5);
-      z-index:50;
-      display:none;align-items:flex-end;
-      max-width:430px;margin:0 auto;
-    }
+    /* HISTORIQUE */
+    .hist-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:50;display:none;align-items:flex-end;max-width:430px;margin:0 auto}
     .hist-overlay.open{display:flex}
-    .hist-sheet{
-      background:#f4f7fb;width:100%;
-      border-radius:20px 20px 0 0;
-      max-height:80vh;display:flex;flex-direction:column;
-      padding-bottom:env(safe-area-inset-bottom,0px);
-    }
-    .hist-hd{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:14px 16px 10px;border-bottom:1px solid #e2e8f0;
-    }
+    .hist-sheet{background:#f4f7fb;width:100%;border-radius:20px 20px 0 0;max-height:85vh;display:flex;flex-direction:column;padding-bottom:env(safe-area-inset-bottom,0px)}
+    .hist-hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px 10px;border-bottom:1px solid #e2e8f0;flex-shrink:0}
     .hist-title{font-size:15px;font-weight:600;color:#0f172a}
     .hist-close{font-size:12px;color:#64748b;background:#f1f5f9;border:none;border-radius:7px;padding:6px 12px;cursor:pointer}
     .hist-body{flex:1;overflow-y:auto;padding:10px 12px;display:flex;flex-direction:column;gap:6px}
+    .hist-total{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 14px;font-size:13px;color:#166534;margin-bottom:4px;font-weight:600}
+    .hist-day-hd{display:flex;justify-content:space-between;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;padding:6px 2px 3px}
     .hist-item{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center}
-    .hi-cat{font-size:10px;color:#64748b;margin-bottom:2px;display:flex;align-items:center;gap:4px}
-    .hi-cat i{font-size:12px}
+    .hist-item.archived{opacity:.6;background:#f8fafc}
+    .hi-cat{font-size:10px;color:#64748b;margin-bottom:2px}
     .hi-name{font-size:13px;font-weight:600;color:#0f172a}
-    .hi-right{display:flex;align-items:center;gap:8px}
+    .hi-badge{background:#e2e8f0;color:#64748b;border-radius:999px;padding:1px 7px;font-size:10px;margin-left:4px;font-weight:400}
+    .hi-right{display:flex;align-items:center;gap:6px}
     .hi-amt{font-size:15px;font-weight:700}
-    .hi-del{background:#fee2e2;color:#dc2626;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0}
-    .hi-edit{background:#e0f2fe;color:#0369a1;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;font-size:14px}
-    .hist-total{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 14px;font-size:13px;color:#166534;margin-bottom:8px}
-    .hist-day-header{display:flex;justify-content:space-between;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#64748b;padding:8px 2px 4px;margin-top:4px}
-    .hist-item.is-archived{opacity:.6;background:#f8fafc}
-    .archived-badge{background:#e2e8f0;color:#64748b;border-radius:999px;padding:1px 7px;font-size:10px;margin-left:4px}
-    .edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px}
+    .hi-edit{background:#e0f2fe;color:#0369a1;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0}
+    .hi-del{background:#fee2e2;color:#dc2626;border:none;border-radius:7px;width:30px;height:30px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;flex-shrink:0}
+    .hist-empty{text-align:center;padding:32px;color:#94a3b8;font-size:13px}
+    .hist-loading{text-align:center;padding:20px;color:#94a3b8;font-size:13px}
+
+    /* MODAL ÉDITION */
+    .edit-modal{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px}
     .edit-card{background:#fff;border-radius:16px;padding:20px;width:100%;max-width:320px}
     .edit-title{font-size:16px;font-weight:600;margin-bottom:16px;color:#0f172a}
     .edit-field{margin-bottom:12px}
     .edit-field label{font-size:12px;color:#64748b;display:block;margin-bottom:4px;font-weight:600}
-    .edit-field input,.edit-field select{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:15px;outline:none}
+    .edit-field input,.edit-field select{width:100%;border:1px solid #e2e8f0;border-radius:8px;padding:10px;font-size:15px;outline:none;user-select:auto;-webkit-user-select:auto}
     .edit-field input:focus,.edit-field select:focus{border-color:#2457ff}
     .edit-btns{display:flex;gap:8px;margin-top:16px}
     .edit-save{flex:1;background:linear-gradient(135deg,#111827,#1e293b);color:#fff;border:none;border-radius:10px;padding:12px;font-size:14px;font-weight:600;cursor:pointer}
     .edit-cancel{background:#f1f5f9;color:#64748b;border:none;border-radius:10px;padding:12px;font-size:14px;cursor:pointer;width:80px}
-    .hi-del i{font-size:14px}
-    .hist-empty{text-align:center;padding:32px;color:#94a3b8;font-size:13px}
 
-    /* ── TOAST ── */
-    .toast{
-      position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);
-      left:12px;right:12px;max-width:430px;margin:0 auto;
-      background:#065f46;color:#d1fae5;
-      border-radius:12px;padding:12px 16px;
-      font-size:13px;font-weight:600;
-      opacity:0;transition:opacity .25s;z-index:100;
-      display:flex;align-items:center;gap:8px;pointer-events:none;
-    }
+    /* TOAST */
+    .toast{position:fixed;bottom:calc(env(safe-area-inset-bottom,0px) + 12px);left:12px;right:12px;max-width:430px;margin:0 auto;background:#065f46;color:#d1fae5;border-radius:12px;padding:12px 16px;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s;z-index:200;display:flex;align-items:center;gap:8px;pointer-events:none}
     .toast.show{opacity:1}
-    .toast.err{background:#7f1d1d;color:#fecaca}
-    .toast i{font-size:16px}
+    .toast.warn{background:#7f1d1d;color:#fecaca}
   </style>
 </head>
 <body>
 <div class="app">
-
-  <!-- HEADER -->
   <div class="hd">
     <div class="hd-row1">
-      <div class="brand">
-        <div class="bmark">FD</div>
-        <div class="bname">Foyer Diallo</div>
-      </div>
+      <div class="brand"><div class="bmark">FD</div><div class="bname">Foyer Diallo</div></div>
       <div class="hd-btns">
         <button class="hbtn danger" onclick="resetTotaux()">↺ Reset</button>
-        <button class="hbtn" onclick="openHist()">⏱ Historique</button>
+        <button class="hbtn" id="histBtn" onclick="openHist()">⏱ Historique</button>
       </div>
     </div>
     <div class="hd-row2">
       <div>
-        <div class="amt-block">
-          <span class="amt-cur">€</span>
-          <span class="amt-val amt-empty" id="amtVal">0</span>
-        </div>
+        <div class="amt-block"><span class="amt-cur">€</span><span class="amt-val amt-empty" id="amtVal">0</span></div>
         <div class="amt-hint" id="amtHint">Choisissez une catégorie</div>
       </div>
       <div class="totaux">
@@ -214,13 +125,9 @@
     </div>
   </div>
 
-  <!-- GROUPES -->
   <div class="groups-grid" id="groupsGrid"></div>
-
-  <!-- CATÉGORIES -->
   <div class="cats-area" id="catsArea"></div>
 
-  <!-- PAVÉ -->
   <div class="numpad">
     <div class="np-grid">
       <button class="np np-num" onclick="np('1')">1</button>
@@ -236,18 +143,15 @@
       <button class="np np-num" onclick="np('0')">0</button>
       <button class="np np-del" onclick="npDel()">⌫</button>
     </div>
-    <button class="np-ok" id="okBtn" disabled onclick="submit()">
-      ✓
-      <span id="okLabel">Enregistrer</span>
-    </button>
+    <button class="np-ok" id="okBtn" disabled onclick="submit()">✓ <span id="okLabel">Enregistrer</span></button>
   </div>
 </div>
 
-<!-- HISTORIQUE SHEET -->
+<!-- HISTORIQUE -->
 <div class="hist-overlay" id="histOverlay" onclick="closeHistIfBg(event)">
   <div class="hist-sheet">
     <div class="hist-hd">
-      <span class="hist-title">Historique du jour</span>
+      <span class="hist-title">Historique du mois</span>
       <button class="hist-close" onclick="closeHist()">Fermer</button>
     </div>
     <div class="hist-body" id="histBody"></div>
@@ -255,13 +159,11 @@
 </div>
 
 <!-- TOAST -->
-<div class="toast" id="toast"><span id="toastIcon">✓</span><span id="toastMsg"></span></div>
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
 
 <script>
-// ─── CONFIG ─────────────────────────────────────────────────────
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyR1OXpZNyz3hBHRE7HuRylfJwW1MiRIUtyUfyJIJwIlx2CV7l0rmRFoe1Vp1KC88bFRw/exec';
 const SECRET = '0603';
-// ────────────────────────────────────────────────────────────────
 
 const GROUPS = [
   {key:'ali',icon:'🛒',label:'Ali.',color:'#1b5e20',bg:'#e8f5e9',bd:'#a5d6a7',
@@ -272,16 +174,16 @@ const GROUPS = [
    cats:[{n:'Réparation/Bricolage',i:'🔨'},{n:'Électroménager',i:'🫧'},{n:'Produits ménagers',i:'🧹'},{n:'Déco/meubles',i:'🪑'}]},
   {key:'tra',icon:'🚗',label:'Transport',color:'#4a148c',bg:'#f3e5f5',bd:'#ce93d8',
    cats:[{n:'Carburant',i:'⛽'},{n:'Parking',i:'🅿️'},{n:'Train/RER',i:'🚆'},{n:'Taxi/VTC',i:'🚕'},{n:'Péage',i:'🛣️'}]},
+  {key:'con',icon:'⚡',label:'Conso.',color:'#0369a1',bg:'#e0f2fe',bd:'#7dd3fc',
+   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Granulets',i:'🪵'}]},
   {key:'san',icon:'❤️',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
    cats:[{n:'Pharmacie',i:'💊'},{n:'Médecin',i:'🩺'},{n:'Dentiste',i:'🦷'},{n:'Optique',i:'👓'}]},
   {key:'loi',icon:'🎉',label:'Loisirs',color:'#006064',bg:'#e0f7fa',bd:'#80deea',
    cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sports/Fitness',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Potager',i:'🌱'},{n:'Cultures/livres/DVD',i:'📚'},{n:'Jeux',i:'🎮'}]},
+  {key:'abo',icon:'📺',label:'Abon.',color:'#6d28d9',bg:'#ede9fe',bd:'#c4b5fd',
+   cats:[{n:'Netflix',i:'🎬'},{n:'Apple TV',i:'🍎'},{n:'Amazon Prime',i:'📦'},{n:'YouTube Premium',i:'▶️'},{n:'Google One',i:'☁️'},{n:'Dropbox',i:'📂'},{n:'Autres',i:'📱'}]},
   {key:'sen',icon:'🌍',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
    cats:[{n:'Envoi famille',i:'💸'},{n:'Achats Sénégal',i:'🛍️'}]},
-  {key:'con',icon:'⚡',label:'Conso.',color:'#0369a1',bg:'#e0f2fe',bd:'#7dd3fc',
-   cats:[{n:'Énergie',i:'⚡'},{n:'Eau',i:'💧'},{n:'Granulets',i:'🪵'}]},
-  {key:'abo',icon:'📺',label:'Abonnements',color:'#6d28d9',bg:'#ede9fe',bd:'#c4b5fd',
-   cats:[{n:'Netflix',i:'🎬'},{n:'Apple TV',i:'🍎'},{n:'Amazon Prime',i:'📦'},{n:'YouTube Premium',i:'▶️'},{n:'Google One',i:'☁️'},{n:'Dropbox',i:'📂'},{n:'Autres',i:'📱'}]},
   {key:'div',icon:'•••',label:'Divers',color:'#33691e',bg:'#f1f8e9',bd:'#c5e1a5',
    cats:[{n:'Cadeaux',i:'🎁'},{n:'Imprévus',i:'⚠️'},{n:'Abonnements ponctuels',i:'📱'}]},
   {key:'don',icon:'🤲',label:'Dons',color:'#7c3aed',bg:'#f5f3ff',bd:'#ddd6fe',
@@ -290,37 +192,68 @@ const GROUPS = [
    cats:[{n:'Tabaski',i:'🌟'},{n:'Korite',i:'🌙'},{n:'Noël',i:'🎄'}]}
 ];
 
-// State
+const today = new Date().toISOString().slice(0,10);
+const currentMonth = today.slice(0,7);
 let amount = '', selectedCat = null, activeGroup = 'ali';
 let todayData = {};
 let history = JSON.parse(localStorage.getItem('fd_history_day') || '[]');
-GROUPS.forEach(g => todayData[g.key] = {total:0, cats:{}});
+let monthHistory = [];
+let pendingQueue = JSON.parse(localStorage.getItem('fd_pending') || '[]');
 
-// Reconstruire todayData depuis history (même jour)
-const today = new Date().toISOString().slice(0,10);
+GROUPS.forEach(g => todayData[g.key] = {total:0, cats:{}});
 history = history.filter(e => e.date === today);
 history.forEach(e => {
-  if (!todayData[e.group]) return;
-  todayData[e.group].total = (todayData[e.group].total || 0) + e.amt;
-  todayData[e.group].cats[e.cat] = (todayData[e.group].cats[e.cat] || 0) + e.amt;
+  const g = GROUPS.find(x => (x.cats||[]).some(c => c.n === e.cat));
+  if (!g) return;
+  todayData[g.key].total = (todayData[g.key].total||0) + e.amt;
+  todayData[g.key].cats[e.cat] = (todayData[g.key].cats[e.cat]||0) + e.amt;
 });
 
-function saveHistory() {
-  localStorage.setItem('fd_history_day', JSON.stringify(history));
+function saveHistory() { localStorage.setItem('fd_history_day', JSON.stringify(history)); }
+function savePending() { localStorage.setItem('fd_pending', JSON.stringify(pendingQueue)); }
+
+// FILE D'ATTENTE HORS LIGNE
+async function processPending() {
+  if (!pendingQueue.length) return;
+  for (let i = pendingQueue.length - 1; i >= 0; i--) {
+    try {
+      const r = await fetch(SCRIPT_URL, {method:'POST',redirect:'follow',body:JSON.stringify({...pendingQueue[i],secret:SECRET})});
+      const t = await r.text(); const d = JSON.parse(t);
+      if (d.ok) pendingQueue.splice(i,1);
+    } catch(e) { break; }
+  }
+  savePending(); updatePendingBadge();
 }
 
-function getTotalJour() {
-  return Math.round(Object.values(todayData).reduce((a,g) => a + (g.total||0), 0) * 100) / 100;
+function updatePendingBadge() {
+  const btn = document.getElementById('histBtn');
+  if (!btn) return;
+  btn.innerHTML = pendingQueue.length > 0
+    ? `⏱ Historique <span style="background:#ef4444;color:#fff;border-radius:999px;padding:1px 5px;font-size:9px">${pendingQueue.length}</span>`
+    : '⏱ Historique';
 }
 
-// ─── RENDER ─────────────────────────────────────────────────────
+async function syncAction(action) {
+  try {
+    const r = await fetch(SCRIPT_URL, {method:'POST',redirect:'follow',body:JSON.stringify({...action,secret:SECRET})});
+    const t = await r.text(); const d = JSON.parse(t);
+    if (!d.ok) throw new Error(d.error);
+    return true;
+  } catch(e) {
+    pendingQueue.push({...action, _qid: Date.now()});
+    savePending(); updatePendingBadge();
+    return false;
+  }
+}
+
+// RENDU
 function renderGroups() {
   document.getElementById('groupsGrid').innerHTML = GROUPS.map(g => {
     const t = todayData[g.key]?.total || 0;
     return `<button class="grp-btn ${g.key===activeGroup?'active':''}"
       style="background:${g.key===activeGroup?g.bg:'#f8fafc'};color:${g.color};${g.key===activeGroup?'border-color:'+g.color:''}"
       onclick="switchGroup('${g.key}')">
-      <span style="font-size:18px;line-height:1">${g.icon}</span>${g.label}
+      <span style="font-size:16px">${g.icon}</span>${g.label}
       ${t>0?`<span class="grp-badge">${Math.round(t)}€</span>`:''}
     </button>`;
   }).join('');
@@ -329,13 +262,13 @@ function renderGroups() {
 function renderCats() {
   const g = GROUPS.find(x => x.key === activeGroup);
   const cats = g.cats.slice();
-  // Remplir jusqu'à 6 pour garder la grille 2×3 régulière
-  while (cats.length < 6) cats.push(null);
-  document.getElementById('catsArea').innerHTML = `<div class="cat-grid">${
+  while (cats.length % 2 !== 0) cats.push(null);
+  const rows = Math.ceil(cats.length / 2);
+  document.getElementById('catsArea').innerHTML = `<div class="cat-grid" style="grid-template-rows:repeat(${rows},1fr)">${
     cats.map(c => c ? `<button class="cat-btn ${selectedCat===c.n?'sel':''}"
       style="background:${g.bg};color:${g.color};border-color:${selectedCat===c.n?'#2457ff':g.bd}"
       onclick="selectCat('${c.n}')">
-      <span style="font-size:24px;line-height:1">${c.i}</span>${c.n}
+      <span style="font-size:22px;line-height:1">${c.i}</span>${c.n}
       ${todayData[activeGroup]?.cats[c.n]>0?`<span class="cat-today">${Math.round(todayData[activeGroup].cats[c.n])}€</span>`:''}
     </button>` : `<div style="border-radius:12px;background:#f8fafc"></div>`
     ).join('')
@@ -345,182 +278,182 @@ function renderCats() {
 function renderTotaux() {
   const g = GROUPS.find(x => x.key === activeGroup);
   const grpT = todayData[activeGroup]?.total || 0;
-  const jourT = getTotalJour();
+  const jourT = Math.round(Object.values(todayData).reduce((a,g) => a+(g.total||0), 0)*100)/100;
   const el = document.getElementById('totalGrp');
-  if (grpT > 0) { el.style.visibility = ''; el.textContent = Math.round(grpT) + '€ ' + g.label.replace('Ali.','Ali.'); }
-  else { el.style.visibility = 'hidden'; el.textContent = '—'; }
+  if (grpT > 0) { el.style.visibility=''; el.textContent=Math.round(grpT)+'€ '+g.label; }
+  else { el.style.visibility='hidden'; el.textContent='—'; }
   document.getElementById('totalJour').innerHTML = jourT > 0 ? `Jour : <strong>${Math.round(jourT)}€</strong>` : '';
 }
 
-function switchGroup(k) {
-  activeGroup = k;
-  selectedCat = null;
-  renderGroups(); renderCats(); renderTotaux(); updateUI(); updatePendingBadge();
-// Synchroniser la file d'attente quand la connexion revient
-window.addEventListener('online', () => { processPending(); showToast('Connexion rétablie — synchronisation…', 'success'); });
-// Tenter sync au démarrage
-setTimeout(processPending, 2000);
-}
+function switchGroup(k) { activeGroup=k; selectedCat=null; renderGroups(); renderCats(); renderTotaux(); updateUI(); }
+function selectCat(n) { selectedCat=n; renderCats(); updateUI(); }
 
-function selectCat(n) {
-  selectedCat = n; renderCats(); updateUI();
-}
-
-// ─── PAVÉ ────────────────────────────────────────────────────────
 function np(d) {
-  if (d === '.' && amount.includes('.')) return;
-  if (d !== '.' && amount.split('.')[1]?.length >= 2) return;
-  if (amount.length >= 7) return;
-  amount = (amount === '0' && d !== '.') ? d : amount + d;
+  if(d==='.'&&amount.includes('.'))return;
+  if(d!=='.'&&amount.split('.')[1]?.length>=2)return;
+  if(amount.length>=7)return;
+  amount=(amount==='0'&&d!=='.')?d:amount+d;
   updateUI();
 }
-function npDel() { amount = amount.slice(0,-1); updateUI(); }
+function npDel() { amount=amount.slice(0,-1); updateUI(); }
 
 function updateUI() {
-  const v = parseFloat(amount) || 0;
+  const v = parseFloat(amount)||0;
   const el = document.getElementById('amtVal');
-  el.textContent = amount || '0';
-  el.classList.toggle('amt-empty', !v);
-  const hint = document.getElementById('amtHint');
-  const ok = document.getElementById('okBtn');
-  const lbl = document.getElementById('okLabel');
-  if (v > 0 && selectedCat) {
-    hint.textContent = selectedCat + ' — prêt à enregistrer';
-    hint.style.color = '#4ade80';
-    ok.disabled = false;
-    lbl.textContent = `Enregistrer ${v}€ · ${selectedCat}`;
-  } else if (v > 0) {
-    hint.textContent = 'Choisissez une catégorie';
-    hint.style.color = '#94a3b8';
-    ok.disabled = true;
-    lbl.textContent = 'Choisir une catégorie';
-  } else if (selectedCat) {
-    hint.textContent = selectedCat + ' sélectionné — tapez le montant';
-    hint.style.color = '#94a3b8';
-    ok.disabled = true;
-    lbl.textContent = 'Entrer un montant';
-  } else {
-    hint.textContent = 'Choisissez une catégorie';
-    hint.style.color = '#475569';
-    ok.disabled = true;
-    lbl.textContent = 'Enregistrer';
-  }
+  el.textContent = amount||'0'; el.classList.toggle('amt-empty',!v);
+  const hint=document.getElementById('amtHint'), ok=document.getElementById('okBtn'), lbl=document.getElementById('okLabel');
+  if(v>0&&selectedCat){hint.textContent=selectedCat+' — prêt';hint.style.color='#4ade80';ok.disabled=false;lbl.textContent=`${v}€ · ${selectedCat}`;}
+  else if(v>0){hint.textContent='Choisissez une catégorie';hint.style.color='#94a3b8';ok.disabled=true;lbl.textContent='Choisir une catégorie';}
+  else if(selectedCat){hint.textContent=selectedCat+' — tapez le montant';hint.style.color='#94a3b8';ok.disabled=true;lbl.textContent='Entrer un montant';}
+  else{hint.textContent='Choisissez une catégorie';hint.style.color='#475569';ok.disabled=true;lbl.textContent='Enregistrer';}
 }
 
-// ─── SUBMIT ──────────────────────────────────────────────────────
+// SOUMETTRE
 async function submit() {
-  const v = parseFloat(amount);
-  if (!v || !selectedCat) return;
+  const v = parseFloat(amount); if(!v||!selectedCat)return;
   document.getElementById('okBtn').disabled = true;
-
-  const entry = {
-    id: Date.now(),
-    date: today,
-    group: activeGroup,
-    cat: selectedCat,
-    amt: v,
-    time: new Date().toLocaleTimeString('fr', {hour:'2-digit', minute:'2-digit'})
-  };
-
-  // Update local state immédiatement
-  todayData[activeGroup].total = (todayData[activeGroup].total || 0) + v;
-  todayData[activeGroup].cats[selectedCat] = (todayData[activeGroup].cats[selectedCat] || 0) + v;
-  history.unshift(entry);
-  saveHistory();
-
-  const savedCat = selectedCat;
-  const savedAmt = v;
-  amount = ''; selectedCat = null;
-  renderGroups(); renderCats(); renderTotaux(); updateUI(); updatePendingBadge();
-// Synchroniser la file d'attente quand la connexion revient
-window.addEventListener('online', () => { processPending(); showToast('Connexion rétablie — synchronisation…', 'success'); });
-// Tenter sync au démarrage
-setTimeout(processPending, 2000);
-
-  // Envoi au Sheet en arrière-plan
+  const entry = {id:Date.now(), date:today, group:activeGroup, cat:selectedCat, amt:v, time:new Date().toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})};
+  todayData[activeGroup].total = (todayData[activeGroup].total||0)+v;
+  todayData[activeGroup].cats[selectedCat] = (todayData[activeGroup].cats[selectedCat]||0)+v;
+  history.unshift(entry); saveHistory();
+  const savedCat=selectedCat, savedAmt=v;
+  amount=''; selectedCat=null;
+  document.getElementById('amtVal').textContent='0'; document.getElementById('amtVal').classList.add('amt-empty');
+  renderGroups(); renderCats(); renderTotaux(); updateUI();
   try {
-    const r = await fetch(SCRIPT_URL, {
-      method: 'POST', redirect: 'follow',
-      body: JSON.stringify({action:'add_depense', secret:SECRET, depense:{
-        date: today, montant: v, categorie: savedCat, proprietaire:'Foyer', note:''
-      }})
-    });
-    const t = await r.text();
-    const data = JSON.parse(t);
-    if (data.ok) showToast(`${savedAmt}€ · ${savedCat} ✓`, 'success');
-    else showToast('Sauvegardé localement', 'warn');
-  } catch(e) {
-    showToast('Hors ligne — sauvegardé', 'warn');
-  }
+    const r = await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({action:'add_depense',secret:SECRET,depense:{date:today,montant:v,categorie:savedCat,proprietaire:'Foyer',note:'',_lid:entry.id}})});
+    const t = await r.text(); const d = JSON.parse(t);
+    if(d.ok){entry.sheet_id=d.id; saveHistory(); showToast(`${savedAmt}€ · ${savedCat} ✓`);}
+    else showToast('Sauvegardé localement','warn');
+  } catch(e){ showToast('Hors ligne — sauvegardé','warn'); }
+  document.getElementById('okBtn').disabled = false;
 }
 
-// ─── RESET ───────────────────────────────────────────────────────
+// RESET
 function resetTotaux() {
-  if (!confirm('Remettre les totaux du jour à zéro ?')) return;
-  GROUPS.forEach(g => todayData[g.key] = {total:0, cats:{}});
-  history = [];
-  saveHistory();
+  if(!confirm('Remettre les totaux du jour à zéro ?'))return;
+  GROUPS.forEach(g => todayData[g.key]={total:0,cats:{}});
+  history=[]; saveHistory();
   renderGroups(); renderCats(); renderTotaux();
-  showToast('Totaux remis à zéro', 'success');
+  showToast('Totaux remis à zéro');
 }
 
-// ─── HISTORIQUE ──────────────────────────────────────────────────
-function openHist() { document.getElementById('histOverlay').classList.add('open'); renderHist(); }
+// HISTORIQUE DU MOIS
+async function openHist() {
+  document.getElementById('histOverlay').classList.add('open');
+  const body = document.getElementById('histBody');
+  body.innerHTML = '<div class="hist-loading">Chargement…</div>';
+  try {
+    const url = SCRIPT_URL+'?'+new URLSearchParams({action:'get_historique',mois:currentMonth,secret:SECRET});
+    const r = await fetch(url,{redirect:'follow'});
+    const t = await r.text(); const data = JSON.parse(t);
+    monthHistory = data.ok ? data.depenses.sort((a,b)=>b.date.localeCompare(a.date)) : [];
+  } catch(e) {
+    monthHistory = history.map(h=>({id:h.sheet_id||h.id,date:h.date,montant:h.amt,categorie:h.cat,statut:'nouveau'}));
+  }
+  renderHist();
+}
+
 function closeHist() { document.getElementById('histOverlay').classList.remove('open'); }
-function closeHistIfBg(e) { if (e.target === e.currentTarget) closeHist(); }
+function closeHistIfBg(e) { if(e.target===e.currentTarget)closeHist(); }
 
 function renderHist() {
   const body = document.getElementById('histBody');
-  if (!history.length) { body.innerHTML = '<div class="hist-empty">Aucune dépense aujourd\'hui.</div>'; return; }
-  body.innerHTML = history.map(e => {
-    const g = GROUPS.find(x => x.key === e.group);
-    return `<div class="hist-item">
-      <div>
-        <div class="hi-cat"><span style="font-size:13px">${g.icon}</span>${g.label.replace('Ali.','Alimentation')} · ${e.time}</div>
-        <div class="hi-name">${e.cat}</div>
-      </div>
-      <div class="hi-right">
-        <div class="hi-amt" style="color:${g.color}">${e.amt}€</div>
-        <button class="hi-del" onclick="deleteEntry(${e.id})">✕</button>
-      </div>
-    </div>`;
-  }).join('');
+  if(!monthHistory.length){body.innerHTML='<div class="hist-empty">Aucune dépense ce mois.</div>';return;}
+  const total = monthHistory.reduce((a,e)=>a+Number(e.montant||0),0);
+  const byDate = {};
+  monthHistory.forEach(e=>{const d=String(e.date).slice(0,10);if(!byDate[d])byDate[d]=[];byDate[d].push(e);});
+  body.innerHTML = `<div class="hist-total">Total du mois : ${Math.round(total)} €</div>`+
+    Object.entries(byDate).map(([date,items])=>{
+      const dayT = items.reduce((a,e)=>a+Number(e.montant||0),0);
+      return `<div class="hist-day-hd"><span>${formatDate(date)}</span><span>${Math.round(dayT)} €</span></div>`+
+        items.map(e=>{
+          const g = GROUPS.find(x=>(x.cats||[]).some(c=>c.n===(e.categorie||e.cat)))||GROUPS[0];
+          const archived = e.statut==='archivé';
+          return `<div class="hist-item ${archived?'archived':''}">
+            <div>
+              <div class="hi-cat" style="color:${g.color}">${g.icon} ${g.label.replace('Ali.','Alimentation').replace('Abon.','Abonnements')}</div>
+              <div class="hi-name">${e.categorie||e.cat}${archived?'<span class="hi-badge">Clôturé</span>':''}</div>
+            </div>
+            <div class="hi-right">
+              <div class="hi-amt" style="color:${g.color}">${e.montant||e.amt} €</div>
+              ${!archived?`<button class="hi-edit" onclick="editEntry('${e.id}',${e.montant||e.amt},'${e.categorie||e.cat}')">✏️</button>
+              <button class="hi-del" onclick="deleteEntry('${e.id}',${e.montant||e.amt},'${e.categorie||e.cat}')">✕</button>`:''}
+            </div>
+          </div>`;
+        }).join('');
+    }).join('');
 }
 
-function deleteEntry(id) {
-  const e = history.find(x => x.id === id);
-  if (!e) return;
-  todayData[e.group].total = Math.max(0, (todayData[e.group].total||0) - e.amt);
-  todayData[e.group].cats[e.cat] = Math.max(0, (todayData[e.group].cats[e.cat]||0) - e.amt);
-  history = history.filter(x => x.id !== id);
-  saveHistory();
-  renderGroups(); renderCats(); renderTotaux(); renderHist();
-  showToast('Dépense supprimée', 'warn');
+function formatDate(d) {
+  return new Date(d+'T12:00:00').toLocaleDateString('fr-FR',{weekday:'short',day:'numeric',month:'short'});
 }
 
-// ─── TOAST ───────────────────────────────────────────────────────
+// MODIFIER
+function editEntry(id, amt, cat) {
+  const modal = document.createElement('div');
+  modal.className = 'edit-modal';
+  modal.innerHTML = `<div class="edit-card">
+    <div class="edit-title">Modifier la dépense</div>
+    <div class="edit-field"><label>Montant (€)</label><input type="number" id="editAmt" value="${amt}" inputmode="decimal" step="0.01"></div>
+    <div class="edit-field"><label>Catégorie</label><select id="editCat">${GROUPS.flatMap(g=>g.cats.map(c=>`<option ${c.n===cat?'selected':''}>${c.n}</option>`)).join('')}</select></div>
+    <div class="edit-btns">
+      <button class="edit-save" onclick="saveEdit('${id}')">Enregistrer</button>
+      <button class="edit-cancel" onclick="this.closest('.edit-modal').remove()">Annuler</button>
+    </div>
+  </div>`;
+  document.body.appendChild(modal);
+  setTimeout(()=>document.getElementById('editAmt').focus(),100);
+}
+
+async function saveEdit(id) {
+  const newAmt = parseFloat(document.getElementById('editAmt').value);
+  const newCat = document.getElementById('editCat').value;
+  if(!newAmt||newAmt<=0)return;
+  document.querySelector('.edit-modal').remove();
+  const e = monthHistory.find(x=>String(x.id)===String(id));
+  if(e){e.montant=newAmt;e.categorie=newCat;}
+  rebuildTodayData(); renderGroups(); renderCats(); renderTotaux(); renderHist();
+  const ok = await syncAction({action:'update_depense',id,montant:newAmt,categorie:newCat});
+  showToast(ok?`Modifié : ${newAmt}€ · ${newCat}`:'Modifié localement',ok?'success':'warn');
+}
+
+// SUPPRIMER
+async function deleteEntry(id, amt, cat) {
+  if(!confirm(`Supprimer ${amt}€ · ${cat} ?`))return;
+  monthHistory = monthHistory.filter(x=>String(x.id)!==String(id));
+  history = history.filter(x=>String(x.id)!==String(id)&&String(x.sheet_id)!==String(id));
+  saveHistory(); rebuildTodayData(); renderGroups(); renderCats(); renderTotaux(); renderHist();
+  const ok = await syncAction({action:'delete_depense',id});
+  showToast(ok?'Dépense supprimée':'Supprimé localement',ok?'success':'warn');
+}
+
+function rebuildTodayData() {
+  GROUPS.forEach(g => todayData[g.key]={total:0,cats:{}});
+  [...monthHistory,...history].filter(e=>(String(e.date||'').slice(0,10)===today)&&e.statut!=='annulé').forEach(e=>{
+    const g = GROUPS.find(x=>(x.cats||[]).some(c=>c.n===(e.categorie||e.cat)));
+    if(!g)return;
+    const amt=Number(e.montant||e.amt||0), cat=e.categorie||e.cat;
+    todayData[g.key].total=(todayData[g.key].total||0)+amt;
+    todayData[g.key].cats[cat]=(todayData[g.key].cats[cat]||0)+amt;
+  });
+}
+
+// TOAST
 function showToast(msg, type='success') {
-  const el = document.getElementById('toast');
-  const icon = document.getElementById('toastIcon');
-  document.getElementById('toastMsg').textContent = msg;
-  el.className = 'toast' + (type==='warn'?' err':'') + ' show';
-  icon.className = 'ti ' + (type==='success'?'ti-check':'ti-alert-triangle');
-  setTimeout(() => el.classList.remove('show'), 2500);
+  const el=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=msg;
+  el.className='toast'+(type==='warn'?' warn':'')+' show';
+  setTimeout(()=>el.classList.remove('show'),2500);
 }
 
-// ─── INIT ────────────────────────────────────────────────────────
-// Hauteur réelle sur mobile (fix iOS 100vh)
-function setVH() { document.documentElement.style.setProperty('--vh', window.innerHeight * 0.01 + 'px'); }
-window.addEventListener('resize', setVH);
-setVH();
-
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(() => {});
-
+// INIT
+function setVH(){document.documentElement.style.setProperty('--vh',window.innerHeight*0.01+'px');}
+window.addEventListener('resize',setVH); setVH();
+window.addEventListener('online',()=>{processPending();showToast('Connexion rétablie');});
+if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js').catch(()=>{});
+setTimeout(processPending,2000);
 renderGroups(); renderCats(); renderTotaux(); updateUI(); updatePendingBadge();
-// Synchroniser la file d'attente quand la connexion revient
-window.addEventListener('online', () => { processPending(); showToast('Connexion rétablie — synchronisation…', 'success'); });
-// Tenter sync au démarrage
-setTimeout(processPending, 2000);
 </script>
 </body>
 </html>

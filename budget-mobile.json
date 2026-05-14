@@ -1,28 +1,56 @@
 {
   "mois": "2026-05",
   "source": "cockpit",
-  "version": 1,
-  "exportedAt": "2026-05-14T17:12:28.075Z",
+  "version": 2,
+  "exportedAt": "2026-05-14T22:53:15.235Z",
   "budgets": [
     {
-      "categorie": "Vie courante",
+      "categorie": "Alimentation",
       "prevu": 900
     },
     {
-      "categorie": "Charges",
-      "prevu": 632
-    },
-    {
-      "categorie": "Mobilité",
-      "prevu": 150
+      "categorie": "Consommation",
+      "prevu": 382
     },
     {
       "categorie": "Santé",
       "prevu": 80
     },
     {
+      "categorie": "Transport",
+      "prevu": 150
+    },
+    {
+      "categorie": "Maison",
+      "prevu": 0
+    },
+    {
       "categorie": "Enfants",
       "prevu": 300
+    },
+    {
+      "categorie": "Loisirs",
+      "prevu": 0
+    },
+    {
+      "categorie": "Sénégal",
+      "prevu": 0
+    },
+    {
+      "categorie": "Divers",
+      "prevu": 0
+    },
+    {
+      "categorie": "Dons, Aumône",
+      "prevu": 0
+    },
+    {
+      "categorie": "Fêtes",
+      "prevu": 0
+    },
+    {
+      "categorie": "Abonnements",
+      "prevu": 0
     }
   ]
 }

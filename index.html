@@ -430,8 +430,9 @@ function startSaisie(){amount='';selectedCat=null;const d=document.getElementByI
 function renderTodayMiniChart(){
   const box=document.getElementById('todayMiniChart');
   if(!box)return;
+
   const rows=(kpiSource()||[])
-    .filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today)
+    .filter(e=>String(e.date||'').slice(0,10)===today && e.statut!=='annulé' && e.statut!=='archivé')
     .slice(0,8);
 
   if(!rows.length){
@@ -439,21 +440,18 @@ function renderTodayMiniChart(){
     return;
   }
 
-const max=Math.max(...rows.map(e=>Number(e.amt||e.amount||0)),1);
+  const max=Math.max(...rows.map(e=>Number(e.amt||e.montant||e.amount||0)),1);
 
-box.innerHTML = rows.map(e=>{
-  const val = Number(e.amt || e.amount || 0);
-  const cat = e.cat || e.categorie || '';
-  const h = 6 + Math.round((val/max)*16);
+  box.innerHTML=rows.map(e=>{
+    const val=Number(e.amt||e.montant||e.amount||0);
+    const cat=e.cat||e.categorie||'';
+    const h=6+Math.round((val/max)*16);
+    return `<span class="today-mini-bar" style="height:${h}px" title="${cat} · ${money(val)}"></span>`;
+  }).join('');
+}
 
-  return `
-    <span
-      class="today-mini-bar"
-      style="height:${h}px"
-      title="${cat} · ${money(val)}">
-    </span>
-  `;
-}).join('');
+function renderHome(){
+  const dayTotal=totalDay();
   const dayCount=expenseCount();
   const monthTotal=totalMonth();
   const monthCount=monthExpenseCount();
@@ -535,6 +533,8 @@ box.innerHTML = rows.map(e=>{
 
   const oa=document.getElementById('statOverrunAmount');
   if(oa)oa.textContent=overs.length?`+${money(overTotal)} au-dessus du budget`:'Aucune alerte';
+
+  renderTodayMiniChart();
 
   const alert=document.getElementById('smartAlert');
   if(alert){

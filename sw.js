@@ -1,23 +1,57 @@
-const CACHE = 'foyer-diallo-v5';
-const ASSETS = ['/', '/index.html', '/manifest.json'];
+const CACHE_NAME = 'foyer-mobile-v3';
 
-self.addEventListener('install', e => {
-  e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)));
+const urlsToCache = [
+  './',
+  './index.html',
+  './manifest.json'
+];
+
+// INSTALL
+self.addEventListener('install', event => {
   self.skipWaiting();
+
+  event.waitUntil(
+    caches.open(CACHE_NAME)
+      .then(cache => cache.addAll(urlsToCache))
+  );
 });
-self.addEventListener('activate', e => {
-  e.waitUntil(caches.keys().then(keys =>
-    Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))
-  ));
+
+// ACTIVATE
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.map(key => {
+          if (key !== CACHE_NAME) {
+            return caches.delete(key);
+          }
+        })
+      );
+    })
+  );
+
   self.clients.claim();
 });
-self.addEventListener('fetch', e => {
-  if (e.request.url.includes('script.google.com')) return;
-  e.respondWith(
-    fetch(e.request).then(r => {
-      const clone = r.clone();
-      caches.open(CACHE).then(c => c.put(e.request, clone));
-      return r;
-    }).catch(() => caches.match(e.request))
+
+// FETCH
+self.addEventListener('fetch', event => {
+
+  // Toujours essayer le réseau d'abord
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+
+        const responseClone = response.clone();
+
+        caches.open(CACHE_NAME)
+          .then(cache => cache.put(event.request, responseClone));
+
+        return response;
+
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
   );
+
 });

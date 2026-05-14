@@ -1,57 +1,54 @@
-const CACHE_NAME = 'foyer-mobile-v3';
-
-const urlsToCache = [
+/* sw.js — GitHub Pages safe, network-first, no stale API cache */
+const CACHE_NAME = 'foyer-mobile-v10';
+const APP_SHELL = [
   './',
   './index.html',
-  './manifest.json'
+  './manifest.json',
+  './icon-192.png',
+  './icon-512.png',
+  './apple-touch-icon.png',
+  './budget-mobile.json'
 ];
 
-// INSTALL
-self.addEventListener('install', event => {
+self.addEventListener('install', (event) => {
   self.skipWaiting();
-
   event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(urlsToCache))
+    caches.open(CACHE_NAME).then((cache) =>
+      Promise.allSettled(APP_SHELL.map((url) => cache.add(url)))
+    )
   );
 });
 
-// ACTIVATE
-self.addEventListener('activate', event => {
+self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
-      );
-    })
+    caches.keys().then((keys) =>
+      Promise.all(keys.map((key) => (key !== CACHE_NAME ? caches.delete(key) : null)))
+    ).then(() => self.clients.claim())
   );
-
-  self.clients.claim();
 });
 
-// FETCH
-self.addEventListener('fetch', event => {
+self.addEventListener('fetch', (event) => {
+  const req = event.request;
+  const url = new URL(req.url);
 
-  // Toujours essayer le réseau d'abord
+  // Ne jamais mettre en cache les appels Google Apps Script / API / POST
+  if (
+    req.method !== 'GET' ||
+    url.hostname.includes('script.google.com') ||
+    url.hostname.includes('googleusercontent.com')
+  ) {
+    event.respondWith(fetch(req));
+    return;
+  }
+
+  // Pour HTML/JS/CSS/JSON : réseau d'abord, cache seulement en secours
   event.respondWith(
-    fetch(event.request)
-      .then(response => {
-
-        const responseClone = response.clone();
-
-        caches.open(CACHE_NAME)
-          .then(cache => cache.put(event.request, responseClone));
-
-        return response;
-
+    fetch(req, { cache: 'no-store' })
+      .then((res) => {
+        const copy = res.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(req, copy)).catch(() => {});
+        return res;
       })
-      .catch(() => {
-        return caches.match(event.request);
-      })
+      .catch(() => caches.match(req).then((cached) => cached || caches.match('./index.html')))
   );
-
 });

@@ -424,7 +424,7 @@ function renderHome(){
   const pctRaw=budgetTotal>0?Math.round((monthTotal/budgetTotal)*100):0;
   const pct=Math.min(100,pctRaw);
   document.getElementById('totalJourHero').textContent=money(monthTotal);
-  const hb=document.getElementById('heroBase'); if(hb)hb.textContent=budgetTotal>0?`${monthCount} dépense(s) · budget ${money(budgetTotal)} · reste ${money(reste)}`:`${monthCount} dépense(s) ce mois · ajoute tes budgets`;
+  const hb=document.getElementById('heroBase'); if(hb)hb.textContent=budgetTotal>0?`${monthCount} dépense(s) · dépensé ${money(monthTotal)} / budget ${money(budgetTotal)} · reste ${money(reste)}`:`${monthCount} dépense(s) ce mois · budget mensuel non défini`;
   document.getElementById('statTotal').textContent=money(total);
   document.getElementById('statCount').textContent=count;
   const smc=document.getElementById('statMonthCount'); if(smc)smc.textContent=monthCount;
@@ -643,7 +643,36 @@ function normalizeManualBudgets(){
   })).filter(b=>Number(b.prevu||0)>0);
   mobileBudgetPayload={mois:currentMonth,source:'manuel-categories-principales'};
 }
-function getTotalBudget(){normalizeManualBudgets();return mobileBudgets.reduce((a,b)=>a+Number(b.prevu||0),0);}
+
+function budgetAliasesForGroup(g0){
+  const aliases=[g0.key, cleanGroupLabel(g0.label), budgetKeyLabel(cleanGroupLabel(g0.label))];
+  // Alias lisibles pour les libellés abrégés de l'app mobile.
+  const map={ali:['Alimentation'], con:['Consommation'], abo:['Abonnements'], don:['Dons, Aumône','Dons'], fet:['Fêtes']};
+  (map[g0.key]||[]).forEach(a=>{aliases.push(a); aliases.push(budgetKeyLabel(a));});
+  return [...new Set(aliases.filter(Boolean))];
+}
+function readBudgetValueForGroup(g0){
+  const label=cleanGroupLabel(g0.label);
+  const aliases=budgetAliasesForGroup(g0);
+  for(const a of aliases){
+    if(Object.prototype.hasOwnProperty.call(manualBudgetMap,a)) return Number(manualBudgetMap[a]||0);
+  }
+  for(const a of aliases){
+    if(Object.prototype.hasOwnProperty.call(externalBudgetMap,a)) return Number(externalBudgetMap[a].prevu||0);
+  }
+  // Dernier secours : si le JSON contient les mêmes sous-catégories, rattacher au groupe.
+  const cats=new Set((g0.cats||[]).map(c=>budgetKeyLabel(c.n)));
+  for(const v of Object.values(externalBudgetMap)){
+    const extCats=Array.isArray(v.categories)?v.categories.map(x=>budgetKeyLabel(x)):[];
+    if(extCats.some(c=>cats.has(c))) return Number(v.prevu||0);
+  }
+  return readBudgetValue(g0.key,label);
+}
+function getTotalBudget(){
+  // Important : le camembert est toujours basé sur le budget mensuel complet,
+  // pas sur les dépenses du jour. On additionne directement les grands ensembles.
+  return allBudgetCategories().reduce((sum,c)=>sum+Number(readBudgetValueForGroup(GROUPS.find(g=>g.key===c.key))||0),0);
+}
 function budgetSpentForCats(cats){
   const set=new Set((cats||[]).map(c=>String(c).toLowerCase()));
   const source=monthHistory.length?monthHistory:history;
@@ -654,9 +683,9 @@ function budgetSpentForCats(cats){
   }).reduce((a,e)=>a+Number(e.montant||e.amt||0),0);
 }
 function getBudgetRows(){
-  normalizeManualBudgets();
   return allBudgetCategories().map(c=>{
-    const prevu=readBudgetValue(c.key,c.categorie);
+    const g0=GROUPS.find(g=>g.key===c.key);
+    const prevu=readBudgetValueForGroup(g0);
     const cats=readBudgetCats(c.key,c.cats);
     const depense=budgetSpentForCats(cats);
     const reste=prevu-depense;
@@ -868,7 +897,17 @@ async function processPending(){if(!pendingQueue.length)return;for(let i=pending
 async function syncAction(action){try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({...action,secret:SECRET})});const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw new Error(d.error);return true;}catch(e){pendingQueue.push({...action,_qid:Date.now()});savePending();updatePendingBadge();return false;}}
 function showToast(msg,type='success'){const t=document.getElementById('toast');const m=document.getElementById('toastMsg');m.textContent=msg;t.className='toast show '+type;clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.className='toast',2200);}
 async function loadMonthHistorySilent(){try{const url=SCRIPT_URL+'?'+new URLSearchParams({action:'get_historique',mois:currentMonth,secret:SECRET,_t:Date.now()});const r=await fetch(url,{redirect:'follow',cache:'no-store'});const t=await r.text();const data=JSON.parse(t);if(data.ok){monthHistory=currentMonthOnly(data.depenses);history=monthHistory.map(e=>({id:e.id,sheet_id:e.sheet_id,date:e.date,group:e.group||'',cat:e.categorie||e.cat,categorie:e.categorie||e.cat,amt:e.montant||e.amt,montant:e.montant||e.amt,time:e.time||'',statut:e.statut||'nouveau'}));saveHistory();histRenderCacheKey='';rebuildTodayData();prepareHistFilters();renderHome();}}catch(e){}}
-applySettings();renderHome();updatePendingBadge();processPending();loadMonthHistorySilent();loadMobileBudgets();
+async function bootstrap(){
+  applySettings();
+  updatePendingBadge();
+  renderHome();
+  processPending();
+  // Charger en parallèle le budget et l'historique du mois, puis rendre l'accueil une dernière fois.
+  await Promise.allSettled([loadMobileBudgets(), loadMonthHistorySilent()]);
+  rebuildTodayData();
+  renderHome();
+}
+bootstrap();
 </script>
 </body>
 </html>

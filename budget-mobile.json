@@ -1,0 +1,141 @@
+{
+  "mois": "2026-05",
+  "source": "Cockpit Foyer Diallo",
+  "budgets": [
+    {
+      "groupe": "Alimentation",
+      "ligneSuivi": "Alimentation",
+      "categories": [
+        "Courses",
+        "Restaurant",
+        "Boulangerie",
+        "Marché",
+        "Boucherie",
+        "Livraison repas"
+      ],
+      "prevu": 900.0
+    },
+    {
+      "groupe": "Consommation",
+      "ligneSuivi": "Consommation",
+      "categories": [
+        "Énergie",
+        "Eau",
+        "Granulets"
+      ],
+      "prevu": 382.0
+    },
+    {
+      "groupe": "Santé",
+      "ligneSuivi": "Santé",
+      "categories": [
+        "Pharmacie",
+        "Dentiste",
+        "Optique",
+        "Médecin"
+      ],
+      "prevu": 80.0
+    },
+    {
+      "groupe": "Transport",
+      "ligneSuivi": "Transport",
+      "categories": [
+        "Taxi/VTC",
+        "Carburant",
+        "Péage",
+        "Train/RER",
+        "Parking"
+      ],
+      "prevu": 150.0
+    },
+    {
+      "groupe": "Maison",
+      "ligneSuivi": "Maison",
+      "categories": [
+        "Réparation/Bricolage",
+        "Électroménager",
+        "Produits ménagers",
+        "Déco/meubles"
+      ],
+      "prevu": 0.0
+    },
+    {
+      "groupe": "Enfants",
+      "ligneSuivi": "École / enfants",
+      "categories": [
+        "Inscription École/Univ",
+        "Fournitures scolaires",
+        "Activités/sport enfants",
+        "Vêtements/chaussures enfants",
+        "Cantine",
+        "Sorties enfants"
+      ],
+      "prevu": 300.0
+    },
+    {
+      "groupe": "Loisirs",
+      "ligneSuivi": "Loisirs",
+      "categories": [
+        "Potager",
+        "Cinéma",
+        "Sorties",
+        "Sports/Fitness",
+        "Vacances",
+        "Cultures/livres/DVD",
+        "Jeux"
+      ],
+      "prevu": 0.0
+    },
+    {
+      "groupe": "Sénégal",
+      "ligneSuivi": "Sénégal",
+      "categories": [
+        "Envoi famille",
+        "Achats Sénégal"
+      ],
+      "prevu": 0.0
+    },
+    {
+      "groupe": "Divers",
+      "ligneSuivi": "Dépenses non planifiées",
+      "categories": [
+        "Cadeaux",
+        "Imprévus",
+        "Abonnements ponctuels"
+      ],
+      "prevu": 0.0
+    },
+    {
+      "groupe": "Dons, Aumône",
+      "ligneSuivi": "Dons, Aumône",
+      "categories": [
+        "Dons"
+      ],
+      "prevu": 0.0
+    },
+    {
+      "groupe": "Fêtes",
+      "ligneSuivi": "Fêtes",
+      "categories": [
+        "Tabaski",
+        "Korite",
+        "Noël"
+      ],
+      "prevu": 0.0
+    },
+    {
+      "groupe": "Abonnements",
+      "ligneSuivi": "Abonnements",
+      "categories": [
+        "Netflix",
+        "Apple TV",
+        "Amazon Prime",
+        "YouTube Premium",
+        "Google One",
+        "Dropbox",
+        "Autres"
+      ],
+      "prevu": 0.0
+    }
+  ]
+}

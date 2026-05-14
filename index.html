@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+F<!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
@@ -608,12 +608,12 @@ function renderHomeExtras(){
 }
 
 function renderGroups(){
-  document.getElementById('groupsGrid').innerHTML = GROUPS.map(g0 => { const g=displayGroup(g0); return `<button class="group-card ${g.key===activeGroup?'active':''}" onclick="switchGroup('${g.key}')"><div class="card-ico" style="background:${g.bg};color:${g.color}">${g.icon}</div><div class="card-main"><div class="card-title">${g.label.replace('Ali.','Alimentation').replace('Conso.','Consommations').replace('Abon.','Abonnements')}</div><div class="card-sub">${g.cats.length} catégories · ${money(todayData[g.key]?.total||0)}</div></div><div class="chev">›</div></button>`}).join('');
+  document.getElementById('groupsGrid').innerHTML = GROUPS.map(g0 => { const g=displayGroup(g0); return `<button class="group-card ${g.key===activeGroup?'active':''}" onclick="switchGroup('${g.key}')"><div class="card-ico" style="background:${g.bg};color:${g.color}">${g.icon}</div><div class="card-main"><div class="card-title">${g.label.replace('Ali.','Alimentation').replace('Conso.','Consommation').replace('Abon.','Abonnements')}</div><div class="card-sub">${g.cats.length} catégories · ${money(todayData[g.key]?.total||0)}</div></div><div class="chev">›</div></button>`}).join('');
 }
 function renderCats(){
   const g0=GROUPS.find(x=>x.key===activeGroup)||GROUPS[0]; const g=displayGroup(g0);
   document.getElementById('saisieTitle').textContent='Choisir une catégorie';
-  document.getElementById('breadcrumb').textContent=g.icon+' '+g.label.replace('Ali.','Alimentation').replace('Conso.','Consommations').replace('Abon.','Abonnements'); document.getElementById('breadcrumb').classList.remove('hidden');
+  document.getElementById('breadcrumb').textContent=g.icon+' '+g.label.replace('Ali.','Alimentation').replace('Conso.','Consommation').replace('Abon.','Abonnements'); document.getElementById('breadcrumb').classList.remove('hidden');
   document.getElementById('catsArea').innerHTML=g.cats.map(c=>`<button class="cat-card ${selectedCat===c.n?'sel':''}" onclick="selectCat('${c.n.replace(/'/g,"\'")}')"><div class="card-ico" style="background:${g.bg};color:${g.color}">${c.i}</div><div class="card-main"><div class="card-title">${c.n}</div><div class="card-sub">Aujourd’hui : ${money(todayData[activeGroup]?.cats[c.n]||0)}</div></div><div class="chev">›</div></button>`).join('');
 }
 function renderTotaux(){
@@ -736,7 +736,7 @@ function renderHist(){
   body.innerHTML=html+more;
 }
 
-function cleanGroupLabel(label){return String(label||'').replace('Ali.','Alimentation').replace('Conso.','Consommations').replace('Abon.','Abonnements')}
+function cleanGroupLabel(label){return String(label||'').replace('Ali.','Alimentation').replace('Conso.','Consommation').replace('Abon.','Abonnements')}
 function allBudgetCategories(){
   return GROUPS.map(g0=>{const g=displayGroup(g0);return {
     key:g0.key,

@@ -116,30 +116,26 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 /* Accueil mobile final : mois → jour → KPI rapides */
 #homeView .hero-month-card{cursor:pointer;min-height:128px}
 #homeView .hero-month-note{font-size:12px;color:var(--muted);font-weight:850;margin-top:4px}
-.today-card{margin:10px 16px 0;background:#fff;border:1px solid rgba(233,225,213,.78);border-radius:22px;padding:12px 14px;box-shadow:var(--softShadow);display:grid;grid-template-columns:1fr auto;align-items:center;gap:8px 12px;width:auto;text-align:left}
+.today-card{margin:10px 16px 0;background:#fff;border:1px solid rgba(233,225,213,.78);border-radius:22px;padding:13px 14px;box-shadow:var(--softShadow);display:flex;justify-content:space-between;align-items:center;gap:12px;width:auto;text-align:left}
 .today-card-title{font-size:14px;font-weight:950}
 .today-card-note{font-size:11px;color:var(--muted);font-weight:800;margin-top:3px}
 .today-card-right{text-align:right;min-width:110px}
 .today-card-total{font-size:22px;font-weight:950;letter-spacing:-.4px;color:var(--accent)}
 .today-card-last{font-size:10px;color:var(--muted);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:148px;margin-top:2px}
-.today-mini-chart{grid-column:1 / -1;height:22px;display:flex;align-items:flex-end;gap:4px;margin-top:2px}
-.today-mini-bar{flex:1;min-width:5px;border-radius:999px;background:linear-gradient(180deg,var(--accent2),var(--accent));opacity:.92}
-.today-mini-bar.empty{background:#E9E1D5;opacity:.8}
-#homeView .home-kpis{padding-top:8px;gap:8px;padding-bottom:72px}
+#homeView .home-kpis{padding-top:10px;gap:9px}
 #homeView .home-kpis .stat{min-height:82px;padding:10px;border-radius:18px}
 #homeView .home-kpis .stat-ico{width:28px;height:28px;border-radius:11px;font-size:15px;margin-bottom:5px}
 #homeView .home-kpis .stat-title{font-size:10px;line-height:1.1}
 #homeView .home-kpis .stat-value{font-size:17px;margin-top:3px}
 #homeView .home-kpis .stat-note{font-size:9px;line-height:1.1}
 #homeView .alert{margin-top:8px}
-#homeView .fab-row{bottom:calc(84px + var(--safe-bottom))}
-#homeView .fab{height:52px;border-radius:19px}
+#homeView .fab-row{bottom:calc(88px + var(--safe-bottom))}
 @media(max-height:760px){
-  .today-card{margin-top:7px;padding:9px 12px;border-radius:18px}
+  .today-card{margin-top:8px;padding:10px 12px;border-radius:19px}
   .today-card-total{font-size:19px}
   #homeView .hero-month-card{min-height:112px}
   #homeView .hero-month-note{font-size:11px}
-  #homeView .home-kpis .stat{min-height:68px;padding:7px}
+  #homeView .home-kpis .stat{min-height:72px;padding:8px}
   #homeView .home-kpis .stat-ico{width:24px;height:24px;font-size:13px;margin-bottom:3px}
   #homeView .home-kpis .stat-value{font-size:15px}
 }
@@ -176,7 +172,6 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
         <div class="today-card-total" id="todayCardTotal">0 €</div>
         <div class="today-card-last" id="todayCardLast">Aucune dépense</div>
       </div>
-      <div class="today-mini-chart" id="todayMiniChart"></div>
     </button>
 
     <div class="stats kpi-only home-kpis">
@@ -427,29 +422,6 @@ function saisieBack(){
 }
 function startSaisie(){amount='';selectedCat=null;const d=document.getElementById('expenseDate');if(d&&!d.value)d.value=today;document.getElementById('amountStep').classList.add('hidden');document.getElementById('catsArea').classList.add('hidden');document.getElementById('groupsGrid').classList.remove('hidden');document.getElementById('breadcrumb').classList.add('hidden');document.getElementById('saisieTitle').textContent='Choisir un groupe';renderGroups();updateUI();}
 
-function renderTodayMiniChart(){
-  const box=document.getElementById('todayMiniChart');
-  if(!box)return;
-
-  const rows=(kpiSource()||[])
-    .filter(e=>String(e.date||'').slice(0,10)===today && e.statut!=='annulé' && e.statut!=='archivé')
-    .slice(0,8);
-
-  if(!rows.length){
-    box.innerHTML='<span class="today-mini-bar empty" style="height:6px"></span><span class="today-mini-bar empty" style="height:10px"></span><span class="today-mini-bar empty" style="height:7px"></span><span class="today-mini-bar empty" style="height:12px"></span><span class="today-mini-bar empty" style="height:8px"></span>';
-    return;
-  }
-
-  const max=Math.max(...rows.map(e=>Number(e.amt||e.montant||e.amount||0)),1);
-
-  box.innerHTML=rows.map(e=>{
-    const val=Number(e.amt||e.montant||e.amount||0);
-    const cat=e.cat||e.categorie||'';
-    const h=6+Math.round((val/max)*16);
-    return `<span class="today-mini-bar" style="height:${h}px" title="${cat} · ${money(val)}"></span>`;
-  }).join('');
-}
-
 function renderHome(){
   const dayTotal=totalDay();
   const dayCount=expenseCount();
@@ -533,8 +505,6 @@ function renderHome(){
 
   const oa=document.getElementById('statOverrunAmount');
   if(oa)oa.textContent=overs.length?`+${money(overTotal)} au-dessus du budget`:'Aucune alerte';
-
-  renderTodayMiniChart();
 
   const alert=document.getElementById('smartAlert');
   if(alert){

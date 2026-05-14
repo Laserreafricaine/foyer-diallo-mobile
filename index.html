@@ -61,7 +61,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 .stat-overrun.has-over{background:linear-gradient(135deg,#fff,#fff0ee);border-color:rgba(229,72,63,.32)}
 .stat-overrun .stat-value{color:var(--green)}.stat-overrun.has-over .stat-value{color:var(--danger)}
 .overrun-list{padding:0 16px 18px;display:flex;flex-direction:column;gap:12px}.overrun-card{background:#fff;border-radius:24px;padding:15px;box-shadow:var(--softShadow);border:1px solid rgba(229,72,63,.24)}
-.overrun-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.overrun-title{font-size:16px;font-weight:950}.overrun-sub{font-size:12px;color:var(--muted);font-weight:750;margin-top:3px}.overrun-amt{text-align:right;color:var(--danger);font-weight:950}.overrun-empty{margin:30px 16px;background:#fff;border-radius:24px;padding:28px;text-align:center;color:var(--muted);font-weight:900;box-shadow:var(--softShadow);line-height:1.35}
+.overrun-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.overrun-title{font-size:16px;font-weight:950}.overrun-sub{font-size:12px;color:var(--muted);font-weight:750;margin-top:3px}.overrun-amt{text-align:right;color:var(--danger);font-weight:950}.overrun-empty{margin:30px 16px;background:#fff;border-radius:24px;padding:28px;text-align:center;color:var(--muted);font-weight:900;box-shadow:var(--softShadow);line-height:1.35}.overrun-meter{margin-top:12px}.overrun-meter-label{display:flex;justify-content:space-between;font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}.overrun-track{height:12px;border-radius:999px;background:#F2E7E5;overflow:hidden}.overrun-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#F59E0B,#E5483F,#B42318);min-width:7%}.overrun-detail{font-size:11px;font-weight:850;color:var(--danger);margin-top:7px;text-align:right}
 
 
 /* Ajustements accueil : zéro scroll, alerte fine, bouton toujours visible */
@@ -551,7 +551,7 @@ function renderHome(){
   const alert=document.getElementById('smartAlert');
   if(alert){
     if(overs.length){
-      alert.innerHTML=`<div><strong>⚠️ ${overs.length} catégorie${overs.length>1?'s':''} dépassée${overs.length>1?'s':''}</strong><br><span>+${money(overTotal)} au-dessus du budget · toucher pour voir</span></div>`;
+      alert.innerHTML=`<div><strong>⚠️ ${overs.length} dépassement${overs.length>1?'s':''} sur le mois</strong><br><span>+${money(overTotal)} au-dessus du budget mensuel · toucher pour voir</span></div>`;
       alert.classList.add('show');
       alert.classList.add('overrun-alert');
     }
@@ -869,12 +869,34 @@ function renderOverruns(){
   const rows=getOverruns();
   const total=rows.reduce((a,r)=>a+(r.depense-r.prevu),0);
   const ta=document.getElementById('overrunTotalAmount'); if(ta)ta.textContent=money(total);
-  const tl=document.getElementById('overrunTotalLabel'); if(tl)tl.textContent=rows.length?`${rows.length} catégorie(s) dépassée(s)`:'Aucune catégorie dépassée';
-  if(!rows.length){body.innerHTML='<div class="overrun-empty">Aucun dépassement pour le mois en cours.<br><small>Les budgets sont suivis uniquement par catégorie principale.</small></div>';return;}
+  const tl=document.getElementById('overrunTotalLabel');
+  if(tl)tl.textContent=rows.length
+    ? `${rows.length} catégorie(s) dépassée(s) sur le mois ${currentMonth}`
+    : 'Aucune catégorie dépassée sur le mois';
+  if(!rows.length){
+    body.innerHTML='<div class="overrun-empty">Aucun dépassement pour le mois en cours.<br><small>Les budgets sont suivis uniquement par catégorie principale.</small></div>';
+    return;
+  }
+  const maxDepassement=Math.max(...rows.map(r=>Math.max(0,r.depense-r.prevu)),1);
   body.innerHTML=rows.map(r=>{
-    const dep=r.depense-r.prevu;
-    const pct=Math.max(100,Math.round((r.depense/r.prevu)*100));
-    return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')"><div class="overrun-top"><div><div class="overrun-title">${r.icon} ${r.categorie}</div><div class="overrun-sub">Prévu ${money(r.prevu)} · dépensé ${money(r.depense)}</div></div><div class="overrun-amt">+${money(dep)}<div style="font-size:11px;color:var(--muted);margin-top:3px">${pct}%</div></div></div><div class="budget-progress"><div class="budget-progress-fill" style="width:100%;background:linear-gradient(90deg,#E5483F,#B42318)"></div></div></div>`;
+    const dep=Math.max(0,r.depense-r.prevu);
+    const pctBudget=r.prevu>0?Math.round((r.depense/r.prevu)*100):0;
+    const pctDepassement=r.prevu>0?Math.round((dep/r.prevu)*100):0;
+    const bar=Math.max(7,Math.min(100,Math.round((dep/maxDepassement)*100)));
+    return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')">
+      <div class="overrun-top">
+        <div>
+          <div class="overrun-title">${r.icon} ${r.categorie}</div>
+          <div class="overrun-sub">Mois ${currentMonth} · prévu ${money(r.prevu)} · dépensé ${money(r.depense)}</div>
+        </div>
+        <div class="overrun-amt">+${money(dep)}<div style="font-size:11px;color:var(--muted);margin-top:3px">${pctBudget}%</div></div>
+      </div>
+      <div class="overrun-meter">
+        <div class="overrun-meter-label"><span>Dépassement</span><span>+${pctDepassement}% du budget</span></div>
+        <div class="overrun-track"><div class="overrun-fill" style="width:${bar}%"></div></div>
+        <div class="overrun-detail">${money(dep)} au-dessus du budget mensuel</div>
+      </div>
+    </div>`;
   }).join('');
 }
 

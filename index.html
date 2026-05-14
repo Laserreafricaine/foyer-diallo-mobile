@@ -332,8 +332,15 @@ const GROUPS = [
    cats:[{n:'Tabaski',i:'🌟'},{n:'Korite',i:'🌙'},{n:'Noël',i:'🎄'}]}
 ];
 
-const today = new Date().toISOString().slice(0,10);
-const currentMonth = today.slice(0,7);
+function localDateISO(d=new Date()){
+  const y=d.getFullYear();
+  const m=String(d.getMonth()+1).padStart(2,'0');
+  const day=String(d.getDate()).padStart(2,'0');
+  return `${y}-${m}-${day}`;
+}
+function localMonthISO(d=new Date()){return localDateISO(d).slice(0,7);}
+let today = localDateISO();
+let currentMonth = today.slice(0,7);
 let amount = '', selectedCat = null, activeGroup = 'ali';
 let historyFiltersReady = false;
 let todayData = {};
@@ -435,7 +442,7 @@ function entryAmount(e){return Number(e.montant||e.amt||0)}
 function entryCat(e){return e.categorie||e.cat||''}
 function normalizeAppDate(value){
   if(!value)return today;
-  if(value instanceof Date && !isNaN(value))return value.toISOString().slice(0,10);
+  if(value instanceof Date && !isNaN(value))return localDateISO(value);
   let s=String(value).trim();
   if(!s)return today;
   const iso=s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
@@ -443,7 +450,7 @@ function normalizeAppDate(value){
   const fr=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})/);
   if(fr)return `${fr[3]}-${String(fr[2]).padStart(2,'0')}-${String(fr[1]).padStart(2,'0')}`;
   const d=new Date(s);
-  if(!isNaN(d))return d.toISOString().slice(0,10);
+  if(!isNaN(d))return localDateISO(d);
   return s.slice(0,10);
 }
 function monthExpenseSource(){
@@ -1029,7 +1036,33 @@ function updatePendingBadge(){const b=document.getElementById('pendingBadge');co
 async function processPending(){if(!pendingQueue.length)return;for(let i=pendingQueue.length-1;i>=0;i--){try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({...pendingQueue[i],secret:SECRET})});const t=await r.text();const d=JSON.parse(t);if(d.ok)pendingQueue.splice(i,1);}catch(e){break;}}savePending();updatePendingBadge();renderHome();}
 async function syncAction(action){try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({...action,secret:SECRET})});const t=await r.text();const d=JSON.parse(t);if(!d.ok)throw new Error(d.error);return true;}catch(e){pendingQueue.push({...action,_qid:Date.now()});savePending();updatePendingBadge();return false;}}
 function showToast(msg,type='success'){const t=document.getElementById('toast');const m=document.getElementById('toastMsg');m.textContent=msg;t.className='toast show '+type;clearTimeout(window.__toast);window.__toast=setTimeout(()=>t.className='toast',2200);}
-async function loadMonthHistorySilent(){try{const url=SCRIPT_URL+'?'+new URLSearchParams({action:'get_historique',mois:currentMonth,secret:SECRET});const r=await fetch(url,{redirect:'follow'});const t=await r.text();const data=JSON.parse(t);if(data.ok){monthHistory=currentMonthOnly(data.depenses);histRenderCacheKey='';rebuildTodayData();prepareHistFilters();renderHome();}}catch(e){}}
+async function loadMonthHistorySilent(){try{const url=SCRIPT_URL+'?'+new URLSearchParams({action:'get_historique',mois:currentMonth,secret:SECRET});const r=await fetch(url,{redirect:'follow'});const t=await r.text();const data=JSON.parse(t);if(data.ok){monthHistory=currentMonthOnly(data.depenses);histRenderCacheKey='';rebuildTodayData();prepareHistFilters();renderHome();if(document.getElementById('overrunsView')?.classList.contains('active'))renderOverruns();if(document.getElementById('historyView')?.classList.contains('active'))renderHist();if(document.getElementById('calendarView')?.classList.contains('active'))renderCalendar();}}catch(e){}}
+
+async function refreshIfMonthChanged(){
+  const newToday=localDateISO();
+  const newMonth=newToday.slice(0,7);
+  if(newToday===today && newMonth===currentMonth) return false;
+  today=newToday;
+  currentMonth=newMonth;
+  monthHistory=[];
+  histRenderCacheKey='';
+  histRenderCache=null;
+  history=JSON.parse(localStorage.getItem('fd_history_day') || '[]').filter(e=>normalizeAppDate(e.date)===today);
+  rebuildTodayData();
+  await loadMobileBudgets();
+  await loadMonthHistorySilent();
+  renderHome();
+  updatePendingBadge();
+  if(document.getElementById('overrunsView')?.classList.contains('active'))renderOverruns();
+  if(document.getElementById('historyView')?.classList.contains('active'))renderHist();
+  if(document.getElementById('calendarView')?.classList.contains('active'))renderCalendar();
+  return true;
+}
+
+window.addEventListener('focus',()=>{refreshIfMonthChanged();});
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refreshIfMonthChanged();});
+setInterval(()=>{refreshIfMonthChanged();},60000);
+
 applySettings();renderHome();updatePendingBadge();processPending();loadMonthHistorySilent();loadMobileBudgets();
 </script>
 </body>

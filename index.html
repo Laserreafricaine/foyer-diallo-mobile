@@ -562,6 +562,42 @@ function allBudgetCategories(){
     cats:(g0.cats||[]).map(c=>c.n)
   }});
 }
+
+const COCKPIT_BUDGET_ALIASES = {
+  'vie courante':'ali',
+  'charges':'mai',
+  'mobilite':'tra',
+  'mobilité':'tra',
+  'sante':'san',
+  'santé':'san',
+  'enfants':'enf',
+  'variable':'div'
+};
+function budgetKeyFromCategorie(categorie){
+  const raw=String(categorie||'').trim();
+  const n=raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(COCKPIT_BUDGET_ALIASES[n]) return COCKPIT_BUDGET_ALIASES[n];
+  const found=GROUPS.find(g=>cleanGroupLabel(g.label).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')===n);
+  return found?found.key:null;
+}
+function applyBudgetPayload(payload){
+  if(!payload || !Array.isArray(payload.budgets)) return false;
+  if(payload.mois && payload.mois !== currentMonth) return false;
+  let changed=false;
+  payload.budgets.forEach(row=>{
+    const key=budgetKeyFromCategorie(row.categorie);
+    const v=Number(row.prevu||0);
+    if(key && v>=0){manualBudgetMap[key]=v;changed=true;}
+  });
+  if(changed){
+    mobileBudgetPayload=payload;
+    localStorage.setItem('fd_manual_budgets',JSON.stringify(manualBudgetMap));
+    localStorage.setItem('fd_last_cockpit_budget',JSON.stringify(payload));
+    normalizeManualBudgets();
+  }
+  return changed;
+}
+
 function normalizeManualBudgets(){
   mobileBudgets=allBudgetCategories().map(c=>({
     key:c.key,
@@ -599,6 +635,22 @@ function getOverruns(){
   return getBudgetRows().filter(r=>r.over).sort((a,b)=>(b.depense-b.prevu)-(a.depense-a.prevu));
 }
 async function loadMobileBudgets(force=false){
+  if(force){
+    try{ localStorage.removeItem('fd_last_cockpit_budget'); }catch(e){}
+  }
+  try{
+    const last = JSON.parse(localStorage.getItem('fd_last_cockpit_budget') || 'null');
+    if(last && last.mois === currentMonth) applyBudgetPayload(last);
+  }catch(e){}
+  try{
+    const r = await fetch('budget-mobile.json?ts=' + Date.now(), {cache:'no-store'});
+    if(r.ok){
+      const payload = await r.json();
+      applyBudgetPayload(payload);
+    }
+  }catch(e){
+    // En local fichier ou hors ligne, on garde les budgets manuels/localStorage.
+  }
   normalizeManualBudgets();
   renderBudgetTracking();
   renderHome();

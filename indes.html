@@ -31,7 +31,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 .fab-row{padding:14px 16px 4px}.fab,.primary{width:100%;height:58px;border-radius:22px;background:linear-gradient(135deg,#14A66B,#0B704B);color:white;font-weight:950;font-size:16px;box-shadow:0 14px 28px rgba(15,138,85,.25)}.secondary{width:100%;height:54px;border-radius:20px;background:#fff;border:1px solid var(--line);font-weight:900;color:#1f2937;box-shadow:var(--softShadow)}.danger{width:100%;height:54px;border-radius:20px;background:var(--dangerSoft);font-weight:900;color:var(--danger)}
 .section-head{display:flex;align-items:center;justify-content:space-between;padding:18px 16px 10px}.section-head h2{margin:0;font-size:18px;font-weight:950;letter-spacing:-.3px}.link{font-size:13px;font-weight:900;color:var(--green)}
 .card-list{padding:0 16px;display:flex;flex-direction:column;gap:10px}.cat-card,.group-card,.hist-item{background:var(--card);border-radius:22px;padding:14px;box-shadow:var(--softShadow);display:flex;align-items:center;gap:12px;border:1px solid rgba(233,225,213,.62)}.card-ico{width:46px;height:46px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:23px;flex:none}.card-main{flex:1;min-width:0}.card-title{font-size:15px;font-weight:950;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card-sub{font-size:12px;color:var(--muted);font-weight:750;margin-top:3px}.card-amt{font-size:16px;font-weight:950;white-space:nowrap}.chev{font-size:28px;color:#B6B1AA}
-.nav{position:absolute;left:12px;right:12px;bottom:calc(10px + var(--safe-bottom));height:74px;background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border:1px solid rgba(233,225,213,.86);border-radius:28px;box-shadow:0 16px 36px rgba(26,33,45,.14);display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding:7px}.nav button{border-radius:22px;font-size:11px;font-weight:900;color:#81848E;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;position:relative}.nav button b{font-size:20px;line-height:1}.nav button.active{background:var(--greenSoft);color:var(--green)}
+.nav{position:absolute;left:12px;right:12px;bottom:calc(10px + var(--safe-bottom));height:74px;background:rgba(255,255,255,.92);backdrop-filter:blur(18px);border:1px solid rgba(233,225,213,.86);border-radius:28px;box-shadow:0 16px 36px rgba(26,33,45,.14);display:grid;grid-template-columns:repeat(5,1fr);z-index:50;padding:7px}.nav button{border-radius:22px;font-size:11px;font-weight:900;color:#81848E;display:flex;flex-direction:column;gap:3px;align-items:center;justify-content:center;position:relative}.nav button b{font-size:20px;line-height:1}.nav button.active{background:var(--greenSoft);color:var(--green)}.nav-alert-badge{position:absolute;top:3px;right:12px;min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--danger);color:#fff;font-size:10px;font-weight:950;display:flex;align-items:center;justify-content:center;box-shadow:0 6px 14px rgba(229,72,63,.28)}.nav-alert-badge.hidden{display:none}
 .topbar{position:sticky;top:0;z-index:20;background:linear-gradient(180deg,#FBF7EF 72%,rgba(251,247,239,.85));padding:calc(12px + var(--safe-top)) 16px 12px;display:flex;align-items:center;justify-content:space-between}.back{width:42px;height:42px;border-radius:16px;background:#fff;box-shadow:var(--softShadow);font-size:30px;line-height:1;color:#111}.top-title{font-weight:950;font-size:18px}.top-spacer{width:42px}
 .view-body{padding:0 16px 0}.step-title{font-size:24px;line-height:1.08;font-weight:950;letter-spacing:-.8px;margin:10px 0 8px}.crumb{display:inline-flex;background:#fff;border:1px solid var(--line);border-radius:999px;padding:8px 12px;font-size:13px;font-weight:900;color:var(--green);margin-bottom:14px;box-shadow:var(--softShadow)}
 .amount-box{background:#fff;border-radius:30px;padding:18px;box-shadow:var(--shadow);margin-top:10px}.amount-display{height:86px;border-radius:24px;background:#F7F3EA;display:flex;align-items:center;justify-content:center;font-size:42px;font-weight:950;letter-spacing:-1.2px;margin-bottom:14px}.amount-meta{background:var(--greenSoft);border-radius:18px;padding:12px 14px;color:var(--green);font-size:13px;font-weight:900;margin-bottom:14px;text-align:center}.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.key{height:58px;border-radius:20px;background:#F6F2EA;font-size:26px;font-weight:950}.save{width:100%;height:60px;border-radius:22px;background:linear-gradient(135deg,#14A66B,#0B704B);color:#fff;font-weight:950;font-size:16px;margin-top:12px;box-shadow:0 14px 28px rgba(15,138,85,.25)}.save:disabled{opacity:.45}
@@ -171,13 +171,6 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
   #saisieView .save{height:44px;margin-top:7px}
 }
 
-
-/* Onglet Dépassements */
-.nav button{font-size:10px}
-.nav button b{font-size:18px}
-.overrun-total-card{border-color:rgba(180,35,24,.32);background:linear-gradient(180deg,#fff,#fff7f6)}
-#overrunsView .budget-summary{position:sticky;top:66px;z-index:5}
-@media(max-width:380px){.nav{left:8px;right:8px;padding:6px}.nav button{font-size:9px}.nav button b{font-size:17px}}
 </style>
 </head>
 <body>
@@ -199,7 +192,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
       </div>
     </header>
 
-    <div id="smartAlert" class="alert" onclick="openOverruns()"></div>
+    <div id="smartAlert" class="alert"></div>
 
     <button class="today-card" onclick="openTodayHistory()">
       <div class="today-card-left">
@@ -217,7 +210,6 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
       <button class="stat" onclick="openTodayHistory()"><div class="stat-ico" style="background:var(--greenSoft)">💰</div><div class="stat-title">Total jour</div><div class="stat-value" id="statCount">0 €</div><div class="stat-note">voir le détail</div></button>
       <button class="stat" onclick="openTodayHistory()"><div class="stat-ico" style="background:var(--blueSoft)">🧾</div><div class="stat-title">Dépenses du jour</div><div class="stat-value" id="statMonth">0</div><div class="stat-note">voir aujourd’hui</div></button>
       <button class="stat" onclick="openCalendarView()"><div class="stat-ico" style="background:var(--purpleSoft)">⏳</div><div class="stat-title">Jours restants</div><div class="stat-value" id="statDaysLeft">0</div><div class="stat-note">voir calendrier</div></button>
-      <button class="stat stat-overrun hidden" id="overrunKpi" onclick="openOverruns()"><div class="stat-ico" style="background:var(--dangerSoft)">⚠️</div><div class="stat-title">Dépassements</div><div class="stat-value" id="statOverrunCount">0</div><div class="stat-note" id="statOverrunAmount">Aucune alerte</div></button>
     </div>
 
     <div class="fab-row"><button class="fab" onclick="go('saisie')">＋  Saisir une dépense</button></div>
@@ -254,8 +246,8 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 
   <main id="overrunsView" class="screen">
     <div class="topbar"><button class="back" onclick="go('home')">‹</button><div class="top-title">Dépassements du mois</div><div class="top-spacer"></div></div>
-    <div class="budget-summary" style="background:linear-gradient(135deg,#E5483F,#B42318)">
-      <div class="bs-title">Catégories principales dépassées</div>
+    <div class="budget-summary" id="overrunSummaryCard" style="background:linear-gradient(135deg,#E5483F,#B42318)">
+      <div class="bs-title" id="overrunSummaryTitle">Synthèse du mois</div>
       <div class="bs-main" id="overrunTotalAmount">0 €</div>
       <div class="bs-note" id="overrunTotalLabel">Aucun dépassement</div>
     </div>
@@ -306,7 +298,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
     </div>
   </main>
 
-  <nav class="nav" id="bottomNav"><button id="nav-home" class="active" onclick="go('home')"><b>🏠</b>Accueil</button><button id="nav-saisie" onclick="go('saisie')"><b>➕</b>Saisir</button><button id="nav-overruns" onclick="openOverruns()"><b>⚠️</b>Dépasse</button><button id="nav-history" onclick="openHist()"><b>🕘</b>Historique</button><button id="nav-settings" onclick="go('settings')"><b>⚙️</b>Paramètres</button></nav>
+  <nav class="nav" id="bottomNav"><button id="nav-home" class="active" onclick="go('home')"><b>🏠</b>Accueil</button><button id="nav-saisie" onclick="go('saisie')"><b>➕</b>Saisir</button><button id="nav-overruns" onclick="openOverruns()"><b>⚠️</b>Dépasse<span id="overrunNavBadge" class="nav-alert-badge hidden">0</span></button><button id="nav-history" onclick="openHist()"><b>🕘</b>Historique</button><button id="nav-settings" onclick="go('settings')"><b>⚙️</b>Paramètres</button></nav>
   <div class="toast" id="toast"><span id="toastMsg"></span></div>
 </div>
 <script>
@@ -479,10 +471,11 @@ function go(view){
   if(view==='home') renderHome();
   if(view==='saisie') startSaisie();
   if(view==='budget') renderBudgetTracking();
-  if(view==='overruns') renderOverruns();
   if(view==='settings') renderSettings();
   if(view==='calendar') renderCalendar();
+  if(view==='overruns') renderOverruns();
 }
+
 
 function saisieBack(){
   if(!document.getElementById('amountStep').classList.contains('hidden')){amount='';selectedCat=null;document.getElementById('amountStep').classList.add('hidden');document.getElementById('catsArea').classList.remove('hidden');renderCats();updateUI();return;}
@@ -563,29 +556,11 @@ function renderHome(){
   const ring=document.getElementById('ring');
   if(ring) ring.style.background=`conic-gradient(${ringColor} ${Math.min(pct,100)*3.6}deg,#E6EFE7 0deg)`;
 
-  const overs=getOverruns();
-  const overTotal=overs.reduce((a,r)=>a+(r.depense-r.prevu),0);
-
-  const ok=document.getElementById('overrunKpi');
-  if(ok){
-    ok.classList.toggle('has-over',overs.length>0);
-    ok.classList.toggle('hidden',overs.length===0);
-  }
-
-  const oc=document.getElementById('statOverrunCount');
-  if(oc)oc.textContent=overs.length;
-
-  const oa=document.getElementById('statOverrunAmount');
-  if(oa)oa.textContent=overs.length?`+${money(overTotal)} au-dessus du budget`:'Aucune alerte';
+  updateOverrunNavBadge();
 
   const alert=document.getElementById('smartAlert');
   if(alert){
-    if(overs.length){
-      alert.innerHTML=`<div><strong>⚠️ ${overs.length} dépassement${overs.length>1?'s':''} sur le mois</strong><br><span>+${money(overTotal)} au-dessus du budget mensuel · toucher pour voir</span></div>`;
-      alert.classList.add('show');
-      alert.classList.add('overrun-alert');
-    }
-    else if(pendingQueue.length){
+    if(pendingQueue.length){
       alert.innerHTML='<div><strong>Synchronisation</strong><br><span>'+pendingQueue.length+' opération(s) en attente</span></div>';
       alert.classList.add('show');
       alert.classList.remove('overrun-alert');
@@ -763,7 +738,7 @@ function allBudgetCategories(){
     icon:g.icon,
     color:g.color,
     bg:g.bg,
-    cats:[cleanGroupLabel(g0.label), ...(g0.cats||[]).map(c=>c.n)]
+    cats:(g0.cats||[]).map(c=>c.n)
   }});
 }
 
@@ -783,28 +758,6 @@ function budgetKeyFromCategorie(categorie){
   if(COCKPIT_BUDGET_ALIASES[n]) return COCKPIT_BUDGET_ALIASES[n];
   const found=GROUPS.find(g=>cleanGroupLabel(g.label).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')===n);
   return found?found.key:null;
-}
-
-const EXPENSE_PARENT_ALIASES = {
-  'voyage':'loi',
-  'voyages':'loi',
-  'vacance':'loi',
-  'vacances':'loi',
-  'loisir':'loi',
-  'loisirs':'loi',
-  'sortie':'loi',
-  'sorties':'loi'
-};
-function normBudgetName(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
-function groupKeyForExpenseCat(categorie){
-  const n=normBudgetName(categorie);
-  if(!n)return null;
-  if(EXPENSE_PARENT_ALIASES[n])return EXPENSE_PARENT_ALIASES[n];
-  for(const g of GROUPS){
-    if(normBudgetName(cleanGroupLabel(g.label))===n)return g.key;
-    if((g.cats||[]).some(c=>normBudgetName(c.n)===n))return g.key;
-  }
-  return null;
 }
 function applyBudgetPayload(payload){
   if(!payload || !Array.isArray(payload.budgets)) return false;
@@ -838,15 +791,8 @@ function normalizeManualBudgets(){
   mobileBudgetPayload={mois:currentMonth,source:'manuel-categories-principales'};
 }
 function getTotalBudget(){normalizeManualBudgets();return mobileBudgets.reduce((a,b)=>a+Number(b.prevu||0),0);}
-function budgetSpentForGroupKey(groupKey){
-  const source=monthExpenseSource();
-  return source.filter(e=>{
-    const d=normalizeAppDate(e.date).slice(0,7);
-    return d===currentMonth && isActiveExpense(e) && groupKeyForExpenseCat(e.categorie||e.cat)===groupKey;
-  }).reduce((a,e)=>a+entryAmount(e),0);
-}
 function budgetSpentForCats(cats){
-  const normCat=normBudgetName;
+  const normCat=v=>String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
   const set=new Set((cats||[]).map(normCat));
   const source=monthExpenseSource();
   return source.filter(e=>{
@@ -855,15 +801,14 @@ function budgetSpentForCats(cats){
     return d===currentMonth && set.has(cat) && isActiveExpense(e);
   }).reduce((a,e)=>a+entryAmount(e),0);
 }
-
 function getBudgetRows(){
   normalizeManualBudgets();
   return allBudgetCategories().map(c=>{
     const prevu=Number(manualBudgetMap[c.key]||manualBudgetMap[c.categorie]||0);
-    const depense=budgetSpentForGroupKey(c.key);
+    const depense=budgetSpentForCats(c.cats);
     const reste=prevu-depense;
-    const pct=prevu>0?Math.round((depense/prevu)*100):(depense>0?100:0);
-    return {...c,prevu,depense,reste,pct,over:depense>prevu};
+    const pct=prevu>0?Math.round((depense/prevu)*100):0;
+    return {...c,prevu,depense,reste,pct,over:(prevu>0 && depense>prevu) || (prevu===0 && depense>0)};
   });
 }
 function getOverruns(){
@@ -902,6 +847,7 @@ async function openOverruns(){
   await loadMonthHistorySilent();
   renderOverruns();
 }
+
 function saveManualBudgets(){
   document.querySelectorAll('[data-budget-key]').forEach(inp=>{
     const key=inp.getAttribute('data-budget-key');
@@ -924,74 +870,69 @@ function renderBudgetTracking(){
   body.className='budget-editor';
   body.innerHTML=rows.map(c=>`<div class="budget-edit-row"><div><div class="budget-edit-title">${c.icon} ${c.categorie}</div><div class="budget-edit-sub">${c.depense?`Dépensé : ${money(c.depense)}`:'Catégorie principale'}</div></div><input type="number" inputmode="decimal" min="0" step="1" value="${manualBudgetMap[c.key]||manualBudgetMap[c.categorie]||''}" placeholder="0" data-budget-key="${c.key}" data-budget-cat="${String(c.categorie).replace(/"/g,'&quot;')}"><span style="font-weight:950;color:var(--muted)">€</span></div>`).join('')+`<div class="budget-savebar"><button class="primary" onclick="saveManualBudgets()">Enregistrer les budgets</button></div>`;
 }
+function updateOverrunNavBadge(){
+  const badge=document.getElementById('overrunNavBadge');
+  if(!badge)return;
+  const rows=getOverruns();
+  if(rows.length){
+    badge.textContent=rows.length>9?'9+':String(rows.length);
+    badge.classList.remove('hidden');
+  } else {
+    badge.textContent='0';
+    badge.classList.add('hidden');
+  }
+}
+function categoryAccent(key){
+  const map={ali:'#2563EB',con:'#0369A1',loi:'#E5483F',mai:'#F97316',tra:'#16A34A',san:'#7C3AED',enf:'#0EA5E9',abo:'#6D28D9',sen:'#F59E0B',div:'#64748B',don:'#9333EA',fet:'#B45309'};
+  return map[key]||'#E5483F';
+}
+
 function renderOverruns(){
   const body=document.getElementById('overrunsBody'); if(!body)return;
   normalizeManualBudgets();
   const rows=getOverruns();
-  const budgetRows=getBudgetRows();
-  const activeBudgets=budgetRows.filter(r=>Number(r.prevu||0)>0 || Number(r.depense||0)>0);
-  const totalBudget=activeBudgets.reduce((a,r)=>a+Number(r.prevu||0),0);
-  const totalSpent=activeBudgets.reduce((a,r)=>a+Number(r.depense||0),0);
-  const totalOver=rows.reduce((a,r)=>a+Math.max(0,Number(r.depense||0)-Number(r.prevu||0)),0);
-  const globalOver=Math.max(0,totalSpent-totalBudget);
-
+  const budgetTotal=getTotalBudget();
+  const spentTotal=totalMonth();
+  const totalOver=rows.reduce((a,r)=>a+Math.max(0,r.depense-r.prevu),0);
+  const pctTotal=budgetTotal>0?Math.round((spentTotal/budgetTotal)*100):0;
   const ta=document.getElementById('overrunTotalAmount');
-  if(ta) ta.textContent=rows.length ? '+'+money(totalOver) : '0 €';
+  if(ta)ta.textContent=rows.length?`+${money(totalOver)}`:'0 €';
   const tl=document.getElementById('overrunTotalLabel');
-  if(tl) tl.textContent=rows.length
-    ? `${rows.length} catégorie(s) dépassée(s) · mois ${currentMonth}`
-    : `Aucun dépassement du mois · budget suivi ${money(totalBudget)}`;
-
-  if(!activeBudgets.length){
-    body.innerHTML=`<div class="overrun-empty">Aucun budget mensuel renseigné.<br><small>Va dans Paramètres &gt; Catégories & budgets pour définir les montants à suivre.</small></div>`;
-    return;
+  if(tl){
+    tl.textContent=rows.length
+      ? `${rows.length} catégorie(s) dépassée(s) · dépensé ${money(spentTotal)} / budget ${money(budgetTotal)} · ${pctTotal}% consommé`
+      : `Aucun dépassement du mois · dépensé ${money(spentTotal)} / budget ${money(budgetTotal)} · ${pctTotal}% consommé`;
   }
-
+  const title=document.getElementById('overrunSummaryTitle');
+  if(title) title.textContent='Synthèse du mois et dépassements';
+  updateOverrunNavBadge();
   if(!rows.length){
-    const pct=totalBudget>0?Math.round((totalSpent/totalBudget)*100):0;
-    body.innerHTML=`<div class="overrun-empty">Aucun dépassement du mois.<br><small>Dépensé : ${money(totalSpent)} / Budget : ${money(totalBudget)} · ${pct}% consommé.</small></div>`;
+    body.innerHTML='<div class="overrun-empty">Aucun dépassement du mois.<br><small>Les catégories restent dans leurs budgets mensuels.</small></div>';
     return;
   }
-
-  const maxDepassement=Math.max(...rows.map(r=>Math.max(0,Number(r.depense||0)-Number(r.prevu||0))),1);
-  const summaryHtml=`<div class="overrun-card overrun-total-card">
-    <div class="overrun-top">
-      <div>
-        <div class="overrun-title">📊 Synthèse du mois</div>
-        <div class="overrun-sub">Budget suivi ${money(totalBudget)} · dépensé ${money(totalSpent)}</div>
-      </div>
-      <div class="overrun-amt">+${money(totalOver)}<div style="font-size:11px;color:var(--muted);margin-top:3px">${rows.length} alerte(s)</div></div>
-    </div>
-    <div class="overrun-meter">
-      <div class="overrun-meter-label"><span>Dépassement total détecté</span><span>${globalOver>0?`Global +${money(globalOver)}`:'Par catégorie'}</span></div>
-      <div class="overrun-track"><div class="overrun-fill" style="width:100%"></div></div>
-      <div class="overrun-detail">Les barres ci-dessous comparent les dépassements entre catégories.</div>
-    </div>
-  </div>`;
-  const listHtml=rows.map(r=>{
-    const dep=Math.max(0,Number(r.depense||0)-Number(r.prevu||0));
+  const maxDepassement=Math.max(...rows.map(r=>Math.max(0,r.depense-r.prevu)),1);
+  body.innerHTML=rows.map(r=>{
+    const dep=Math.max(0,r.depense-r.prevu);
     const pctBudget=r.prevu>0?Math.round((r.depense/r.prevu)*100):100;
     const pctDepassement=r.prevu>0?Math.round((dep/r.prevu)*100):100;
-    const bar=Math.max(8,Math.min(100,Math.round((dep/maxDepassement)*100)));
-    const usedWidth=Math.max(8,Math.min(100,pctBudget));
-    return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')">
+    const bar=Math.max(7,Math.min(100,Math.round((dep/maxDepassement)*100)));
+    const accent=categoryAccent(r.key);
+    const depenseText=r.prevu>0?`+${pctDepassement}% du budget`:'budget à 0 €';
+    return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')" style="border-left:6px solid ${accent}">
       <div class="overrun-top">
         <div>
           <div class="overrun-title">${r.icon} ${r.categorie}</div>
-          <div class="overrun-sub">Budget ${money(r.prevu)} · dépensé ${money(r.depense)}</div>
+          <div class="overrun-sub">Mois ${currentMonth} · prévu ${money(r.prevu)} · dépensé ${money(r.depense)}</div>
         </div>
         <div class="overrun-amt">+${money(dep)}<div style="font-size:11px;color:var(--muted);margin-top:3px">${pctBudget}%</div></div>
       </div>
       <div class="overrun-meter">
-        <div class="overrun-meter-label"><span>Consommation du budget</span><span>${pctBudget}%</span></div>
-        <div class="overrun-track"><div class="overrun-fill" style="width:${usedWidth}%"></div></div>
-        <div class="overrun-meter-label" style="margin-top:10px"><span>Dépassement</span><span>+${pctDepassement}%</span></div>
-        <div class="overrun-track"><div class="overrun-fill" style="width:${bar}%"></div></div>
-        <div class="overrun-detail">${money(dep)} au-dessus du budget mensuel · toucher pour voir l’historique</div>
+        <div class="overrun-meter-label"><span>Dépassement</span><span>${depenseText}</span></div>
+        <div class="overrun-track"><div class="overrun-fill" style="width:${bar}%;background:${accent}"></div></div>
+        <div class="overrun-detail" style="color:${accent}">${money(dep)} au-dessus du budget mensuel</div>
       </div>
     </div>`;
   }).join('');
-  body.innerHTML=summaryHtml+listHtml;
 }
 
 function renderSettings(){

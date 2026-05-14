@@ -1,2 +1,0 @@
-# foyer-diallo-mobile
-

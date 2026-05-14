@@ -140,6 +140,38 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
   #homeView .home-kpis .stat-value{font-size:15px}
 }
 
+/* Correctifs 14/05 : graphique jour + saisie compacte */
+.today-card{position:relative;overflow:hidden}
+.today-card-left{flex:1;min-width:0}
+.today-mini-chart{display:flex;align-items:flex-end;gap:4px;height:28px;margin-top:7px;max-width:150px}
+.today-mini-bar{width:12px;min-height:4px;border-radius:999px;background:linear-gradient(180deg,var(--accent2),var(--accent));opacity:.9}
+.today-mini-empty{font-size:10px;color:var(--muted);font-weight:800;margin-top:6px}
+#saisieView .view-body{padding:0 14px 86px}
+#saisieView .step-title{font-size:22px;margin:7px 0 7px}
+#saisieView .crumb{margin-bottom:8px;padding:6px 10px}
+#saisieView .amount-box{margin-top:4px;padding:12px;border-radius:24px}
+#saisieView .amount-display{height:58px;border-radius:19px;font-size:34px;margin-bottom:8px}
+#saisieView .amount-meta{padding:8px 10px;margin-bottom:8px;border-radius:14px;font-size:12px}
+#saisieView .date-picker{margin-bottom:8px}
+#saisieView .date-picker label{font-size:11px;margin-bottom:4px}
+#saisieView .date-picker input{height:42px;border-radius:15px;font-size:14px}
+#saisieView .keypad{gap:7px}
+#saisieView .key{height:45px;border-radius:16px;font-size:22px}
+#saisieView .save{height:48px;border-radius:18px;margin-top:8px}
+@media(max-height:720px){
+  #saisieView .topbar{padding-top:calc(6px + var(--safe-top));padding-bottom:6px}
+  #saisieView .back{width:36px;height:36px;border-radius:14px;font-size:25px}
+  #saisieView .top-spacer{width:36px}
+  #saisieView .step-title{font-size:19px;margin:4px 0}
+  #saisieView .amount-box{padding:10px}
+  #saisieView .amount-display{height:48px;font-size:30px}
+  #saisieView .amount-meta{display:none}
+  #saisieView .date-picker{margin-bottom:6px}
+  #saisieView .date-picker input{height:38px}
+  #saisieView .key{height:39px;font-size:20px}
+  #saisieView .save{height:44px;margin-top:7px}
+}
+
 </style>
 </head>
 <body>
@@ -166,7 +198,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
     <button class="today-card" onclick="openTodayHistory()">
       <div class="today-card-left">
         <div class="today-card-title">Dépenses du jour</div>
-        <div class="today-card-note" id="todayCardNote">0 dépense aujourd’hui</div>
+        <div class="today-card-note" id="todayCardNote">0 dépense aujourd’hui</div><div class="today-mini-chart" id="todayMiniChart"></div>
       </div>
       <div class="today-card-right">
         <div class="today-card-total" id="todayCardTotal">0 €</div>
@@ -396,6 +428,16 @@ function kpiSource(){return monthHistory.length?monthHistory:history}
 function isActiveExpense(e){return e && e.statut!=='annulé' && e.statut!=='archivé'}
 function entryAmount(e){return Number(e.montant||e.amt||0)}
 function entryCat(e){return e.categorie||e.cat||''}
+function monthExpenseSource(){
+  const merged=[...(monthHistory||[]),...(history||[])].map(normalizeHistoryEntry);
+  const byId=new Map();
+  merged.forEach(e=>{
+    if(String(e.date||'').slice(0,7)!==currentMonth)return;
+    const key=String(e.sheet_id||e.id||`${e.date}-${e.categorie}-${e.montant}-${e.time||''}`);
+    byId.set(key,e);
+  });
+  return [...byId.values()];
+}
 function totalDay(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
 function expenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).length}
 function monthExpenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,7)===currentMonth).length}
@@ -523,6 +565,22 @@ function renderHome(){
       alert.classList.remove('overrun-alert');
     }
   }
+  renderTodayMiniChart();
+}
+function renderTodayMiniChart(){
+  const box=document.getElementById('todayMiniChart');
+  if(!box)return;
+  const rows=Object.entries(todayData||{}).map(([key,v])=>{
+    const g0=GROUPS.find(g=>g.key===key)||{};
+    const g=displayGroup(g0);
+    return {label:g.label||key,total:Number(v?.total||0)};
+  }).filter(r=>r.total>0).sort((a,b)=>b.total-a.total).slice(0,6);
+  const max=Math.max(...rows.map(r=>r.total),0);
+  if(!rows.length){box.innerHTML='<div class="today-mini-empty">Graphique vide pour aujourd’hui</div>';return;}
+  box.innerHTML=rows.map(r=>{
+    const h=Math.max(8,Math.round((r.total/max)*28));
+    return `<span class="today-mini-bar" title="${r.label} · ${money(r.total)}" style="height:${h}px"></span>`;
+  }).join('');
 }
 function renderHomeExtras(){
   const catBox=document.getElementById('homeCatSummary');
@@ -567,7 +625,7 @@ async function submit(){
   const depNote=(document.getElementById('expenseNote')?.value||'').trim();
   const entry={id:Date.now(),date:depDate,group:activeGroup,cat:selectedCat,amt:v,note:depNote,time:new Date().toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})};
   if(depDate===today){todayData[activeGroup].total=(todayData[activeGroup].total||0)+v;todayData[activeGroup].cats[selectedCat]=(todayData[activeGroup].cats[selectedCat]||0)+v;}
-  history.unshift(entry);histRenderCacheKey='';monthHistory.unshift({id:entry.id,date:depDate,montant:v,categorie:selectedCat,statut:'nouveau'});saveHistory();
+  history.unshift(entry);histRenderCacheKey='';monthHistory.unshift({id:entry.id,date:depDate,montant:v,categorie:selectedCat,note:depNote,statut:'nouveau'});saveHistory();
   const savedCat=selectedCat,savedAmt=v,savedDate=depDate,savedNote=depNote;amount='';selectedCat=null;renderHome();renderGroups();renderTotaux();updateUI();go('home');
   try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({action:'add_depense',secret:SECRET,depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:savedNote,_lid:entry.id}})});const t=await r.text();const d=JSON.parse(t);if(d.ok){entry.sheet_id=d.id;saveHistory();showToast(`${savedAmt}€ · ${savedCat} ✓`);}else throw new Error('not ok');}
   catch(e){pendingQueue.push({action:'add_depense',depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:savedNote,_lid:entry.id},_qid:Date.now()});savePending();updatePendingBadge();showToast('Hors ligne — sauvegardé','warn');}
@@ -731,7 +789,7 @@ function normalizeManualBudgets(){
 function getTotalBudget(){normalizeManualBudgets();return mobileBudgets.reduce((a,b)=>a+Number(b.prevu||0),0);}
 function budgetSpentForCats(cats){
   const set=new Set((cats||[]).map(c=>String(c).toLowerCase()));
-  const source=monthHistory.length?monthHistory:history;
+  const source=monthExpenseSource();
   return source.filter(e=>{
     const d=String(e.date||'').slice(0,7);
     const cat=String(e.categorie||e.cat||'').toLowerCase();
@@ -780,7 +838,8 @@ async function openBudget(){
 }
 async function openOverruns(){
   go('overruns');
-  if(!monthHistory.length) await loadMonthHistorySilent();
+  renderOverruns();
+  await loadMonthHistorySilent();
   renderOverruns();
 }
 function saveManualBudgets(){

@@ -84,7 +84,6 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 #homeView .stat-title{font-size:11px}
 #homeView .stat-value{font-size:18px;margin-top:3px}
 #homeView .stat-note{font-size:10px;margin-top:2px}
-#homeView .stat-overrun{display:none}
 #homeView .fab-row{position:absolute;left:0;right:0;bottom:calc(92px + var(--safe-bottom));padding:0 16px;z-index:42}
 #homeView .fab{height:56px;border-radius:21px}
 @media(max-height:760px){#homeView .header{padding-top:calc(8px + var(--safe-top));padding-bottom:10px}#homeView .hero-card{margin-top:9px;padding:13px 14px}#homeView .hero-money{font-size:28px}#homeView .ring{width:76px;height:76px}#homeView .ring-inner{width:58px;height:58px}#homeView .stats{gap:8px;padding-top:8px}#homeView .stat{min-height:80px;padding:9px 10px}#homeView .stat-ico{width:28px;height:28px;margin-bottom:4px}#homeView .fab{height:52px}}
@@ -560,7 +559,10 @@ function renderHome(){
   const overTotal=overs.reduce((a,r)=>a+(r.depense-r.prevu),0);
 
   const ok=document.getElementById('overrunKpi');
-  if(ok)ok.classList.toggle('has-over',overs.length>0);
+  if(ok){
+    ok.classList.toggle('has-over',overs.length>0);
+    ok.classList.toggle('hidden',overs.length===0);
+  }
 
   const oc=document.getElementById('statOverrunCount');
   if(oc)oc.textContent=overs.length;
@@ -807,13 +809,14 @@ function normalizeManualBudgets(){
 }
 function getTotalBudget(){normalizeManualBudgets();return mobileBudgets.reduce((a,b)=>a+Number(b.prevu||0),0);}
 function budgetSpentForCats(cats){
-  const set=new Set((cats||[]).map(c=>String(c).toLowerCase()));
+  const normCat=v=>String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const set=new Set((cats||[]).map(normCat));
   const source=monthExpenseSource();
   return source.filter(e=>{
-    const d=String(e.date||'').slice(0,7);
-    const cat=String(e.categorie||e.cat||'').toLowerCase();
-    return d===currentMonth && set.has(cat) && e.statut!=='annulé' && e.statut!=='archivé';
-  }).reduce((a,e)=>a+Number(e.montant||e.amt||0),0);
+    const d=normalizeAppDate(e.date).slice(0,7);
+    const cat=normCat(e.categorie||e.cat);
+    return d===currentMonth && set.has(cat) && isActiveExpense(e);
+  }).reduce((a,e)=>a+entryAmount(e),0);
 }
 function getBudgetRows(){
   normalizeManualBudgets();

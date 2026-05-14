@@ -428,21 +428,34 @@ function kpiSource(){return monthHistory.length?monthHistory:history}
 function isActiveExpense(e){return e && e.statut!=='annulé' && e.statut!=='archivé'}
 function entryAmount(e){return Number(e.montant||e.amt||0)}
 function entryCat(e){return e.categorie||e.cat||''}
+function normalizeAppDate(value){
+  if(!value)return today;
+  if(value instanceof Date && !isNaN(value))return value.toISOString().slice(0,10);
+  let s=String(value).trim();
+  if(!s)return today;
+  const iso=s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+  if(iso)return `${iso[1]}-${String(iso[2]).padStart(2,'0')}-${String(iso[3]).padStart(2,'0')}`;
+  const fr=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})/);
+  if(fr)return `${fr[3]}-${String(fr[2]).padStart(2,'0')}-${String(fr[1]).padStart(2,'0')}`;
+  const d=new Date(s);
+  if(!isNaN(d))return d.toISOString().slice(0,10);
+  return s.slice(0,10);
+}
 function monthExpenseSource(){
   const merged=[...(monthHistory||[]),...(history||[])].map(normalizeHistoryEntry);
   const byId=new Map();
   merged.forEach(e=>{
-    if(String(e.date||'').slice(0,7)!==currentMonth)return;
+    if(normalizeAppDate(e.date).slice(0,7)!==currentMonth)return;
     const key=String(e.sheet_id||e.id||`${e.date}-${e.categorie}-${e.montant}-${e.time||''}`);
     byId.set(key,e);
   });
   return [...byId.values()];
 }
-function totalDay(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
-function expenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).length}
-function monthExpenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,7)===currentMonth).length}
+function totalDay(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date)===today).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
+function expenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date)===today).length}
+function monthExpenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date).slice(0,7)===currentMonth).length}
 function daysLeftInMonth(){const d=new Date();return new Date(d.getFullYear(),d.getMonth()+1,0).getDate()-d.getDate()}
-function totalMonth(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,7)===currentMonth).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
+function totalMonth(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date).slice(0,7)===currentMonth).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
 function catIcon(cat){for(const g0 of GROUPS){const g=displayGroup(g0);const c=(g0.cats||[]).find(x=>x.n===cat);if(c)return c.i}return '🏷️'}
 
 function go(view){
@@ -496,7 +509,7 @@ function renderHome(){
   const last=document.getElementById('todayCardLast');
   if(last){
     const lastEntry=(kpiSource()||[])
-      .filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today)
+      .filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date)===today)
       .sort((a,b)=>String(b.id||'').localeCompare(String(a.id||'')))[0];
 
     last.textContent=lastEntry
@@ -930,7 +943,7 @@ function renderCalendar(){
   if(title)title.textContent=now.toLocaleDateString('fr-FR',{month:'long',year:'numeric'});
   if(left)left.textContent=daysLeftInMonth();
   const first=new Date(y,m,1); const last=new Date(y,m+1,0); const start=(first.getDay()+6)%7;
-  const expenseDays=new Set((monthHistory.length?monthHistory:history).filter(e=>String(e.date||'').slice(0,7)===currentMonth && e.statut!=='annulé' && e.statut!=='archivé').map(e=>Number(String(e.date||'').slice(8,10))));
+  const expenseDays=new Set((monthHistory.length?monthHistory:history).filter(e=>normalizeAppDate(e.date).slice(0,7)===currentMonth && e.statut!=='annulé' && e.statut!=='archivé').map(e=>Number(String(e.date||'').slice(8,10))));
   let html=['L','M','M','J','V','S','D'].map(d=>`<div class="cal-head">${d}</div>`).join('');
   for(let i=0;i<start;i++)html+='<div class="cal-day empty"></div>';
   const todayNum=now.getDate();
@@ -945,9 +958,9 @@ function formatDate(d){try{return new Date(d+'T12:00:00').toLocaleDateString('fr
 function editEntry(id,amt,cat){const modal=document.createElement('div');modal.className='edit-modal';modal.innerHTML=`<div class="edit-card"><div class="edit-title">Modifier la dépense</div><div class="edit-field"><label>Montant (€)</label><input type="number" id="editAmt" value="${amt}" inputmode="decimal" step="0.01"></div><div class="edit-field"><label>Catégorie</label><select id="editCat">${GROUPS.flatMap(g=>g.cats.map(c=>`<option ${c.n===cat?'selected':''}>${c.n}</option>`)).join('')}</select></div><div class="edit-btns"><button class="edit-save" onclick="saveEdit('${id}')">Enregistrer</button><button class="edit-cancel" onclick="this.closest('.edit-modal').remove()">Annuler</button></div></div>`;document.body.appendChild(modal);setTimeout(()=>document.getElementById('editAmt').focus(),100);}
 async function saveEdit(id){const newAmt=parseFloat(document.getElementById('editAmt').value);const newCat=document.getElementById('editCat').value;if(!newAmt||newAmt<=0)return;document.querySelector('.edit-modal').remove();const e=monthHistory.find(x=>String(x.id)===String(id));if(e){e.montant=newAmt;e.categorie=newCat;}histRenderCacheKey='';rebuildTodayData();renderHome();renderHist();const ok=await syncAction({action:'update_depense',id,montant:newAmt,categorie:newCat});showToast(ok?`Modifié : ${newAmt}€ · ${newCat}`:'Modifié localement',ok?'success':'warn');}
 async function deleteEntry(id,amt,cat){if(!confirm(`Supprimer ${amt}€ · ${cat} ?`))return;monthHistory=monthHistory.filter(x=>String(x.id)!==String(id));history=history.filter(x=>String(x.id)!==String(id)&&String(x.sheet_id)!==String(id));histRenderCacheKey='';saveHistory();rebuildTodayData();renderHome();renderHist();const ok=await syncAction({action:'delete_depense',id});showToast(ok?'Dépense supprimée':'Supprimé localement',ok?'success':'warn');}
-function normalizeHistoryEntry(e){return {id:e.id||e.sheet_id||Date.now()+Math.random(),sheet_id:e.sheet_id||e.id,date:String(e.date||today).slice(0,10),montant:entryAmount(e),amt:entryAmount(e),categorie:entryCat(e),cat:entryCat(e),statut:e.statut||'nouveau',time:e.time||''};}
-function currentMonthOnly(list){return (list||[]).map(normalizeHistoryEntry).filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,7)===currentMonth).sort((a,b)=>String(b.date).localeCompare(String(a.date)));}
-function rebuildTodayData(){GROUPS.forEach(g=>todayData[g.key]={total:0,cats:{}});kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).forEach(e=>{const cat=entryCat(e);const g=GROUPS.find(x=>(x.cats||[]).some(c=>c.n===cat));if(!g)return;const amt=entryAmount(e);todayData[g.key].total=(todayData[g.key].total||0)+amt;todayData[g.key].cats[cat]=(todayData[g.key].cats[cat]||0)+amt;});}
+function normalizeHistoryEntry(e){return {id:e.id||e.sheet_id||Date.now()+Math.random(),sheet_id:e.sheet_id||e.id,date:normalizeAppDate(e.date||today),montant:entryAmount(e),amt:entryAmount(e),categorie:entryCat(e),cat:entryCat(e),statut:e.statut||'nouveau',time:e.time||''};}
+function currentMonthOnly(list){return (list||[]).map(normalizeHistoryEntry).filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date).slice(0,7)===currentMonth).sort((a,b)=>String(b.date).localeCompare(String(a.date)));}
+function rebuildTodayData(){GROUPS.forEach(g=>todayData[g.key]={total:0,cats:{}});kpiSource().filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date)===today).forEach(e=>{const cat=entryCat(e);const g=GROUPS.find(x=>(x.cats||[]).some(c=>c.n===cat));if(!g)return;const amt=entryAmount(e);todayData[g.key].total=(todayData[g.key].total||0)+amt;todayData[g.key].cats[cat]=(todayData[g.key].cats[cat]||0)+amt;});}
 async function syncKpisWithHistory(){
   showToast('Synchronisation des KPI…','warn');
   let source=[];

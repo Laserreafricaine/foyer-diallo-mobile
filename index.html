@@ -303,6 +303,7 @@ let histRenderCacheKey = '';
 let histRenderCache = null;
 const HIST_PAGE_SIZE = 30;
 let manualBudgetMap = JSON.parse(localStorage.getItem('fd_manual_budgets') || '{}');
+let externalBudgetMap = {}; // budgets lus depuis budget-mobile.json, utilisés si aucun budget manuel n'est saisi
 
 const THEMES = {
   vert:{name:'Vert',accent:'#0F8A55',accent2:'#4FA978'},
@@ -605,6 +606,19 @@ function renderHist(){
 }
 
 function cleanGroupLabel(label){return String(label||'').replace('Ali.','Alimentation').replace('Conso.','Consommations').replace('Abon.','Abonnements')}
+function budgetKeyLabel(v){return String(v||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'').trim()}
+function readBudgetValue(key, categorie){
+  if(Object.prototype.hasOwnProperty.call(manualBudgetMap,key)) return Number(manualBudgetMap[key]||0);
+  if(Object.prototype.hasOwnProperty.call(manualBudgetMap,categorie)) return Number(manualBudgetMap[categorie]||0);
+  if(Object.prototype.hasOwnProperty.call(externalBudgetMap,key)) return Number(externalBudgetMap[key].prevu||0);
+  const norm=budgetKeyLabel(categorie);
+  if(Object.prototype.hasOwnProperty.call(externalBudgetMap,norm)) return Number(externalBudgetMap[norm].prevu||0);
+  return 0;
+}
+function readBudgetCats(key, fallbackCats){
+  const ext=externalBudgetMap[key] || externalBudgetMap[budgetKeyLabel(key)];
+  return ext && Array.isArray(ext.categories) && ext.categories.length ? ext.categories : fallbackCats;
+}
 function allBudgetCategories(){
   return GROUPS.map(g0=>{const g=displayGroup(g0);return {
     key:g0.key,
@@ -621,7 +635,7 @@ function normalizeManualBudgets(){
     key:c.key,
     groupe:c.groupe,
     categorie:c.categorie,
-    prevu:Number(manualBudgetMap[c.key]||manualBudgetMap[c.categorie]||0),
+    prevu:readBudgetValue(c.key,c.categorie),
     icon:c.icon,
     color:c.color,
     bg:c.bg,
@@ -642,8 +656,9 @@ function budgetSpentForCats(cats){
 function getBudgetRows(){
   normalizeManualBudgets();
   return allBudgetCategories().map(c=>{
-    const prevu=Number(manualBudgetMap[c.key]||manualBudgetMap[c.categorie]||0);
-    const depense=budgetSpentForCats(c.cats);
+    const prevu=readBudgetValue(c.key,c.categorie);
+    const cats=readBudgetCats(c.key,c.cats);
+    const depense=budgetSpentForCats(cats);
     const reste=prevu-depense;
     const pct=prevu>0?Math.round((depense/prevu)*100):0;
     return {...c,prevu,depense,reste,pct,over:prevu>0 && depense>prevu};
@@ -653,10 +668,54 @@ function getOverruns(){
   return getBudgetRows().filter(r=>r.over).sort((a,b)=>(b.depense-b.prevu)-(a.depense-a.prevu));
 }
 async function loadMobileBudgets(force=false){
+  // Charge budget-mobile.json comme budget par défaut.
+  // Les budgets saisis manuellement dans Paramètres restent prioritaires.
+  try{
+    const res = await fetch('./budget-mobile.json?_t=' + Date.now(), {cache:'no-store'});
+    if(res.ok){
+      const data = await res.json();
+      const raw = data.budgets || [];
+      const map = {};
+      raw.forEach(b => {
+        const label = b.groupe || b.ligneSuivi || b.categorie || b.category || '';
+        const key = budgetKeyLabel(label);
+        if(!key) return;
+        map[key] = {
+          prevu: Number(b.prevu || b.budget || b.montant || 0),
+          categories: Array.isArray(b.categories) ? b.categories : []
+        };
+      });
+      // Rattache chaque ligne JSON au grand ensemble mobile correspondant.
+      GROUPS.forEach(g => {
+        const groupKey = g.key;
+        const labelKey = budgetKeyLabel(cleanGroupLabel(g.label));
+        const cats = new Set((g.cats||[]).map(c=>budgetKeyLabel(c.n)));
+        let found = raw.find(b => {
+          const bKey = budgetKeyLabel(b.groupe || b.ligneSuivi || b.categorie || b.category || '');
+          if(bKey === groupKey || bKey === labelKey) return true;
+          const bCats = Array.isArray(b.categories) ? b.categories.map(x=>budgetKeyLabel(x)) : [];
+          return bCats.some(c => cats.has(c));
+        });
+        if(found){
+          const v = {
+            prevu:Number(found.prevu || found.budget || found.montant || 0),
+            categories:Array.isArray(found.categories) && found.categories.length ? found.categories : (g.cats||[]).map(c=>c.n)
+          };
+          map[groupKey] = v;
+          map[labelKey] = v;
+        }
+      });
+      externalBudgetMap = map;
+      mobileBudgetPayload = data;
+    }
+  }catch(e){
+    // Pas bloquant : l'app fonctionne avec les budgets manuels/localStorage.
+  }
   normalizeManualBudgets();
   renderBudgetTracking();
   renderHome();
 }
+
 async function openBudget(){
   go('budget');
   if(!monthHistory.length) await loadMonthHistorySilent();
@@ -688,7 +747,7 @@ function renderBudgetTracking(){
   const totalEl=document.getElementById('budgetTotalPrevu'); if(totalEl) totalEl.textContent=money(totalPrevu);
   const label=document.getElementById('budgetMonthLabel'); if(label) label.textContent=`Mois ${currentMonth} · dépensé ${money(totalDepense)} · reste ${money(Math.max(0,totalPrevu-totalDepense))}`;
   body.className='budget-editor';
-  body.innerHTML=rows.map(c=>`<div class="budget-edit-row"><div><div class="budget-edit-title">${c.icon} ${c.categorie}</div><div class="budget-edit-sub">${c.depense?`Dépensé : ${money(c.depense)}`:'Catégorie principale'}</div></div><input type="number" inputmode="decimal" min="0" step="1" value="${manualBudgetMap[c.key]||manualBudgetMap[c.categorie]||''}" placeholder="0" data-budget-key="${c.key}" data-budget-cat="${String(c.categorie).replace(/"/g,'&quot;')}"><span style="font-weight:950;color:var(--muted)">€</span></div>`).join('')+`<div class="budget-savebar"><button class="primary" onclick="saveManualBudgets()">Enregistrer les budgets</button></div>`;
+  body.innerHTML=rows.map(c=>`<div class="budget-edit-row"><div><div class="budget-edit-title">${c.icon} ${c.categorie}</div><div class="budget-edit-sub">${c.depense?`Dépensé : ${money(c.depense)}`:'Catégorie principale'}</div></div><input type="number" inputmode="decimal" min="0" step="1" value="${readBudgetValue(c.key,c.categorie)||''}" placeholder="0" data-budget-key="${c.key}" data-budget-cat="${String(c.categorie).replace(/"/g,'&quot;')}"><span style="font-weight:950;color:var(--muted)">€</span></div>`).join('')+`<div class="budget-savebar"><button class="primary" onclick="saveManualBudgets()">Enregistrer les budgets</button></div>`;
 }
 function renderOverruns(){
   const body=document.getElementById('overrunsBody'); if(!body)return;
@@ -711,7 +770,7 @@ function renderSettings(){
   if(themeGrid){themeGrid.innerHTML=Object.entries(THEMES).map(([k,t])=>`<button class="theme-dot ${appSettings.theme===k?'active':''}" style="background:linear-gradient(135deg,${t.accent2},${t.accent})" onclick="selectTheme('${k}')" title="${t.name}"></button>`).join('');}
   const box=document.getElementById('categorySettings');
   if(box){
-    box.innerHTML=GROUPS.map(g0=>{const g=displayGroup(g0);const budget=manualBudgetMap[g0.key]||manualBudgetMap[cleanGroupLabel(g0.label)]||'';return `<div class="category-setting-row"><input type="text" value="${g.icon}" maxlength="2" data-set-icon="${g0.key}"><div><div class="category-setting-name">${cleanGroupLabel(g0.label)}</div><div class="category-setting-sub">Budget mensuel · catégorie principale</div></div><input type="number" inputmode="decimal" min="0" step="1" value="${budget}" placeholder="0" data-set-budget="${g0.key}" data-set-cat="${cleanGroupLabel(g0.label)}"></div>`}).join('');
+    box.innerHTML=GROUPS.map(g0=>{const g=displayGroup(g0);const budget=readBudgetValue(g0.key,cleanGroupLabel(g0.label))||'';return `<div class="category-setting-row"><input type="text" value="${g.icon}" maxlength="2" data-set-icon="${g0.key}"><div><div class="category-setting-name">${cleanGroupLabel(g0.label)}</div><div class="category-setting-sub">Budget mensuel · catégorie principale</div></div><input type="number" inputmode="decimal" min="0" step="1" value="${budget}" placeholder="0" data-set-budget="${g0.key}" data-set-cat="${cleanGroupLabel(g0.label)}"></div>`}).join('');
   }
 }
 function selectTheme(k){appSettings.theme=k;applySettings();renderSettings();}

@@ -1,5 +1,5 @@
 /* sw.js — GitHub Pages safe, network-first, no stale API cache */
-const CACHE_NAME = 'foyer-mobile-v12';
+const CACHE_NAME = 'foyer-mobile-v13';
 const APP_SHELL = [
   './',
   './index.html',

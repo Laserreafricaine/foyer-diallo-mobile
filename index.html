@@ -439,8 +439,21 @@ function renderTodayMiniChart(){
     return;
   }
 
-  const max=Math.max(...rows.map(e=>entryAmount(e)),1);
-  box.innerH
+const max=Math.max(...rows.map(e=>Number(e.amt||e.amount||0)),1);
+
+box.innerHTML = rows.map(e=>{
+  const val = Number(e.amt || e.amount || 0);
+  const cat = e.cat || e.categorie || '';
+  const h = 6 + Math.round((val/max)*16);
+
+  return `
+    <span
+      class="today-mini-bar"
+      style="height:${h}px"
+      title="${cat} · ${money(val)}">
+    </span>
+  `;
+}).join('');
   const dayCount=expenseCount();
   const monthTotal=totalMonth();
   const monthCount=monthExpenseCount();

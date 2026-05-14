@@ -327,7 +327,7 @@ const GROUPS = [
   {key:'san',icon:'❤️',label:'Santé',color:'#880e4f',bg:'#fce4ec',bd:'#f48fb1',
    cats:[{n:'Pharmacie',i:'💊'},{n:'Médecin',i:'🩺'},{n:'Dentiste',i:'🦷'},{n:'Optique',i:'👓'}]},
   {key:'loi',icon:'🎉',label:'Loisirs',color:'#006064',bg:'#e0f7fa',bd:'#80deea',
-   cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sports/Fitness',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Potager',i:'🌱'},{n:'Cultures/livres/DVD',i:'📚'},{n:'Jeux',i:'🎮'}]},
+   cats:[{n:'Cinéma',i:'🎬'},{n:'Sorties',i:'🎵'},{n:'Sports/Fitness',i:'🏃'},{n:'Vacances',i:'✈️'},{n:'Voyage',i:'✈️'},{n:'Potager',i:'🌱'},{n:'Cultures/livres/DVD',i:'📚'},{n:'Jeux',i:'🎮'}]},
   {key:'abo',icon:'📺',label:'Abon.',color:'#6d28d9',bg:'#ede9fe',bd:'#c4b5fd',
    cats:[{n:'Netflix',i:'🎬'},{n:'Apple TV',i:'🍎'},{n:'Amazon Prime',i:'📦'},{n:'YouTube Premium',i:'▶️'},{n:'Google One',i:'☁️'},{n:'Dropbox',i:'📂'},{n:'Autres',i:'📱'}]},
   {key:'sen',icon:'🌍',label:'Sénégal',color:'#f57f17',bg:'#fff8e1',bd:'#ffe082',
@@ -763,7 +763,7 @@ function allBudgetCategories(){
     icon:g.icon,
     color:g.color,
     bg:g.bg,
-    cats:(g0.cats||[]).map(c=>c.n)
+    cats:[cleanGroupLabel(g0.label), ...(g0.cats||[]).map(c=>c.n)]
   }});
 }
 
@@ -783,6 +783,28 @@ function budgetKeyFromCategorie(categorie){
   if(COCKPIT_BUDGET_ALIASES[n]) return COCKPIT_BUDGET_ALIASES[n];
   const found=GROUPS.find(g=>cleanGroupLabel(g.label).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')===n);
   return found?found.key:null;
+}
+
+const EXPENSE_PARENT_ALIASES = {
+  'voyage':'loi',
+  'voyages':'loi',
+  'vacance':'loi',
+  'vacances':'loi',
+  'loisir':'loi',
+  'loisirs':'loi',
+  'sortie':'loi',
+  'sorties':'loi'
+};
+function normBudgetName(v){return String(v||'').trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');}
+function groupKeyForExpenseCat(categorie){
+  const n=normBudgetName(categorie);
+  if(!n)return null;
+  if(EXPENSE_PARENT_ALIASES[n])return EXPENSE_PARENT_ALIASES[n];
+  for(const g of GROUPS){
+    if(normBudgetName(cleanGroupLabel(g.label))===n)return g.key;
+    if((g.cats||[]).some(c=>normBudgetName(c.n)===n))return g.key;
+  }
+  return null;
 }
 function applyBudgetPayload(payload){
   if(!payload || !Array.isArray(payload.budgets)) return false;
@@ -816,8 +838,15 @@ function normalizeManualBudgets(){
   mobileBudgetPayload={mois:currentMonth,source:'manuel-categories-principales'};
 }
 function getTotalBudget(){normalizeManualBudgets();return mobileBudgets.reduce((a,b)=>a+Number(b.prevu||0),0);}
+function budgetSpentForGroupKey(groupKey){
+  const source=monthExpenseSource();
+  return source.filter(e=>{
+    const d=normalizeAppDate(e.date).slice(0,7);
+    return d===currentMonth && isActiveExpense(e) && groupKeyForExpenseCat(e.categorie||e.cat)===groupKey;
+  }).reduce((a,e)=>a+entryAmount(e),0);
+}
 function budgetSpentForCats(cats){
-  const normCat=v=>String(v||'').trim().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  const normCat=normBudgetName;
   const set=new Set((cats||[]).map(normCat));
   const source=monthExpenseSource();
   return source.filter(e=>{
@@ -826,14 +855,15 @@ function budgetSpentForCats(cats){
     return d===currentMonth && set.has(cat) && isActiveExpense(e);
   }).reduce((a,e)=>a+entryAmount(e),0);
 }
+
 function getBudgetRows(){
   normalizeManualBudgets();
   return allBudgetCategories().map(c=>{
     const prevu=Number(manualBudgetMap[c.key]||manualBudgetMap[c.categorie]||0);
-    const depense=budgetSpentForCats(c.cats);
+    const depense=budgetSpentForGroupKey(c.key);
     const reste=prevu-depense;
-    const pct=prevu>0?Math.round((depense/prevu)*100):0;
-    return {...c,prevu,depense,reste,pct,over:prevu>0 && depense>prevu};
+    const pct=prevu>0?Math.round((depense/prevu)*100):(depense>0?100:0);
+    return {...c,prevu,depense,reste,pct,over:depense>prevu};
   });
 }
 function getOverruns(){
@@ -899,7 +929,7 @@ function renderOverruns(){
   normalizeManualBudgets();
   const rows=getOverruns();
   const budgetRows=getBudgetRows();
-  const activeBudgets=budgetRows.filter(r=>Number(r.prevu||0)>0);
+  const activeBudgets=budgetRows.filter(r=>Number(r.prevu||0)>0 || Number(r.depense||0)>0);
   const totalBudget=activeBudgets.reduce((a,r)=>a+Number(r.prevu||0),0);
   const totalSpent=activeBudgets.reduce((a,r)=>a+Number(r.depense||0),0);
   const totalOver=rows.reduce((a,r)=>a+Math.max(0,Number(r.depense||0)-Number(r.prevu||0)),0);
@@ -940,8 +970,8 @@ function renderOverruns(){
   </div>`;
   const listHtml=rows.map(r=>{
     const dep=Math.max(0,Number(r.depense||0)-Number(r.prevu||0));
-    const pctBudget=r.prevu>0?Math.round((r.depense/r.prevu)*100):0;
-    const pctDepassement=r.prevu>0?Math.round((dep/r.prevu)*100):0;
+    const pctBudget=r.prevu>0?Math.round((r.depense/r.prevu)*100):100;
+    const pctDepassement=r.prevu>0?Math.round((dep/r.prevu)*100):100;
     const bar=Math.max(8,Math.min(100,Math.round((dep/maxDepassement)*100)));
     const usedWidth=Math.max(8,Math.min(100,pctBudget));
     return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')">

@@ -267,6 +267,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
     <div class="calendar-grid" id="calendarGrid"></div>
   </main>
 
+  <!-- VERSION PARAMETRES NETTOYEE : 1 bouton gestion locale + 1 bouton maintenance -->
   <main id="settingsView" class="screen">
     <div class="topbar"><button class="back" onclick="go('home')">‹</button><div class="top-title">Paramètres</div><div class="top-spacer"></div></div>
     <div class="settings-section">
@@ -283,11 +284,17 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
       </div>
       <div class="settings-card">
         <h2 class="settings-title">Gestion locale</h2>
-        <button class="secondary" onclick="processPending();showToast('Synchronisation relancée')">Relancer la synchronisation</button>
-        <div style="height:10px"></div>
-        <button class="secondary" onclick="syncKpisWithHistory()">Synchroniser KPI avec l’historique</button>
-        <div style="height:10px"></div>
-        <button class="danger" onclick="resetTotaux()">Remettre les totaux du jour à zéro</button>
+        <p style="margin:0 0 12px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35">
+          Envoie d’abord les opérations en attente vers Google Sheet, puis recharge l’historique du mois pour recalculer les cartes, les KPI et les dépassements.
+        </p>
+        <button class="secondary" onclick="syncNow()">Synchroniser maintenant</button>
+      </div>
+      <div class="settings-card">
+        <h2 class="settings-title">Maintenance</h2>
+        <p style="margin:0 0 12px;color:var(--muted);font-size:13px;font-weight:800;line-height:1.35">
+          À utiliser seulement si une opération reste bloquée en attente. Ce bouton vide uniquement la file locale des dépenses non envoyées. Il ne supprime ni Google Sheet, ni l’historique déjà synchronisé.
+        </p>
+        <button class="danger" onclick="clearPendingQueue()">Vider les opérations en attente</button>
       </div>
       <div class="settings-savebar"><button class="primary" onclick="saveSettings()">Enregistrer les paramètres</button></div>
     </div>
@@ -644,7 +651,6 @@ async function submit(){
   catch(e){pendingQueue.push({action:'add_depense',depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:savedNote,_lid:entry.id},_qid:Date.now()});savePending();updatePendingBadge();showToast('Hors ligne — sauvegardé','warn');}
   document.getElementById('okBtn').disabled=false;
 }
-function resetTotaux(){if(!confirm('Remettre les totaux du jour à zéro ?'))return;GROUPS.forEach(g=>todayData[g.key]={total:0,cats:{}});history=[];saveHistory();renderHome();showToast('Totaux remis à zéro');}
 async function openHist(){
   go('history');
   histLimit=HIST_PAGE_SIZE;
@@ -961,6 +967,25 @@ async function deleteEntry(id,amt,cat){if(!confirm(`Supprimer ${amt}€ · ${cat
 function normalizeHistoryEntry(e){return {id:e.id||e.sheet_id||Date.now()+Math.random(),sheet_id:e.sheet_id||e.id,date:normalizeAppDate(e.date||today),montant:entryAmount(e),amt:entryAmount(e),categorie:entryCat(e),cat:entryCat(e),statut:e.statut||'nouveau',time:e.time||''};}
 function currentMonthOnly(list){return (list||[]).map(normalizeHistoryEntry).filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date).slice(0,7)===currentMonth).sort((a,b)=>String(b.date).localeCompare(String(a.date)));}
 function rebuildTodayData(){GROUPS.forEach(g=>todayData[g.key]={total:0,cats:{}});kpiSource().filter(e=>isActiveExpense(e)&&normalizeAppDate(e.date)===today).forEach(e=>{const cat=entryCat(e);const g=GROUPS.find(x=>(x.cats||[]).some(c=>c.n===cat));if(!g)return;const amt=entryAmount(e);todayData[g.key].total=(todayData[g.key].total||0)+amt;todayData[g.key].cats[cat]=(todayData[g.key].cats[cat]||0)+amt;});}
+async function syncNow(){
+  showToast('Synchronisation en cours…','warn');
+  await processPending();
+  await syncKpisWithHistory();
+  updatePendingBadge();
+  renderHome();
+  showToast(pendingQueue.length ? 'Synchronisation partielle : opération(s) encore en attente' : 'Synchronisation terminée','success');
+}
+
+function clearPendingQueue(){
+  if(!pendingQueue.length){showToast('Aucune opération en attente','success');return;}
+  if(!confirm('Vider les opérations en attente ? Les dépenses non envoyées vers Google Sheet seront abandonnées.'))return;
+  pendingQueue=[];
+  savePending();
+  updatePendingBadge();
+  renderHome();
+  showToast('Opérations en attente vidées','success');
+}
+
 async function syncKpisWithHistory(){
   showToast('Synchronisation des KPI…','warn');
   let source=[];

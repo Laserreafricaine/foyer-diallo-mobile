@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-title" content="FD Dépenses">
 <meta name="theme-color" content="#0F8A55">
 <title>Foyer Mandiaye</title>
-<link rel="manifest" href="manifest.json?v=12">
+<link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <style>
 :root{
@@ -61,7 +61,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 .stat-overrun.has-over{background:linear-gradient(135deg,#fff,#fff0ee);border-color:rgba(229,72,63,.32)}
 .stat-overrun .stat-value{color:var(--green)}.stat-overrun.has-over .stat-value{color:var(--danger)}
 .overrun-list{padding:0 16px 18px;display:flex;flex-direction:column;gap:12px}.overrun-card{background:#fff;border-radius:24px;padding:15px;box-shadow:var(--softShadow);border:1px solid rgba(229,72,63,.24)}
-.overrun-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.overrun-title{font-size:16px;font-weight:950}.overrun-sub{font-size:12px;color:var(--muted);font-weight:750;margin-top:3px}.overrun-amt{text-align:right;color:var(--danger);font-weight:950}.overrun-empty{margin:30px 16px;background:#fff;border-radius:24px;padding:28px;text-align:center;color:var(--muted);font-weight:900;box-shadow:var(--softShadow);line-height:1.35}
+.overrun-top{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}.overrun-title{font-size:16px;font-weight:950}.overrun-sub{font-size:12px;color:var(--muted);font-weight:750;margin-top:3px}.overrun-amt{text-align:right;color:var(--danger);font-weight:950}.overrun-empty{margin:30px 16px;background:#fff;border-radius:24px;padding:28px;text-align:center;color:var(--muted);font-weight:900;box-shadow:var(--softShadow);line-height:1.35}.overrun-meter{margin-top:12px}.overrun-meter-label{display:flex;justify-content:space-between;font-size:11px;font-weight:900;color:var(--muted);margin-bottom:6px}.overrun-track{height:12px;border-radius:999px;background:#F2E7E5;overflow:hidden}.overrun-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,#F59E0B,#E5483F,#B42318);min-width:7%}.overrun-detail{font-size:11px;font-weight:850;color:var(--danger);margin-top:7px;text-align:right}
 
 
 /* Ajustements accueil : zéro scroll, alerte fine, bouton toujours visible */
@@ -112,6 +112,66 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
 .hist-chip-block{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;padding-bottom:8px}.hist-chip-block::-webkit-scrollbar{display:none}.hist-chips.two-level{display:block}.hist-subtitle{font-size:12px;color:var(--muted);font-weight:900;margin:0 0 8px 2px}.overrun-card{cursor:pointer}.overrun-card:active{transform:scale(.99)}.overrun-card .overrun-sub::after{content:' · toucher pour voir les dépenses';color:var(--danger);font-weight:850}.settings-section{padding-bottom:calc(170px + var(--safe-bottom))}.settings-savebar{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(92px + var(--safe-bottom));width:min(448px,calc(100% - 32px));padding:0;background:transparent;z-index:45}.category-setting-row{grid-template-columns:42px 1fr 96px}.calendar-summary{margin:14px 16px;background:linear-gradient(135deg,var(--accent2),var(--accent));color:#fff;border-radius:28px;padding:18px;box-shadow:0 16px 34px rgba(15,138,85,.22);display:flex;justify-content:space-between;align-items:center}.calendar-label{font-size:13px;font-weight:850;opacity:.86}.calendar-title{font-size:24px;font-weight:950;margin-top:5px}.calendar-days{text-align:right}.calendar-days strong{display:block;font-size:32px;line-height:1;font-weight:950}.calendar-days span{font-size:11px;font-weight:850;opacity:.82}.calendar-grid{margin:0 16px 18px;background:#fff;border-radius:26px;padding:14px;box-shadow:var(--softShadow);display:grid;grid-template-columns:repeat(7,1fr);gap:8px}.cal-head{font-size:11px;color:var(--muted);font-weight:950;text-align:center;padding:4px 0}.cal-day{height:42px;border-radius:15px;background:#F7F3EA;display:flex;align-items:center;justify-content:center;font-weight:950;color:#374151;position:relative}.cal-day.empty{background:transparent}.cal-day.today{background:var(--greenSoft);color:var(--accent);outline:2px solid var(--accent)}.cal-day.has-expense::after{content:'';position:absolute;bottom:6px;width:5px;height:5px;border-radius:999px;background:var(--danger)}.cal-day.past{opacity:.45}
 
 .hist-more{width:100%;margin:14px 0 90px;border-radius:18px}
+
+/* Accueil mobile final : mois → jour → KPI rapides */
+#homeView .hero-month-card{cursor:pointer;min-height:128px}
+#homeView .hero-month-note{font-size:12px;color:var(--muted);font-weight:850;margin-top:4px}
+.today-card{margin:10px 16px 0;background:#fff;border:1px solid rgba(233,225,213,.78);border-radius:22px;padding:13px 14px;box-shadow:var(--softShadow);display:flex;justify-content:space-between;align-items:center;gap:12px;width:auto;text-align:left}
+.today-card-title{font-size:14px;font-weight:950}
+.today-card-note{font-size:11px;color:var(--muted);font-weight:800;margin-top:3px}
+.today-card-right{text-align:right;min-width:110px}
+.today-card-total{font-size:22px;font-weight:950;letter-spacing:-.4px;color:var(--accent)}
+.today-card-last{font-size:10px;color:var(--muted);font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:148px;margin-top:2px}
+#homeView .home-kpis{padding-top:10px;gap:9px}
+#homeView .home-kpis .stat{min-height:82px;padding:10px;border-radius:18px}
+#homeView .home-kpis .stat-ico{width:28px;height:28px;border-radius:11px;font-size:15px;margin-bottom:5px}
+#homeView .home-kpis .stat-title{font-size:10px;line-height:1.1}
+#homeView .home-kpis .stat-value{font-size:17px;margin-top:3px}
+#homeView .home-kpis .stat-note{font-size:9px;line-height:1.1}
+#homeView .alert{margin-top:8px}
+#homeView .fab-row{bottom:calc(88px + var(--safe-bottom))}
+@media(max-height:760px){
+  .today-card{margin-top:8px;padding:10px 12px;border-radius:19px}
+  .today-card-total{font-size:19px}
+  #homeView .hero-month-card{min-height:112px}
+  #homeView .hero-month-note{font-size:11px}
+  #homeView .home-kpis .stat{min-height:72px;padding:8px}
+  #homeView .home-kpis .stat-ico{width:24px;height:24px;font-size:13px;margin-bottom:3px}
+  #homeView .home-kpis .stat-value{font-size:15px}
+}
+
+/* Correctifs 14/05 : graphique jour + saisie compacte */
+.today-card{position:relative;overflow:hidden}
+.today-card-left{flex:1;min-width:0}
+.today-mini-chart{display:flex;align-items:flex-end;gap:4px;height:28px;margin-top:7px;max-width:150px}
+.today-mini-bar{width:12px;min-height:4px;border-radius:999px;background:linear-gradient(180deg,var(--accent2),var(--accent));opacity:.9}
+.today-mini-empty{font-size:10px;color:var(--muted);font-weight:800;margin-top:6px}
+#saisieView .view-body{padding:0 14px 86px}
+#saisieView .step-title{font-size:22px;margin:7px 0 7px}
+#saisieView .crumb{margin-bottom:8px;padding:6px 10px}
+#saisieView .amount-box{margin-top:4px;padding:12px;border-radius:24px}
+#saisieView .amount-display{height:58px;border-radius:19px;font-size:34px;margin-bottom:8px}
+#saisieView .amount-meta{padding:8px 10px;margin-bottom:8px;border-radius:14px;font-size:12px}
+#saisieView .date-picker{margin-bottom:8px}
+#saisieView .date-picker label{font-size:11px;margin-bottom:4px}
+#saisieView .date-picker input{height:42px;border-radius:15px;font-size:14px}
+#saisieView .keypad{gap:7px}
+#saisieView .key{height:45px;border-radius:16px;font-size:22px}
+#saisieView .save{height:48px;border-radius:18px;margin-top:8px}
+@media(max-height:720px){
+  #saisieView .topbar{padding-top:calc(6px + var(--safe-top));padding-bottom:6px}
+  #saisieView .back{width:36px;height:36px;border-radius:14px;font-size:25px}
+  #saisieView .top-spacer{width:36px}
+  #saisieView .step-title{font-size:19px;margin:4px 0}
+  #saisieView .amount-box{padding:10px}
+  #saisieView .amount-display{height:48px;font-size:30px}
+  #saisieView .amount-meta{display:none}
+  #saisieView .date-picker{margin-bottom:6px}
+  #saisieView .date-picker input{height:38px}
+  #saisieView .key{height:39px;font-size:20px}
+  #saisieView .save{height:44px;margin-top:7px}
+}
+
 </style>
 </head>
 <body>
@@ -122,22 +182,38 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
         <div><div class="hello" id="homeHello">Bonjour Mandiaye 👋</div><div class="subtitle" id="monthSubtitle">Vue d’ensemble du jour</div></div>
         <button class="bell-btn" id="histBtn" onclick="openHist()">🕘<span id="pendingBadge" class="badge hidden">0</span></button>
       </div>
-      <div class="hero-card">
-        <div><div class="hero-label">Dépensé aujourd’hui</div><div class="hero-money" id="totalJourHero">0 €</div><div class="hero-base" id="heroBase">Foyer Mandiaye</div></div>
-        <div class="ring" id="ring"><div class="ring-inner"><div><div class="ring-num" id="ringPct">0%</div><div class="ring-txt">activité</div></div></div></div>
+      <div class="hero-card hero-month-card" onclick="openMonthHistory()">
+        <div>
+          <div class="hero-label">Dépenses du mois</div>
+          <div class="hero-money" id="totalJourHero">0 €</div>
+          <div class="hero-base" id="heroBase">Budget mensuel : 0 €</div>
+          <div class="hero-month-note" id="monthCountHero">0 dépense ce mois</div>
+        </div>
+        <div class="ring" id="ring"><div class="ring-inner"><div><div class="ring-num" id="ringPct">0%</div><div class="ring-txt">du budget</div></div></div></div>
       </div>
     </header>
+
     <div id="smartAlert" class="alert" onclick="openOverruns()"></div>
-    <div class="stats kpi-only">
-      <button class="stat" onclick="openTodayHistory()"><div class="stat-ico" style="background:var(--greenSoft)">💰</div><div class="stat-title">Total jour</div><div class="stat-value" id="statTotal">0 €</div><div class="stat-note">voir le détail</div></button>
-      <button class="stat" onclick="openTodayHistory()"><div class="stat-ico" style="background:var(--blueSoft)">🧾</div><div class="stat-title">Nombre de dépenses</div><div class="stat-value" id="statCount">0</div><div class="stat-note">voir aujourd’hui</div></button>
-      <button class="stat" onclick="openMonthHistory()"><div class="stat-ico" style="background:var(--orangeSoft)">📅</div><div class="stat-title">Total mois</div><div class="stat-value" id="statMonth">0 €</div><div class="stat-note">historique du mois</div></button>
+
+    <button class="today-card" onclick="openTodayHistory()">
+      <div class="today-card-left">
+        <div class="today-card-title">Dépenses du jour</div>
+        <div class="today-card-note" id="todayCardNote">0 dépense aujourd’hui</div><div class="today-mini-chart" id="todayMiniChart"></div>
+      </div>
+      <div class="today-card-right">
+        <div class="today-card-total" id="todayCardTotal">0 €</div>
+        <div class="today-card-last" id="todayCardLast">Aucune dépense</div>
+      </div>
+    </button>
+
+    <div class="stats kpi-only home-kpis">
+      <button class="stat" onclick="openMonthHistory()"><div class="stat-ico" style="background:var(--orangeSoft)">📅</div><div class="stat-title">Dépenses du mois</div><div class="stat-value" id="statTotal">0</div><div class="stat-note">voir le mois</div></button>
+      <button class="stat" onclick="openTodayHistory()"><div class="stat-ico" style="background:var(--greenSoft)">💰</div><div class="stat-title">Total jour</div><div class="stat-value" id="statCount">0 €</div><div class="stat-note">voir le détail</div></button>
+      <button class="stat" onclick="openTodayHistory()"><div class="stat-ico" style="background:var(--blueSoft)">🧾</div><div class="stat-title">Dépenses du jour</div><div class="stat-value" id="statMonth">0</div><div class="stat-note">voir aujourd’hui</div></button>
       <button class="stat" onclick="openCalendarView()"><div class="stat-ico" style="background:var(--purpleSoft)">⏳</div><div class="stat-title">Jours restants</div><div class="stat-value" id="statDaysLeft">0</div><div class="stat-note">voir calendrier</div></button>
-      <button class="stat stat-overrun" id="overrunKpi" onclick="openOverruns()"><div class="stat-ico" style="background:var(--dangerSoft)">⚠️</div><div class="stat-title">Dépassements</div><div class="stat-value" id="statOverrunCount">0</div><div class="stat-note" id="statOverrunAmount">Aucune alerte</div></button>
+      <button class="stat stat-overrun hidden" id="overrunKpi" onclick="openOverruns()"><div class="stat-ico" style="background:var(--dangerSoft)">⚠️</div><div class="stat-title">Dépassements</div><div class="stat-value" id="statOverrunCount">0</div><div class="stat-note" id="statOverrunAmount">Aucune alerte</div></button>
     </div>
-    <div class="home-extra home-extra-single">
-      <div class="home-mini-card"><div class="home-mini-title">Dernières dépenses <span>récent</span></div><div id="homeLastExpenses"></div></div>
-    </div>
+
     <div class="fab-row"><button class="fab" onclick="go('saisie')">＋  Saisir une dépense</button></div>
     <div id="homeGroups" class="card-list hidden"></div>
     <span id="statGroup" class="hidden">Ali.</span><span id="totalGrp" class="hidden">—</span><span id="statPending" class="hidden">0</span>
@@ -146,7 +222,7 @@ button,input,select{font-family:inherit}button{border:0;background:none;cursor:p
   <main id="saisieView" class="screen">
     <div class="topbar"><button class="back" onclick="saisieBack()">‹</button><div class="top-title" id="saisieTopTitle">Saisir</div><div class="top-spacer"></div></div>
     <div class="view-body"><div class="step-title" id="saisieTitle">Choisir un groupe</div><div id="breadcrumb" class="crumb hidden"></div><div id="groupsGrid" class="card-list"></div><div id="catsArea" class="card-list hidden"></div>
-      <div id="amountStep" class="hidden"><div class="amount-box"><div class="amount-display"><span id="amtVal" class="amt-empty">0</span><span style="font-size:22px;margin-left:4px">€</span></div><div class="amount-meta" id="amtHint">Tapez le montant</div><div class="date-picker"><label for="expenseDate">Date de la dépense</label><input type="date" id="expenseDate"></div><div class="keypad"><button class="key" onclick="np('1')">1</button><button class="key" onclick="np('2')">2</button><button class="key" onclick="np('3')">3</button><button class="key" onclick="np('4')">4</button><button class="key" onclick="np('5')">5</button><button class="key" onclick="np('6')">6</button><button class="key" onclick="np('7')">7</button><button class="key" onclick="np('8')">8</button><button class="key" onclick="np('9')">9</button><button class="key" onclick="npDel()">⌫</button><button class="key" onclick="np('0')">0</button><button class="key" onclick="np('.')">,</button></div><button class="save" id="okBtn" disabled onclick="submit()"><span id="okLabel">Enregistrer</span></button></div></div>
+      <div id="amountStep" class="hidden"><div class="amount-box"><div class="amount-display"><span id="amtVal" class="amt-empty">0</span><span style="font-size:22px;margin-left:4px">€</span></div><div class="amount-meta" id="amtHint">Tapez le montant</div><div class="date-picker"><label for="expenseDate">Date de la dépense</label><input type="date" id="expenseDate"></div><div class="date-picker"><label for="expenseNote">Commentaire</label><input type="text" id="expenseNote" placeholder="Ex : courses Auchan, ordonnance, cantine..." maxlength="80"></div><div class="keypad"><button class="key" onclick="np('1')">1</button><button class="key" onclick="np('2')">2</button><button class="key" onclick="np('3')">3</button><button class="key" onclick="np('4')">4</button><button class="key" onclick="np('5')">5</button><button class="key" onclick="np('6')">6</button><button class="key" onclick="np('7')">7</button><button class="key" onclick="np('8')">8</button><button class="key" onclick="np('9')">9</button><button class="key" onclick="npDel()">⌫</button><button class="key" onclick="np('0')">0</button><button class="key" onclick="np('.')">,</button></div><button class="save" id="okBtn" disabled onclick="submit()"><span id="okLabel">Enregistrer</span></button></div></div>
     </div>
   </main>
 
@@ -352,8 +428,19 @@ function kpiSource(){return monthHistory.length?monthHistory:history}
 function isActiveExpense(e){return e && e.statut!=='annulé' && e.statut!=='archivé'}
 function entryAmount(e){return Number(e.montant||e.amt||0)}
 function entryCat(e){return e.categorie||e.cat||''}
+function monthExpenseSource(){
+  const merged=[...(monthHistory||[]),...(history||[])].map(normalizeHistoryEntry);
+  const byId=new Map();
+  merged.forEach(e=>{
+    if(String(e.date||'').slice(0,7)!==currentMonth)return;
+    const key=String(e.sheet_id||e.id||`${e.date}-${e.categorie}-${e.montant}-${e.time||''}`);
+    byId.set(key,e);
+  });
+  return [...byId.values()];
+}
 function totalDay(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
 function expenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today).length}
+function monthExpenseCount(){return kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,7)===currentMonth).length}
 function daysLeftInMonth(){const d=new Date();return new Date(d.getFullYear(),d.getMonth()+1,0).getDate()-d.getDate()}
 function totalMonth(){return Math.round(kpiSource().filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,7)===currentMonth).reduce((a,e)=>a+entryAmount(e),0)*100)/100}
 function catIcon(cat){for(const g0 of GROUPS){const g=displayGroup(g0);const c=(g0.cats||[]).find(x=>x.n===cat);if(c)return c.i}return '🏷️'}
@@ -378,36 +465,123 @@ function saisieBack(){
 function startSaisie(){amount='';selectedCat=null;const d=document.getElementById('expenseDate');if(d&&!d.value)d.value=today;document.getElementById('amountStep').classList.add('hidden');document.getElementById('catsArea').classList.add('hidden');document.getElementById('groupsGrid').classList.remove('hidden');document.getElementById('breadcrumb').classList.add('hidden');document.getElementById('saisieTitle').textContent='Choisir un groupe';renderGroups();updateUI();}
 
 function renderHome(){
-  const total=totalDay(), count=expenseCount(), monthTotal=totalMonth(), left=daysLeftInMonth();
+  const dayTotal=totalDay();
+  const dayCount=expenseCount();
+  const monthTotal=totalMonth();
+  const monthCount=monthExpenseCount();
+  const left=daysLeftInMonth();
+
   const budgetTotal=getTotalBudget();
   const reste=Math.max(0,budgetTotal-monthTotal);
   const pctRaw=budgetTotal>0?Math.round((monthTotal/budgetTotal)*100):0;
   const pct=Math.min(100,pctRaw);
-  document.getElementById('totalJourHero').textContent=money(total);
-  const hb=document.getElementById('heroBase'); if(hb)hb.textContent=budgetTotal>0?`Budget mensuel : ${money(budgetTotal)} · reste ${money(reste)}`:'Ajoute tes budgets par catégorie';
-  document.getElementById('statTotal').textContent=money(total);
-  document.getElementById('statCount').textContent=count;
-  document.getElementById('statMonth').textContent=money(monthTotal);
-  document.getElementById('statDaysLeft').textContent=left;
-  const sp=document.getElementById('statPending'); if(sp)sp.textContent=pendingQueue.length;
-  const g0=GROUPS.find(x=>x.key===activeGroup)||GROUPS[0]; const g=displayGroup(g0); const sg=document.getElementById('statGroup'); if(sg)sg.textContent=g.label; renderTotaux();
-  document.getElementById('ringPct').textContent=pctRaw+'%';
-  const rt=document.querySelector('#ring .ring-txt'); if(rt)rt.textContent=pctRaw>100?'dépassé':'du budget';
+
+  const hero=document.getElementById('totalJourHero');
+  if(hero) hero.textContent=money(monthTotal);
+
+  const hb=document.getElementById('heroBase');
+  if(hb) hb.textContent=budgetTotal>0
+    ? `Budget mensuel : ${money(budgetTotal)} · reste ${money(reste)}`
+    : 'Budget mensuel non renseigné';
+
+  const mh=document.getElementById('monthCountHero');
+  if(mh) mh.textContent=monthCount + ` dépense${monthCount>1?'s':''} ce mois`;
+
+  const tct=document.getElementById('todayCardTotal');
+  if(tct) tct.textContent=money(dayTotal);
+
+  const tcn=document.getElementById('todayCardNote');
+  if(tcn) tcn.textContent=dayCount + ` dépense${dayCount>1?'s':''} aujourd’hui`;
+
+  const last=document.getElementById('todayCardLast');
+  if(last){
+    const lastEntry=(kpiSource()||[])
+      .filter(e=>isActiveExpense(e)&&String(e.date||'').slice(0,10)===today)
+      .sort((a,b)=>String(b.id||'').localeCompare(String(a.id||'')))[0];
+
+    last.textContent=lastEntry
+      ? `${entryCat(lastEntry)} · ${money(entryAmount(lastEntry))}`
+      : 'Aucune dépense';
+  }
+
+  const st=document.getElementById('statTotal');
+  if(st) st.textContent=monthCount;
+
+  const sc=document.getElementById('statCount');
+  if(sc) sc.textContent=money(dayTotal);
+
+  const sm=document.getElementById('statMonth');
+  if(sm) sm.textContent=dayCount;
+
+  const sd=document.getElementById('statDaysLeft');
+  if(sd) sd.textContent=left;
+
+  const sp=document.getElementById('statPending');
+  if(sp) sp.textContent=pendingQueue.length;
+
+  const g0=GROUPS.find(x=>x.key===activeGroup)||GROUPS[0];
+  const g=displayGroup(g0);
+  const sg=document.getElementById('statGroup');
+  if(sg)sg.textContent=g.label;
+
+  renderTotaux();
+
+  const ringPct=document.getElementById('ringPct');
+  if(ringPct) ringPct.textContent=pctRaw+'%';
+
+  const rt=document.querySelector('#ring .ring-txt');
+  if(rt)rt.textContent=pctRaw>100?'dépassé':'du budget';
+
   const ringColor = pctRaw>100?'var(--danger)':(pctRaw>=90?'#F59E0B':'var(--green)');
-  document.getElementById('ring').style.background=`conic-gradient(${ringColor} ${Math.min(pct,100)*3.6}deg,#E6EFE7 0deg)`;
+  const ring=document.getElementById('ring');
+  if(ring) ring.style.background=`conic-gradient(${ringColor} ${Math.min(pct,100)*3.6}deg,#E6EFE7 0deg)`;
+
   const overs=getOverruns();
   const overTotal=overs.reduce((a,r)=>a+(r.depense-r.prevu),0);
-  const ok=document.getElementById('overrunKpi'); if(ok)ok.classList.toggle('has-over',overs.length>0);
-  const oc=document.getElementById('statOverrunCount'); if(oc)oc.textContent=overs.length;
-  const oa=document.getElementById('statOverrunAmount'); if(oa)oa.textContent=overs.length?`+${money(overTotal)} au-dessus du budget`:'Aucune alerte';
-  const alert=document.getElementById('smartAlert'); if(alert){
-    if(overs.length){alert.innerHTML=`<div><strong>⚠️ ${overs.length} catégorie(s) dépassée(s)</strong><br><span>+${money(overTotal)} au-dessus du budget</span></div>`;alert.classList.add('show');alert.classList.add('overrun-alert');}
-    else if(pendingQueue.length){alert.innerHTML='<div><strong>Synchronisation</strong><br><span>'+pendingQueue.length+' opération(s) en attente</span></div>';alert.classList.add('show');alert.classList.remove('overrun-alert');}
-    else {alert.classList.remove('show');alert.classList.remove('overrun-alert');}
-  }
-  renderHomeExtras();
-}
 
+  const ok=document.getElementById('overrunKpi');
+  if(ok)ok.classList.toggle('has-over',overs.length>0);
+
+  const oc=document.getElementById('statOverrunCount');
+  if(oc)oc.textContent=overs.length;
+
+  const oa=document.getElementById('statOverrunAmount');
+  if(oa)oa.textContent=overs.length?`+${money(overTotal)} au-dessus du budget`:'Aucune alerte';
+
+  const alert=document.getElementById('smartAlert');
+  if(alert){
+    if(overs.length){
+      alert.innerHTML=`<div><strong>⚠️ ${overs.length} dépassement${overs.length>1?'s':''} sur le mois</strong><br><span>+${money(overTotal)} au-dessus du budget mensuel · toucher pour voir</span></div>`;
+      alert.classList.add('show');
+      alert.classList.add('overrun-alert');
+    }
+    else if(pendingQueue.length){
+      alert.innerHTML='<div><strong>Synchronisation</strong><br><span>'+pendingQueue.length+' opération(s) en attente</span></div>';
+      alert.classList.add('show');
+      alert.classList.remove('overrun-alert');
+    }
+    else {
+      alert.classList.remove('show');
+      alert.classList.remove('overrun-alert');
+    }
+  }
+  renderTodayMiniChart();
+}
+function renderTodayMiniChart(){
+  const box=document.getElementById('todayMiniChart');
+  if(!box)return;
+  const rows=Object.entries(todayData||{}).map(([key,v])=>{
+    const g0=GROUPS.find(g=>g.key===key)||{};
+    const g=displayGroup(g0);
+    return {label:g.label||key,total:Number(v?.total||0)};
+  }).filter(r=>r.total>0).sort((a,b)=>b.total-a.total).slice(0,6);
+  const max=Math.max(...rows.map(r=>r.total),0);
+  if(!rows.length){box.innerHTML='<div class="today-mini-empty">Graphique vide pour aujourd’hui</div>';return;}
+  box.innerHTML=rows.map(r=>{
+    const h=Math.max(8,Math.round((r.total/max)*28));
+    return `<span class="today-mini-bar" title="${r.label} · ${money(r.total)}" style="height:${h}px"></span>`;
+  }).join('');
+}
 function renderHomeExtras(){
   const catBox=document.getElementById('homeCatSummary');
   if(catBox){
@@ -434,7 +608,7 @@ function renderTotaux(){
   const g0=GROUPS.find(x=>x.key===activeGroup)||GROUPS[0]; const g=displayGroup(g0);const grpT=todayData[activeGroup]?.total||0;const el=document.getElementById('totalGrp');if(el)el.textContent=grpT>0?money(grpT)+' '+g.label:'—';
 }
 function switchGroup(k){activeGroup=k;selectedCat=null;document.getElementById('groupsGrid').classList.add('hidden');document.getElementById('catsArea').classList.remove('hidden');renderCats();renderTotaux();updateUI();}
-function selectCat(n){selectedCat=n;const d=document.getElementById('expenseDate');if(d&&!d.value)d.value=today;document.getElementById('catsArea').classList.add('hidden');document.getElementById('amountStep').classList.remove('hidden');document.getElementById('saisieTitle').textContent='Entrer le montant';document.getElementById('breadcrumb').textContent=(GROUPS.find(x=>x.key===activeGroup)?.icon||'')+' '+selectedCat;updateUI();}
+function selectCat(n){selectedCat=n;const d=document.getElementById('expenseDate');if(d&&!d.value)d.value=today;const note=document.getElementById('expenseNote');if(note)note.value='';document.getElementById('catsArea').classList.add('hidden');document.getElementById('amountStep').classList.remove('hidden');document.getElementById('saisieTitle').textContent='Entrer le montant';document.getElementById('breadcrumb').textContent=(GROUPS.find(x=>x.key===activeGroup)?.icon||'')+' '+selectedCat;updateUI();}
 function np(d){if(d==='.'&&amount.includes('.'))return;if(d!=='.'&&amount.split('.')[1]?.length>=2)return;if(amount.length>=7)return;amount=(amount==='0'&&d!=='.')?d:amount+d;updateUI();}
 function npDel(){amount=amount.slice(0,-1);updateUI();}
 function updateUI(){
@@ -448,12 +622,13 @@ function updateUI(){
 async function submit(){
   const v=parseFloat(amount); if(!v||!selectedCat)return;document.getElementById('okBtn').disabled=true;
   const depDate=(document.getElementById('expenseDate')?.value)||today;
-  const entry={id:Date.now(),date:depDate,group:activeGroup,cat:selectedCat,amt:v,time:new Date().toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})};
+  const depNote=(document.getElementById('expenseNote')?.value||'').trim();
+  const entry={id:Date.now(),date:depDate,group:activeGroup,cat:selectedCat,amt:v,note:depNote,time:new Date().toLocaleTimeString('fr',{hour:'2-digit',minute:'2-digit'})};
   if(depDate===today){todayData[activeGroup].total=(todayData[activeGroup].total||0)+v;todayData[activeGroup].cats[selectedCat]=(todayData[activeGroup].cats[selectedCat]||0)+v;}
-  history.unshift(entry);histRenderCacheKey='';monthHistory.unshift({id:entry.id,date:depDate,montant:v,categorie:selectedCat,statut:'nouveau'});saveHistory();
-  const savedCat=selectedCat,savedAmt=v,savedDate=depDate;amount='';selectedCat=null;renderHome();renderGroups();renderTotaux();updateUI();go('home');
-  try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({action:'add_depense',secret:SECRET,depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:'',_lid:entry.id}})});const t=await r.text();const d=JSON.parse(t);if(d.ok){entry.sheet_id=d.id;saveHistory();showToast(`${savedAmt}€ · ${savedCat} ✓`);}else throw new Error('not ok');}
-  catch(e){pendingQueue.push({action:'add_depense',depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:'',_lid:entry.id},_qid:Date.now()});savePending();updatePendingBadge();showToast('Hors ligne — sauvegardé','warn');}
+  history.unshift(entry);histRenderCacheKey='';monthHistory.unshift({id:entry.id,date:depDate,montant:v,categorie:selectedCat,note:depNote,statut:'nouveau'});saveHistory();
+  const savedCat=selectedCat,savedAmt=v,savedDate=depDate,savedNote=depNote;amount='';selectedCat=null;renderHome();renderGroups();renderTotaux();updateUI();go('home');
+  try{const r=await fetch(SCRIPT_URL,{method:'POST',redirect:'follow',body:JSON.stringify({action:'add_depense',secret:SECRET,depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:savedNote,_lid:entry.id}})});const t=await r.text();const d=JSON.parse(t);if(d.ok){entry.sheet_id=d.id;saveHistory();showToast(`${savedAmt}€ · ${savedCat} ✓`);}else throw new Error('not ok');}
+  catch(e){pendingQueue.push({action:'add_depense',depense:{date:savedDate,montant:v,categorie:savedCat,proprietaire:'Foyer',note:savedNote,_lid:entry.id},_qid:Date.now()});savePending();updatePendingBadge();showToast('Hors ligne — sauvegardé','warn');}
   document.getElementById('okBtn').disabled=false;
 }
 function resetTotaux(){if(!confirm('Remettre les totaux du jour à zéro ?'))return;GROUPS.forEach(g=>todayData[g.key]={total:0,cats:{}});history=[];saveHistory();renderHome();showToast('Totaux remis à zéro');}
@@ -562,6 +737,42 @@ function allBudgetCategories(){
     cats:(g0.cats||[]).map(c=>c.n)
   }});
 }
+
+const COCKPIT_BUDGET_ALIASES = {
+  'vie courante':'ali',
+  'charges':'mai',
+  'mobilite':'tra',
+  'mobilité':'tra',
+  'sante':'san',
+  'santé':'san',
+  'enfants':'enf',
+  'variable':'div'
+};
+function budgetKeyFromCategorie(categorie){
+  const raw=String(categorie||'').trim();
+  const n=raw.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+  if(COCKPIT_BUDGET_ALIASES[n]) return COCKPIT_BUDGET_ALIASES[n];
+  const found=GROUPS.find(g=>cleanGroupLabel(g.label).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'')===n);
+  return found?found.key:null;
+}
+function applyBudgetPayload(payload){
+  if(!payload || !Array.isArray(payload.budgets)) return false;
+  if(payload.mois && payload.mois !== currentMonth) return false;
+  let changed=false;
+  payload.budgets.forEach(row=>{
+    const key=budgetKeyFromCategorie(row.categorie);
+    const v=Number(row.prevu||0);
+    if(key && v>=0){manualBudgetMap[key]=v;changed=true;}
+  });
+  if(changed){
+    mobileBudgetPayload=payload;
+    localStorage.setItem('fd_manual_budgets',JSON.stringify(manualBudgetMap));
+    localStorage.setItem('fd_last_cockpit_budget',JSON.stringify(payload));
+    normalizeManualBudgets();
+  }
+  return changed;
+}
+
 function normalizeManualBudgets(){
   mobileBudgets=allBudgetCategories().map(c=>({
     key:c.key,
@@ -578,7 +789,7 @@ function normalizeManualBudgets(){
 function getTotalBudget(){normalizeManualBudgets();return mobileBudgets.reduce((a,b)=>a+Number(b.prevu||0),0);}
 function budgetSpentForCats(cats){
   const set=new Set((cats||[]).map(c=>String(c).toLowerCase()));
-  const source=monthHistory.length?monthHistory:history;
+  const source=monthExpenseSource();
   return source.filter(e=>{
     const d=String(e.date||'').slice(0,7);
     const cat=String(e.categorie||e.cat||'').toLowerCase();
@@ -599,6 +810,22 @@ function getOverruns(){
   return getBudgetRows().filter(r=>r.over).sort((a,b)=>(b.depense-b.prevu)-(a.depense-a.prevu));
 }
 async function loadMobileBudgets(force=false){
+  if(force){
+    try{ localStorage.removeItem('fd_last_cockpit_budget'); }catch(e){}
+  }
+  try{
+    const last = JSON.parse(localStorage.getItem('fd_last_cockpit_budget') || 'null');
+    if(last && last.mois === currentMonth) applyBudgetPayload(last);
+  }catch(e){}
+  try{
+    const r = await fetch('budget-mobile.json?ts=' + Date.now(), {cache:'no-store'});
+    if(r.ok){
+      const payload = await r.json();
+      applyBudgetPayload(payload);
+    }
+  }catch(e){
+    // En local fichier ou hors ligne, on garde les budgets manuels/localStorage.
+  }
   normalizeManualBudgets();
   renderBudgetTracking();
   renderHome();
@@ -611,7 +838,8 @@ async function openBudget(){
 }
 async function openOverruns(){
   go('overruns');
-  if(!monthHistory.length) await loadMonthHistorySilent();
+  renderOverruns();
+  await loadMonthHistorySilent();
   renderOverruns();
 }
 function saveManualBudgets(){
@@ -641,12 +869,34 @@ function renderOverruns(){
   const rows=getOverruns();
   const total=rows.reduce((a,r)=>a+(r.depense-r.prevu),0);
   const ta=document.getElementById('overrunTotalAmount'); if(ta)ta.textContent=money(total);
-  const tl=document.getElementById('overrunTotalLabel'); if(tl)tl.textContent=rows.length?`${rows.length} catégorie(s) dépassée(s)`:'Aucune catégorie dépassée';
-  if(!rows.length){body.innerHTML='<div class="overrun-empty">Aucun dépassement pour le mois en cours.<br><small>Les budgets sont suivis uniquement par catégorie principale.</small></div>';return;}
+  const tl=document.getElementById('overrunTotalLabel');
+  if(tl)tl.textContent=rows.length
+    ? `${rows.length} catégorie(s) dépassée(s) sur le mois ${currentMonth}`
+    : 'Aucune catégorie dépassée sur le mois';
+  if(!rows.length){
+    body.innerHTML='<div class="overrun-empty">Aucun dépassement pour le mois en cours.<br><small>Les budgets sont suivis uniquement par catégorie principale.</small></div>';
+    return;
+  }
+  const maxDepassement=Math.max(...rows.map(r=>Math.max(0,r.depense-r.prevu)),1);
   body.innerHTML=rows.map(r=>{
-    const dep=r.depense-r.prevu;
-    const pct=Math.max(100,Math.round((r.depense/r.prevu)*100));
-    return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')"><div class="overrun-top"><div><div class="overrun-title">${r.icon} ${r.categorie}</div><div class="overrun-sub">Prévu ${money(r.prevu)} · dépensé ${money(r.depense)}</div></div><div class="overrun-amt">+${money(dep)}<div style="font-size:11px;color:var(--muted);margin-top:3px">${pct}%</div></div></div><div class="budget-progress"><div class="budget-progress-fill" style="width:100%;background:linear-gradient(90deg,#E5483F,#B42318)"></div></div></div>`;
+    const dep=Math.max(0,r.depense-r.prevu);
+    const pctBudget=r.prevu>0?Math.round((r.depense/r.prevu)*100):0;
+    const pctDepassement=r.prevu>0?Math.round((dep/r.prevu)*100):0;
+    const bar=Math.max(7,Math.min(100,Math.round((dep/maxDepassement)*100)));
+    return `<div class="overrun-card" onclick="openGroupHistory('${r.key}')">
+      <div class="overrun-top">
+        <div>
+          <div class="overrun-title">${r.icon} ${r.categorie}</div>
+          <div class="overrun-sub">Mois ${currentMonth} · prévu ${money(r.prevu)} · dépensé ${money(r.depense)}</div>
+        </div>
+        <div class="overrun-amt">+${money(dep)}<div style="font-size:11px;color:var(--muted);margin-top:3px">${pctBudget}%</div></div>
+      </div>
+      <div class="overrun-meter">
+        <div class="overrun-meter-label"><span>Dépassement</span><span>+${pctDepassement}% du budget</span></div>
+        <div class="overrun-track"><div class="overrun-fill" style="width:${bar}%"></div></div>
+        <div class="overrun-detail">${money(dep)} au-dessus du budget mensuel</div>
+      </div>
+    </div>`;
   }).join('');
 }
 
@@ -728,17 +978,5 @@ function showToast(msg,type='success'){const t=document.getElementById('toast');
 async function loadMonthHistorySilent(){try{const url=SCRIPT_URL+'?'+new URLSearchParams({action:'get_historique',mois:currentMonth,secret:SECRET});const r=await fetch(url,{redirect:'follow'});const t=await r.text();const data=JSON.parse(t);if(data.ok){monthHistory=currentMonthOnly(data.depenses);histRenderCacheKey='';rebuildTodayData();prepareHistFilters();renderHome();}}catch(e){}}
 applySettings();renderHome();updatePendingBadge();processPending();loadMonthHistorySilent();loadMobileBudgets();
 </script>
-
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker
-      .register('/foyer-diallo-mobile/sw.js?v=12')
-      .then(reg => console.log('SW OK', reg.scope))
-      .catch(err => console.error('SW ERROR', err));
-  });
-}
-</script>
-
 </body>
 </html>

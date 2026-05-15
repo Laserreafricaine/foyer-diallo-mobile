@@ -428,6 +428,22 @@ function kpiSource(){return monthHistory.length?monthHistory:history}
 function isActiveExpense(e){return e && e.statut!=='annulé' && e.statut!=='archivé'}
 function entryAmount(e){return Number(e.montant||e.amt||0)}
 function entryCat(e){return e.categorie||e.cat||''}
+<<<<<<< HEAD
+function normalizeAppDate(value){
+  if(!value)return today;
+  if(value instanceof Date && !isNaN(value))return value.toISOString().slice(0,10);
+  let s=String(value).trim();
+  if(!s)return today;
+  const iso=s.match(/^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})/);
+  if(iso)return `${iso[1]}-${String(iso[2]).padStart(2,'0')}-${String(iso[3]).padStart(2,'0')}`;
+  const fr=s.match(/^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{4})/);
+  if(fr)return `${fr[3]}-${String(fr[2]).padStart(2,'0')}-${String(fr[1]).padStart(2,'0')}`;
+  const d=new Date(s);
+  if(!isNaN(d))return d.toISOString().slice(0,10);
+  return s.slice(0,10);
+}
+=======
+>>>>>>> e6ee891d12e4b4341a7a3c58c5d5d7bdb7266f8b
 function monthExpenseSource(){
   const merged=[...(monthHistory||[]),...(history||[])].map(normalizeHistoryEntry);
   const byId=new Map();
